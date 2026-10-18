@@ -96,8 +96,11 @@ for i, x0 in enumerate(legs_x):
     H_(f"Montante mensola {i+1}", "M", "barra mensola Ø12", (xc, D - 60, H), (0, 0, 1), 12, P["riser_h"],
        note="passante, forare metà da ogni testa")
     H_("Piano di lavoro", "M", "barra mensola Ø12", (xc, D - 60, H), (0, 0, -1), 12, P["T_top"], note="passante")
-    H_("Mensola rialzata", "M", "barra mensola Ø12", (xc, D - 60, H + P["riser_h"] + P["T_riser"]), (0, 0, -1), 12,
-       P["T_riser"], cb=(CB_D, 8), note="passante, lamatura per rondella e dado cieco")
+    zt_m = H + P["riser_h"] + P["T_riser"]
+    boards = [n for n in parts if n.startswith("Mensola – tavola")]
+    owner = [b for b in boards if parts[b]["box"][0] <= xc <= parts[b]["box"][3]]
+    note = "passante" if len(owner) == 1 else f"passante, a cavallo del giunto {owner[0][-1]}–{owner[1][-1]}: fora a tavole accostate"
+    H_(owner[0], "M", "barra mensola Ø12", (xc, D - 60, zt_m), (0, 0, -1), 12, P["T_riser"], note=note)
 pz = parts["Piano di lavoro"]
 for ax, u, v, dia in pz["holes"]:
     H_("Piano di lavoro", "C", "passacavi Ø60", (u, v, H), (0, 0, -1), dia, P["T_top"], note="sega a tazza")

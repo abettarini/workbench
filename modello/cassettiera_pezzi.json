@@ -1,0 +1,153 @@
+{
+ "multistrato 18": [
+  [
+   "Cassettiera fianco sx",
+   582,
+   400
+  ],
+  [
+   "Cassettiera fianco dx",
+   582,
+   400
+  ],
+  [
+   "Cassettiera cielo",
+   582,
+   460
+  ],
+  [
+   "Cassettiera fondo",
+   582,
+   460
+  ],
+  [
+   "Frontale cassetto 1",
+   496,
+   131
+  ],
+  [
+   "Frontale cassetto 2",
+   496,
+   131
+  ],
+  [
+   "Frontale cassetto 3",
+   496,
+   131
+  ],
+  [
+   "Frontale cassetto appeso",
+   496,
+   97
+  ]
+ ],
+ "multistrato 15": [
+  [
+   "cassetto 1: fianco",
+   500,
+   85
+  ],
+  [
+   "cassetto 1: fianco",
+   500,
+   85
+  ],
+  [
+   "cassetto 1: testata",
+   405,
+   85
+  ],
+  [
+   "cassetto 1: testata",
+   405,
+   85
+  ],
+  [
+   "cassetto 2: fianco",
+   500,
+   85
+  ],
+  [
+   "cassetto 2: fianco",
+   500,
+   85
+  ],
+  [
+   "cassetto 2: testata",
+   405,
+   85
+  ],
+  [
+   "cassetto 2: testata",
+   405,
+   85
+  ],
+  [
+   "cassetto 3: fianco",
+   500,
+   85
+  ],
+  [
+   "cassetto 3: fianco",
+   500,
+   85
+  ],
+  [
+   "cassetto 3: testata",
+   405,
+   85
+  ],
+  [
+   "cassetto 3: testata",
+   405,
+   85
+  ],
+  [
+   "appeso: fianco",
+   500,
+   70
+  ],
+  [
+   "appeso: fianco",
+   500,
+   70
+  ],
+  [
+   "appeso: testata",
+   445,
+   70
+  ],
+  [
+   "appeso: testata",
+   445,
+   70
+  ]
+ ],
+ "HDF 4": [
+  [
+   "Cassettiera schienale",
+   496,
+   400
+  ],
+  [
+   "cassetto 1: fondo",
+   500,
+   435
+  ],
+  [
+   "cassetto 2: fondo",
+   500,
+   435
+  ],
+  [
+   "cassetto 3: fondo",
+   500,
+   435
+  ],
+  [
+   "appeso: fondo",
+   500,
+   475
+  ]
+ ]
+}

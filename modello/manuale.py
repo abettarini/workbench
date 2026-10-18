@@ -1,105 +1,6 @@
-"""Manuale di lavorazione e montaggio – tavolo KVH 80×120 -> tavolo_manuale_lavorazione.pdf"""
-import json, re, textwrap
-from collections import Counter, OrderedDict
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
-from matplotlib.patches import Rectangle, Circle, Polygon, FancyBboxPatch
-
-def code(n):
-    m = re.match(r"Gamba (\d) (ant|post)", n)
-    if m: return f"G{m.group(1)}{'A' if m.group(2)=='ant' else 'P'}"
-    m = re.match(r"Trav\. (sup|inf)\. lat\. (\d)", n)
-    if m: return f"L{m.group(2)}{'s' if m.group(1)=='sup' else 'i'}"
-    m = re.match(r"Trav\. (sup|inf)\. (post|ant)\. (\w+)", n)
-    if m: return f"{'P' if m.group(2)=='post' else 'A'}{m.group(3)[0].upper()}{'s' if m.group(1)=='sup' else 'i'}"
-    m = re.match(r"Montante mensola (\d)", n)
-    if m: return f"M{m.group(1)}"
-    return n
-
-d = json.load(open("parts_kvh.json")); holes = json.load(open("fori.json")); cf = json.load(open("confronto.json"))
-P = d["params"]; parts = {p["name"]: p for p in d["parts"]}
-W, D, H, Lx, Ly, Rt, Rh = P["W"], P["D"], P["H"], P["Lx"], P["Ly"], P["Rt"], P["Rh"]
-LEG_H = H - P["T_top"]
-A4 = (11.69, 8.27)
-INK, RED, MUTE = "#222222", "#c0392b", "#666666"
-WOOD, WOOD2, STEEL, PLY = "#e3c79c", "#cfa874", "#9aa3ab", "#efdcb8"
-HCOL = {"B1": "#c0392b", "B2": "#e67e22", "R": "#8e44ad", "S": "#d4a017", "I": "#7f8c8d", "M": "#2c6fbb",
-        "T": "#16a085", "A": "#c0392b", "C": "#555555", "P": "#34495e"}
-FACE_NAME = {"A": "anteriore", "D": "destra", "P": "posteriore", "S": "sinistra", "T": "testa", "F": "piede"}
-plt.rcParams["font.family"] = "DejaVu Sans"
-PAGE = [0]
-TOC = []
-
-# ------------------------------------------------------------------ utilità pagina
-def page(title, phase=None):
-    PAGE[0] += 1
-    fig = plt.figure(figsize=A4)
-    fig.patches.append(Rectangle((0, 0.93), 1, 0.07, transform=fig.transFigure, fc="#2f3b45", ec="none"))
-    fig.text(0.035, 0.955, title, fontsize=15, weight="bold", color="white", va="center")
-    if phase: fig.text(0.965, 0.955, phase, fontsize=10, color="#d9e1e7", va="center", ha="right")
-    fig.text(0.035, 0.02, "Tavolo da lavoro KVH 80×120 – manuale di lavorazione e montaggio", fontsize=7.5, color=MUTE)
-    fig.text(0.965, 0.02, f"pag. {PAGE[0]}", fontsize=7.5, color=MUTE, ha="right")
-    TOC.append((PAGE[0], title))
-    return fig
-
-def para(fig, x, y, text, width=60, fs=9, lh=1.45, color=INK, weight="normal"):
-    """testo con a capo automatico; ritorna la y finale"""
-    lines = []
-    for block in text.split("\n"):
-        if not block.strip(): lines.append(""); continue
-        ind = len(block) - len(block.lstrip())
-        sub = textwrap.wrap(block.strip(), width=width - ind) or [""]
-        bullet = block.strip()[:2] in ("• ", "– ") or re.match(r"^\d+\.", block.strip())
-        lines.append(" " * ind + sub[0])
-        for s in sub[1:]: lines.append(" " * (ind + (3 if bullet else 0)) + s)
-    fig.text(x, y, "\n".join(lines), fontsize=fs, va="top", color=color, linespacing=lh, weight=weight)
-    return y - len(lines) * fs * lh / 72 / A4[1]
-
-def box_note(fig, x, y, w, h, title, text, fs=8.3, color="#fff6e0", edge="#e0b25c", width=None):
-    fig.patches.append(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.006", transform=fig.transFigure,
-                                      fc=color, ec=edge, lw=0.8))
-    fig.text(x + 0.01, y + h - 0.012, title, fontsize=fs + 0.5, weight="bold", va="top")
-    para(fig, x + 0.01, y + h - 0.04, text, width=width or int(w * 150), fs=fs)
-
-def dim(ax, x0, y0, x1, y1, off, text=None, vertical=False, fs=7.5):
-    kw = dict(arrowprops=dict(arrowstyle="<->", lw=0.6, color=RED, shrinkA=0, shrinkB=0))
-    if vertical:
-        xo = x0 + off
-        ax.annotate("", (xo, y0), (xo, y1), **kw)
-        ax.plot([x0, xo], [y0, y0], lw=0.35, color=RED); ax.plot([x1, xo], [y1, y1], lw=0.35, color=RED)
-        ax.text(xo + (4 if off > 0 else -4), (y0 + y1) / 2, text or f"{abs(y1 - y0):.0f}", rotation=90,
-                ha="left" if off > 0 else "right", va="center", fontsize=fs, color=RED)
-    else:
-        yo = y0 + off
-        ax.annotate("", (x0, yo), (x1, yo), **kw)
-        ax.plot([x0, x0], [y0, yo], lw=0.35, color=RED); ax.plot([x1, x1], [y1, yo], lw=0.35, color=RED)
-        ax.text((x0 + x1) / 2, yo + (3 if off > 0 else -3), text or f"{abs(x1 - x0):.0f}",
-                ha="center", va="bottom" if off > 0 else "top", fontsize=fs, color=RED)
-
-def R(ax, x, y, w, h, fc=WOOD, ec=INK, lw=0.8, hatch=None, ls="-", z=1, alpha=1):
-    ax.add_patch(Rectangle((x, y), w, h, fc=fc, ec=ec, lw=lw, hatch=hatch, ls=ls, zorder=z, alpha=alpha))
-
-def label(ax, xy, xytext, text, fs=7.5, ha="left"):
-    ax.annotate(text, xy, xytext, fontsize=fs, ha=ha, va="center",
-                arrowprops=dict(arrowstyle="-", lw=0.6, color=INK, shrinkB=0),
-                bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="#aaa", lw=0.5))
-
-def img(fig, path, rect, crop=None):
-    a = fig.add_axes(rect); im = plt.imread(path)
-    if crop: im = im[crop[0]:crop[1], crop[2]:crop[3]]
-    a.imshow(im); a.axis("off"); return a
-
-def table(ax, cells, cols, widths, fs=7.5, sc=1.25, colors=None):
-    tb = ax.table(cellText=cells, colLabels=cols, loc="upper left", cellLoc="left", colWidths=widths)
-    tb.auto_set_font_size(False); tb.set_fontsize(fs); tb.scale(1, sc)
-    for (r, c), cell in tb.get_celld().items():
-        cell.set_edgecolor("#bbb"); cell.set_linewidth(0.5)
-        if r == 0: cell.set_facecolor("#e8edf1"); cell.set_text_props(weight="bold")
-        elif colors and colors[r - 1]: cell.set_facecolor(colors[r - 1])
-    ax.axis("off"); return tb
-
+"""Manuale tavolo BASE – KVH 80×120 -> tavolo_base_manuale.pdf"""
+from manlib import *
+from manlib import PAGE, TOC, FOOTER
 # ------------------------------------------------------------------ codici e quantità
 legs = [n for n in parts if n.startswith("Gamba")]
 rails = [n for n in parts if n.startswith("Trav.")]
@@ -144,9 +45,8 @@ HW = [  # codice, nome, quantità, dove, disegno
     ("B1", "Bullone TCEI M10×180 + rondella Ø20", "16", "traverse laterali (L): dalla faccia esterna della gamba", "B1"),
     ("B2", "Bullone TCEI M10×140 + rondella Ø20", "8", "traverse longitudinali su gambe con una sola traversa", "B2"),
     ("R", "Barra filettata M10, spezzone 220 mm", "4", "gambe 2P e 3P: unisce le due traverse longitudinali", "R"),
-    ("D", "Dado a tamburo M10 (Ø15 circa)", "36", "uno per testata di traversa + 4 nelle gambe posteriori", "D"),
+    ("D", "Dado a tamburo M10 (Ø15 circa)", "36", "32 nelle traverse + 4 nelle gambe posteriori (predisposizione alzatina)", "D"),
     ("S", "Spina in faggio Ø12×50", "64", "2 per testata di traversa", "S"),
-    ("M", "Barra M10, spezzone 400 + rondella + dado cieco", "4", "mensola → montante → piano → gamba posteriore", "M"),
     ("I", "Inserto filettato M10 + piedino livellatore", "8", "sotto ogni gamba", "I"),
     ("Q", "Squadretta con asola + viti 4,5×25", "16", "fissaggio del piano alle traverse superiori", "Q"),
     ("V", "Viti legno: 5×60, 5×70, 4×45, 4×50, 3,5×25", "sfuse", "rinforzo, listelli, cassettiera, cassetti", "V"),
@@ -231,7 +131,7 @@ def draw_leg(fig, n, rect_draw, rect_tab):
             pos = "—"; hor = f"{u:.0f} da sx, {('%.0f' % (Ly - v))} dal retro" if f == "T" else f"centro"
         depth = "passante" if through(h, n) else f"{h['depth']:.0f}"
         note = {"B1": "bullone laterale B1", "B2": "bullone longit. B2", "R": "barra R", "S": "spina S", "I": "inserto I",
-                "M": "barra mensola M", "T": "dado a tamburo D (mensola)"}.get(h["code"], h["kind"])
+                "M": "predisp. alzatina: foro barra M", "T": "predisp. alzatina: dado D"}.get(h["code"], h["kind"])
         if h["cb"]: note += f", lamatura Ø{h['cb'][0]}×{h['cb'][1]}"
         if f == "T": note += " – punta lunga"
         lev = "sup." if (v > 400 and f in "ADPS") else ("inf." if f in "ADPS" else "")
@@ -320,17 +220,19 @@ def testata(ax, kind):
     ax.set_title(title, fontsize=8, loc="left")
 
 # ------------------------------------------------------------------ PDF
-with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
+FOOTER[0] = "Modulo 1 – Tavolo base KVH 80×120 – manuale di lavorazione e montaggio"
+with PdfPages("tavolo_base_manuale.pdf") as pdf:
     # ================= 1. copertina
     fig = plt.figure(figsize=A4); PAGE[0] += 1
     fig.text(0.05, 0.9, "Tavolo da lavoro", fontsize=30, weight="bold")
-    fig.text(0.05, 0.85, "Manuale di lavorazione e montaggio – travi KVH 80×120", fontsize=14, color=MUTE)
-    img(fig, "kvh_vista_frontale_sx.png", [0.36, 0.08, 0.62, 0.74])
+    fig.text(0.05, 0.85, "Modulo 1 · Tavolo base – manuale di lavorazione e montaggio", fontsize=14, color=MUTE)
+    img(fig, "man_f9_base.png", [0.36, 0.10, 0.62, 0.72], crop=(150, 900, 40, 1480))
     fases = ["Prima di iniziare", "Ferramenta e codici dei pezzi", "Fase 1 · Taglio",
              "Fase 2 · Foratura (gambe, traverse, pannelli)", "Fase 3 · Levigatura e finitura",
              "Fase 4 · Telai laterali", "Fase 5 · Collegamento dei telai", "Fase 6 · Listelli e ripiani bassi",
-             "Fase 7 · Piano", "Fase 8 · Zona ricarica", "Fase 9 · Mensola, piedini e fissaggio a muro",
-             "Fase 10 · Cassettiera e cassetti", "Fase 11 · Canaline, elettrico e controlli finali"]
+             "Fase 7 · Piano", "Fase 8 · Zona ricarica", "Fase 9 · Piedini, fissaggio a muro, predisposizioni",
+             "Fase 10 · Canaline, elettrico e controlli finali", "",
+             "Moduli aggiuntivi (manuali separati):", "  Modulo 2 · Cassettiera", "  Modulo 3 · Alzatina con mensola"]
     fig.text(0.05, 0.76, "Contenuto", fontsize=11, weight="bold")
     fig.text(0.05, 0.735, "\n".join(fases), fontsize=9, va="top", linespacing=1.9)
     fig.text(0.05, 0.08, "Quote in mm. Ogni foro è stato verificato sul modello 3D: nessun foro\n"
@@ -378,7 +280,7 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
              "• Traverse laterali: bullone a 90 mm dalla testa, spine a 35.\n"
              "• Spine a ±15 mm dall'asse del pezzo.\n"
              "• Dado a tamburo a 60 mm dalla testata della traversa.\n\n"
-             "Le due regole sono una lo specchio dell'altra: con UNA sola dima (pag. 9) fori tutti i nodi, "
+             "Le due regole sono una lo specchio dell'altra: con UNA sola dima (pag. 7) fori tutti i nodi, "
              "basta girarla.\n\n"
              "Spine incollate solo nella traversa: nella gamba entrano a secco, così il tavolo resta smontabile.",
              fs=8.3, width=64)
@@ -418,7 +320,7 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
     for n in legs + rails + risers:
         c = code(n); L = length(n)
         typ = "gamba" if n.startswith("Gamba") else ("traversa laterale" if ". lat." in n else
-               ("montante mensola" if n.startswith("Mont") else "traversa longitudinale"))
+               ("montante alzatina (conservare)" if n.startswith("Mont") else "traversa longitudinale"))
         groups.setdefault((typ, L), []).append(c)
     for (typ, L), cs in groups.items():
         rows.append([typ, f"{L}", str(len(cs)), "\n".join(", ".join(cs[k:k + 4]) for k in range(0, len(cs), 4))])
@@ -428,8 +330,9 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
         "Appena tagliato ogni pezzo, scrivi il codice a matita su una faccia che resterà nascosta "
         "(per le gambe: la testa; per le traverse: la faccia inferiore). Segna anche una freccia verso il FRONTE: "
         "evita di montare un pezzo girato.\n\n"
-        "Gli altri pezzi hanno il loro nome: Piano, Mensola, Rinforzo, Ripiano cassetti, Ripiano ricarica, "
-        "Ripiano seduta (multistrato), Listelli reggiripiano, Cassettiera."), width=110, fs=8.8)
+        "Gli altri pezzi hanno il loro nome: Piano (lamellare), Rinforzo, Ripiano cassetti, Ripiano ricarica, "
+        "Ripiano seduta (tutti in OSB), Listelli reggiripiano. I 4 montanti M1–M4 non servono al tavolo base: "
+        "tagliali, marcali e conservali per l'alzatina (modulo 3)."), width=110, fs=8.8)
     pdf.savefig(fig); plt.close(fig)
 
     # ================= 5. taglio
@@ -464,16 +367,17 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
         "5. Tieni gli avanzi da ~100 mm: uno serve per la dima di foratura.\n"
         "6. Marca subito il codice su ogni pezzo."), width=66, fs=8.5)
     ax2 = fig.add_axes([0.56, 0.08, 0.40, 0.32]); ax2.set_aspect("equal"); ax2.axis("off")
-    R(ax2, 0, 0, 2000, 800, "#f4ead8")
-    for (x, y), w_, h_, t in [((0, 540), 2000, 260, "Mensola 2000×260"), ((0, 0), 480, 520, "Rinforzo\n480×520"),
-                              ((484, 0), 560, 500, "Ripiano cassetti\n560×500"), ((1048, 0), 560, 480, "Ripiano ricarica\n560×480")]:
-        R(ax2, x, y, w_, h_, "#e2c08f", lw=0.6); ax2.text(x + w_ / 2, y + h_ / 2, t, ha="center", va="center", fontsize=6.5)
-    ax2.text(1800, 260, "avanzo", ha="center", va="center", fontsize=6.5, color=MUTE)
-    ax2.set_xlim(-20, 2020); ax2.set_ylim(-20, 820)
-    ax2.set_title("Secondo pannello lamellare 2000×800×40 (il primo è il piano, intero)", fontsize=8, loc="left")
+    R(ax2, 0, 0, 2500, 1250, "#efe3c4")
+    for (x, y), w_, h_, t in [((0, 0), 500, 560, "Ripiano\ncassetti\n500×560"), ((504, 0), 480, 560, "Ripiano\nricarica\n480×560"),
+                              ((988, 0), 480, 520, "Rinforzo A\n480×520"), ((1472, 0), 480, 520, "Rinforzo B\n480×520"),
+                              ((0, 564), 700, 260, "Ripiano seduta 700×260")]:
+        R(ax2, x, y, w_, h_, "#d9c08a", lw=0.6); ax2.text(x + w_ / 2, y + h_ / 2, t, ha="center", va="center", fontsize=6.3)
+    ax2.text(1600, 900, "avanzo ≈ 1,8 m²\n(utile per la cassettiera)", ha="center", va="center", fontsize=6.5, color=MUTE)
+    ax2.set_xlim(-20, 2520); ax2.set_ylim(-20, 1270)
+    ax2.set_title("Pannello OSB/3 2500×1250×18 (il piano lamellare resta intero)", fontsize=8, loc="left")
     para(fig, 0.04, 0.17, (
-        "Pannello 2: taglia prima la striscia della mensola per tutta la lunghezza, poi i tre pezzi dalla "
-        "striscia restante. Multistrato: fatti tagliare a misura i pezzi della cassettiera (elenco a pag. 20)."),
+        "OSB: taglia prima la striscia da 560 su tutta la lunghezza, poi i pezzi. Lato liscio dei ripiani verso "
+        "l'alto. I due rinforzi si incollano uno sull'altro e formano 36 mm."),
         width=66, fs=8.5)
     pdf.savefig(fig); plt.close(fig)
 
@@ -576,11 +480,11 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
             "Fora 125 mm da ogni\ntesta con la punta lunga.", fontsize=7, va="center")
     ax.text(0, -25, "retro (muro)", fontsize=6.5, color=MUTE)
     ax.set_xlim(-30, 420); ax.set_ylim(-40, 150)
-    ax.set_title("Montanti M1–M4 (80×120×250), vista dal fianco", fontsize=8, loc="left")
+    ax.set_title("Montanti M1–M4 (80×120×250) per l'alzatina, vista dal fianco", fontsize=8, loc="left")
     pdf.savefig(fig); plt.close(fig)
 
     # ================= pannelli
-    fig = page("Foratura di piano, mensola, rinforzo e contropiastra", "Fase 2")
+    fig = page("Foratura di piano, rinforzo e contropiastra", "Fase 2")
     ax = fig.add_axes([0.03, 0.42, 0.62, 0.46]); ax.set_aspect("equal"); ax.axis("off")
     R(ax, 0, 0, 2000, 800, "#efe0c2")
     lab = {"M": "barra mensola Ø12", "C": "passacavi Ø60", "P": "base piastre Ø11"}
@@ -599,24 +503,12 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
     ax.set_xlim(-60, 2040); ax.set_ylim(-110, 820)
     ax.set_title("PIANO 2000×800×40 visto dall'alto", fontsize=8.5, loc="left")
     para(fig, 0.67, 0.88, (
-        "Piano\n• 4 fori Ø12 passanti (barra mensola) a 740 dal fronte, in asse con le gambe posteriori: "
-        "x = 40, 620, 1400, 1960. Foralo quando il piano è già appoggiato sul telaio (fase 9), passando la punta "
-        "nel foro della gamba: così i fori coincidono.\n"
-        "• 2 fori Ø60 passacavi con la sega a tazza: fora metà da sopra e metà da sotto per non scheggiare.\n"
-        "• 4 fori Ø11 della base piastre: falli in fase 8, usando la base d'acciaio come dima.\n\n"
-        "Mensola 2000×260×40\n• 4 fori Ø12 passanti a 200 dal bordo anteriore della mensola "
-        "(60 dal retro), stessi x del piano. Lamatura Ø25×8 sopra per rondella e dado cieco.\n\n"
-        "Rinforzo 480×520 e contropiastra 220×220×6\n• 2 fori Ø11 per le viti posteriori della base: "
+        "Piano\n• 2 fori Ø60 passacavi con la sega a tazza: fora metà da sopra e metà da sotto per non scheggiare.\n"
+        "• 4 fori Ø11 della base piastre: falli in fase 8, usando la base d'acciaio come dima.\n"
+        "• 4 fori Ø12 (in blu) a 740 dal fronte, x = 40, 620, 1400, 1960: servono SOLO per l'alzatina "
+        "(modulo 3). Non farli ora: si forano dall'alto passando la punta nel foro già fatto nella gamba.\n\n"
+        "Rinforzo (OSB 2×18) e contropiastra 220×220×6\n• 2 fori Ø11 per le viti posteriori della base: "
         "falli in fase 8 insieme al piano, dopo l'incollaggio del rinforzo."), width=48, fs=8.2)
-    ax = fig.add_axes([0.03, 0.06, 0.62, 0.30]); ax.set_aspect("equal"); ax.axis("off")
-    R(ax, 0, 0, 2000, 260, "#efe0c2")
-    for xx in (40, 620, 1400, 1960):
-        ax.add_patch(Circle((xx, 200), 12.5, fc="white", ec=HCOL["M"], ls="--")); ax.add_patch(Circle((xx, 200), 6, fc=HCOL["M"], ec=INK))
-        ax.text(xx, 225, f"{xx}", fontsize=6, ha="center", color=RED)
-    dim(ax, 2000, 0, 2000, 200, 25, "200", vertical=True)
-    ax.text(1000, -45, "FRONTE della mensola", ha="center", fontsize=7, color=MUTE)
-    ax.set_xlim(-40, 2100); ax.set_ylim(-80, 300)
-    ax.set_title("MENSOLA vista dall'alto", fontsize=8.5, loc="left")
     pdf.savefig(fig); plt.close(fig)
 
     # ================= fase 3 finitura + fase 4 telai
@@ -625,7 +517,8 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
     para(fig, 0.04, 0.86, (
         "1. Leviga tutti i pezzi con grana 120 e poi 180. Il KVH è già piallato: basta togliere segni e matita.\n"
         "2. Smussa tutti gli spigoli vivi di 2 mm.\n"
-        "3. Stendi olio o impregnante su gambe, traverse, montanti, mensola e ripiani.\n"
+        "3. Stendi olio o impregnante su gambe, traverse e montanti; vernice trasparente sui ripiani OSB "
+        "(l'OSB grezzo trattiene polvere e sporco).\n"
         "4. NON trattare le testate delle traverse e le zone dove andrà la colla (sotto il piano dove si incolla "
         "il rinforzo): la colla non attacca sull'olio. Coprile con nastro di carta.\n"
         "5. Il piano si tratta per ultimo, a tavolo montato, con 2–3 mani."), width=58, fs=8.6)
@@ -673,24 +566,24 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
     fig = page("Listelli e ripiani bassi", "Fase 6")
     img(fig, "man_f6_ripiani.png", [0.40, 0.10, 0.59, 0.80], crop=(90, 920, 40, 1480))
     para(fig, 0.04, 0.89, (
-        "Listelli reggiripiano 30×40 (6 pezzi): avvitati sulle facce interne delle traverse laterali inferiori.\n\n"
-        "• Campate cassetti e ricarica: listelli da 560, filo superiore a 40 mm sotto il filo della traversa "
-        "(il ripiano lamellare è spesso 40 e resta a filo).\n"
-        "• Campata seduta: listelli da 300 contro la traversa posteriore, filo superiore a 18 mm sotto il filo "
-        "della traversa (multistrato 18).\n\n"
+        "Listelli reggiripiano 30×40 (6 pezzi): avvitati sulle facce interne delle traverse laterali inferiori, "
+        "con il filo superiore a 18 mm sotto il filo della traversa (i ripiani OSB restano a filo).\n\n"
+        "• Campate cassetti e ricarica: listelli da 560, per tutta la profondità.\n"
+        "• Campata seduta: listelli da 260 contro la traversa posteriore.\n\n"
         "Viti: 5×70, preforo Ø3 nella traversa, Ø5 svasato nel listello, più colla.\n"
         "• Listelli da 560: 3 viti a 130, 280 e 430 dalla testata anteriore.\n"
-        "• Listelli da 300: 2 viti a 50 e 180 dall'inizio del listello.\n"
+        "• Listelli da 260: 2 viti a 50 e 130 dall'inizio del listello.\n"
         "NON avvitare entro 100 mm dalle testate delle traverse: lì ci sono bullone e dado a tamburo.\n\n"
-        "Ripiani: appoggiali sui listelli e fissa ciascuno con 2 viti 4×50 per lato, dall'alto, preforo Ø3. "
-        "Il ripiano della campata cassetti va posato PRIMA della cassettiera."), width=55, fs=8.4)
+        "Ripiani OSB 18: appoggiali sui listelli, lato liscio in alto, e fissa ciascuno con 2 viti 4×35 per lato, "
+        "preforo Ø3. Carico consigliato: fino a 30 kg sui ripiani da 500, fino a 15 kg su quello della seduta "
+        "(luce 700)."), width=55, fs=8.4)
     ax = fig.add_axes([0.04, 0.08, 0.32, 0.25]); ax.set_aspect("equal"); ax.axis("off")
-    R(ax, 0, 0, 80, 120, WOOD2); R(ax, 80, 40, 30, 40, WOOD); R(ax, 80, 80, 160, 40, "#e6caa0")
-    for y in (60,): R(ax, 20, y - 2.5, 90, 5, STEEL)
-    ax.text(5, 60, "vite 5×70", fontsize=6.3, va="center", color="white")
-    ax.text(120, 100, "ripiano 40", fontsize=6.5, va="center"); ax.text(115, 55, "listello 30×40", fontsize=6.5)
+    R(ax, 0, 0, 80, 120, WOOD2); R(ax, 80, 62, 30, 40, WOOD); R(ax, 80, 102, 160, 18, "#d9c08a")
+    for y in (82,): R(ax, 20, y - 2.5, 90, 5, STEEL)
+    ax.text(5, 82, "vite 5×70", fontsize=6.3, va="center", color="white")
+    ax.text(120, 111, "ripiano OSB 18", fontsize=6.5, va="center"); ax.text(115, 75, "listello 30×40", fontsize=6.5)
     ax.text(5, 20, "traversa\nlaterale inf.", fontsize=6.3)
-    dim(ax, 240, 80, 240, 120, 10, "40", vertical=True)
+    dim(ax, 240, 102, 240, 120, 10, "18", vertical=True)
     ax.set_xlim(-10, 290); ax.set_ylim(-15, 140)
     ax.set_title("Sezione: ripiano sul listello", fontsize=8, loc="left")
     pdf.savefig(fig); plt.close(fig)
@@ -699,14 +592,14 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
     fig = page("Piano di lavoro", "Fase 7")
     img(fig, "man_f7_piano.png", [0.42, 0.40, 0.57, 0.52], crop=(110, 950, 40, 1480))
     para(fig, 0.04, 0.89, (
-        "1. Fai i 2 fori passacavi Ø60 (pag. 13) e incolla sotto il piano il rinforzo della ricarica: "
+        "1. Fai i 2 fori passacavi Ø60. Incolla tra loro i due rinforzi OSB (36 mm) e poi incollali sotto il piano: "
         "posizione x 1440–1920, y 80–600 (a filo della traversa ARs e tra le traverse L3s e L4s). Colla su tutta "
         "la superficie + 12 viti 5×60 dal basso, preforo Ø3, svasate. Le viti non devono stare entro 40 mm "
         "dai 4 fori della base piastre (x 1615 e 1745, y 155).\n"
         "2. Appoggia il piano sul telaio, a filo dietro e sui lati (sporgenza zero).\n"
         "3. Fissalo con le squadrette Q avvitate all'interno delle traverse superiori: l'asola va sotto il piano "
         "e la vite 4,5×25 al centro dell'asola, così il legno può muoversi con l'umidità.\n"
-        "4. Le barre della mensola (fase 9) bloccano il piano anche sul retro."), width=56, fs=8.4)
+        "4. Se monterai l'alzatina, le sue barre bloccheranno il piano anche sul retro."), width=56, fs=8.4)
     rows = [["traverse posteriori PCs, PSs, PRs", "2 per traversa, a 100 dalle gambe", "6"],
             ["L1s (faccia destra)", "a 200 e 450 dal fronte", "2"],
             ["L2s (faccia sinistra e destra)", "1 a sinistra, 2 a destra", "3"],
@@ -732,10 +625,10 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
     ax = fig.add_axes([0.03, 0.06, 0.62, 0.40]); ax.set_aspect("equal"); ax.axis("off")
     R(ax, 0, 580, 80, 120, WOOD2)                         # ARs
     R(ax, 0, 700, 640, 40, "#efe0c2", hatch="///")        # piano
-    R(ax, 80, 660, 520, 40, "#e2c08f", hatch="\\\\")       # rinforzo
-    R(ax, 80, 654, 220, 6, STEEL)                          # contropiastra
+    R(ax, 80, 664, 520, 36, "#d9c08a", hatch="\\\\")       # rinforzo
+    R(ax, 80, 658, 220, 6, STEEL)                          # contropiastra
     R(ax, 0, 740, 180, 12, "#3a3f45"); R(ax, 0, 752, 180, 10, "#9aa7b4")
-    for y, zb, lab_ in ((25, 580, "M10×200"), (155, 654, "M10×110")):
+    for y, zb, lab_ in ((25, 580, "M10×200"), (155, 658, "M10×110")):
         R(ax, y - 5, zb - 14, 10, 752 - zb + 14, STEEL, lw=0.5)
         ax.add_patch(Polygon([[y - 9, 752], [y + 9, 752], [y + 5, 746], [y - 5, 746]], fc=STEEL, ec=INK, lw=0.5))
         R(ax, y - 9, zb - 9, 18, 9, "#7f8890", lw=0.5)
@@ -743,8 +636,8 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
     for y in (380, 520): R(ax, y - 2.5, 660, 5, 60, "#666", lw=0.3)
     ax.text(440, 640, "viti 5×60 + colla", fontsize=6.5)
     ax.text(200, 590, "traversa ARs", fontsize=6.5) if False else ax.text(5, 610, "ARs", fontsize=6.5)
-    ax.text(330, 720, "piano 40", fontsize=6.5); ax.text(330, 675, "rinforzo 40", fontsize=6.5)
-    ax.text(310, 648, "contropiastra 6", fontsize=6.5)
+    ax.text(330, 720, "piano 40", fontsize=6.5); ax.text(330, 677, "rinforzo OSB 36", fontsize=6.5)
+    ax.text(310, 650, "contropiastra 6", fontsize=6.5)
     ax.text(190, 760, "base 12 + piastra attrezzo 10", fontsize=6.5)
     dim(ax, 0, 762, 25, 762, 14, "25", fs=6.5); dim(ax, 0, 790, 155, 790, 10, "155", fs=6.5)
     ax.text(0, 540, "← fronte", fontsize=6.5, color=MUTE)
@@ -764,95 +657,38 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
         "5. Stringi in croce. Le piastre degli attrezzi si bloccano poi con le 2 manopole M12."), width=62, fs=8.3)
     pdf.savefig(fig); plt.close(fig)
 
-    # ================= fase 9 mensola, piedini, muro
-    fig = page("Mensola, piedini e fissaggio a muro", "Fase 9")
-    img(fig, "man_f9_mensola.png", [0.55, 0.42, 0.44, 0.50], crop=(110, 930, 40, 1480))
-    ax = fig.add_axes([0.03, 0.05, 0.34, 0.50]); ax.set_aspect("equal"); ax.axis("off")
-    R(ax, 680, 450, 120, 250, WOOD)          # gamba
-    R(ax, 520, 700, 300, 40, "#efe0c2", hatch="///")
-    R(ax, 680, 740, 120, 250, WOOD)          # montante
-    R(ax, 540, 990, 260, 40, "#efe0c2")
-    R(ax, 734, 625, 12, 1030 - 625 + 12, STEEL, lw=0.5)
-    R(ax, 726, 1030, 28, 4, STEEL); ax.add_patch(Circle((740, 1042), 9, fc="#c8cdd2", ec=INK))
+    # ================= fase 9 piedini, muro, predisposizioni
+    fig = page("Piedini, fissaggio a muro e predisposizioni", "Fase 9")
+    img(fig, "man_f9_base.png", [0.50, 0.40, 0.49, 0.52], crop=(150, 900, 40, 1480))
+    ax = fig.add_axes([0.55, 0.04, 0.30, 0.34]); ax.set_aspect("equal"); ax.axis("off")
+    R(ax, 680, 450, 120, 250, WOOD); R(ax, 560, 700, 260, 40, "#efe0c2", hatch="///")
+    R(ax, 734, 625, 12, 75, "white", ec=HCOL["M"], ls="--")
     R(ax, 730, 632.5, 70, 15, "white", ec=HCOL["T"], ls="--"); ax.add_patch(Circle((740, 640), 7.5, fc=STEEL, ec=INK))
-    ax.plot([800, 800], [430, 1070], color="#555", lw=2); ax.text(806, 450, "muro", fontsize=6.5, rotation=90)
-    ax.add_patch(Polygon([[790, 990], [800, 990], [800, 930], [796, 930], [796, 986], [760, 986], [760, 990]], fc=STEEL, ec=INK))
-    ax.text(560, 1050, "mensola 40", fontsize=6.3); ax.text(600, 860, "montante\n80×120", fontsize=6.3)
-    ax.text(530, 715, "piano 40", fontsize=6.3); ax.text(600, 560, "gamba\nposteriore", fontsize=6.3)
-    ax.text(600, 660, "dado D\ndal retro", fontsize=6.3, color=HCOL["T"])
-    ax.text(600, 960, "angolare\na muro →", fontsize=6.3)
-    dim(ax, 680, 450, 800, 450, -20, "120", fs=6.3); dim(ax, 740, 1070, 800, 1070, 10, "60", fs=6.3)
-    ax.set_xlim(500, 840); ax.set_ylim(400, 1090)
-    ax.set_title("Sezione: barra M della mensola", fontsize=8, loc="left")
-    para(fig, 0.39, 0.42, (
-        "Mensola\n1. In ogni gamba posteriore c'è già il dado a tamburo D (foro dal retro, a 60 dalla testa) "
-        "e il foro verticale Ø12.\n"
-        "2. Con il piano montato, fora il piano Ø12 passando dal foro della gamba (pag. 13).\n"
-        "3. Monta i montanti M1–M4, appoggia la mensola, infila le barre M da 400 dall'alto e avvitale nel dado. "
-        "Rondella e dado cieco sopra; stringi fino a bloccare montante e piano.\n\n"
-        "Piedini\n4. Inclina il tavolo, avvita gli inserti I nei fori Ø14 sotto le gambe (con una vite M10 e "
-        "controdado) e poi i piedini.\n"
-        "5. Porta il tavolo al muro e livellalo agendo sui piedini.\n\n"
+    ax.plot([800, 800], [430, 760], color="#555", lw=2); ax.text(806, 450, "muro", fontsize=6.5, rotation=90)
+    ax.text(570, 715, "piano (non forato)", fontsize=6.3); ax.text(600, 560, "gamba\nposteriore", fontsize=6.3)
+    ax.text(600, 660, "dado D\ngià inserito", fontsize=6.3, color=HCOL["T"]); ax.text(690, 680, "Ø12", fontsize=6, color=HCOL["M"])
+    dim(ax, 680, 450, 800, 450, -20, "120", fs=6.3); dim(ax, 740, 760, 800, 760, 10, "60", fs=6.3)
+    ax.set_xlim(540, 840); ax.set_ylim(400, 790)
+    ax.set_title("Predisposizione alzatina nelle gambe posteriori", fontsize=8, loc="left")
+    para(fig, 0.04, 0.89, (
+        "Piedini\n1. Inclina il tavolo, avvita gli inserti I nei fori Ø14 sotto le gambe (con una vite M10 e "
+        "controdado) e poi i piedini.\n2. Porta il tavolo al muro e livellalo agendo sui piedini.\n\n"
         "Fissaggio a muro (indispensabile per le presse)\n"
-        "6. 2 angolari a L sotto la mensola, vicino a M1 e M4: viti 5×30 nella mensola, tasselli Ø8 nel muro.\n"
-        "7. 2 angolari sulle facce esterne di G1P e G4P, a circa 400 da terra: viti 5×40 nella gamba, tasselli Ø8.\n"
-        "Tasselli: nylon per mattone pieno, specifici per forato; su cartongesso cerca il montante metallico. "
-        "Se c'è il battiscopa, metti uno spessore dietro le gambe."), width=92, fs=8.0)
-    pdf.savefig(fig); plt.close(fig)
-
-    # ================= fase 10 cassettiera
-    cp = {n: parts[n]["box"] for n in parts if n.startswith("Cassettiera") or n.startswith("Frontale") or "(scatola)" in n}
-    fig = page("Cassettiera e cassetti", "Fase 10")
-    ax = fig.add_axes([0.03, 0.40, 0.42, 0.50]); ax.set_aspect("equal"); ax.axis("off")
-    x0 = cp["Cassettiera fianco sx"][0]
-    for n in ("Cassettiera fianco sx", "Cassettiera fianco dx", "Cassettiera cielo", "Cassettiera fondo"):
-        b = cp[n]; R(ax, b[0] - x0, b[2], b[3] - b[0], b[5] - b[2], "#efdcb8")
-    for n in [k for k in cp if k.startswith("Frontale cassetto ")]:
-        b = cp[n]; R(ax, b[0] - x0, b[2], b[3] - b[0], b[5] - b[2], "#9fb3c2", alpha=0.35, ls="--")
-    b = cp["Frontale cassetto appeso"]; R(ax, b[0] - x0, b[2], b[3] - b[0], b[5] - b[2], "#9fb3c2", alpha=0.35, ls="--")
-    bf = cp["Cassettiera fianco sx"]; bc = cp["Cassettiera cielo"]
-    for zz in (bf[2] + 9, bf[5] - 9):
-        for xx in (bf[0] - x0 + 9, cp["Cassettiera fianco dx"][0] - x0 + 9):
-            ax.plot([xx - 14, xx + 14], [zz, zz], color=STEEL, lw=2.2)
-    dim(ax, 0, bf[2], bf[3] - bf[0] + (cp["Cassettiera fianco dx"][3] - cp["Cassettiera fianco dx"][0]) + bc[3] - bc[0], bf[2], -20,
-        f"{cp['Cassettiera fianco dx'][3] - x0:.0f}")
-    dim(ax, cp["Cassettiera fianco dx"][3] - x0, bf[2], cp["Cassettiera fianco dx"][3] - x0, bf[5], 14, f"{bf[5] - bf[2]:.0f}", vertical=True)
-    ax.text(10, bf[5] + 120, "frontale cassetto appeso", fontsize=6.5)
-    ax.set_xlim(-30, 560); ax.set_ylim(bf[2] - 60, 720)
-    ax.set_title("Cassettiera vista di fronte (frontali tratteggiati)", fontsize=8, loc="left")
-    para(fig, 0.48, 0.89, (
-        "Scatola della cassettiera (multistrato 18)\n"
-        "1. Cielo e fondo vanno TRA i due fianchi. Colla + viti 4×45 ogni 150 mm (4 per giunto), preforo Ø3 "
-        "e svasatura. Distanza dal bordo: 9 mm (metà spessore).\n"
-        "2. Schienale HDF 4 inchiodato o avvitato (3×16 ogni 120 mm): mettendolo in squadra, squadra anche la scatola.\n"
-        "3. Guide a sfera: montale sui fianchi PRIMA di inserire la cassettiera, a filo del bordo anteriore "
-        "del fianco arretrato di 18 mm (spessore del frontale). Altezze dal fondo interno: 20, 153, 286 mm "
-        "(asse guida a metà altezza del cassetto).\n"
-        "4. Appoggia la cassettiera sul ripiano dei cassetti (2 mm di gioco per lato) e fissala: 4 viti 4×30 dal "
-        "fondo nel ripiano + 2 viti 4×50 per fianco nelle gambe G1A e G2A (spessori da 2 mm tra fianco e gamba).\n\n"
-        "Cassetti (multistrato 15)\n"
-        "5. Scatola: testate tra i fianchi, colla + 2 viti 3,5×30 per giunto, preforo Ø2,5. Fondo HDF avvitato "
-        "sotto con 3×16.\n"
-        "6. Larghezza della scatola = luce interna − 2 × 12,7 mm (spessore guida). Verifica il valore indicato "
-        "dalle tue guide.\n"
-        "7. Frontali: fissali con biadesivo, regola le fughe di 3 mm, poi 4 viti 3,5×25 dall'interno.\n\n"
-        "Cassetto appeso\n"
-        "8. Guide sulle facce interne di L1s e G1A (lato sinistro) e di L2s e G2A (lato destro), a 20 mm sotto il "
-        "filo superiore delle traverse. Viti 4×16, evitando i 100 mm vicino alle testate delle traverse."),
-        width=72, fs=8.0)
-    rows = []
-    for n in ("Cassettiera fianco sx", "Cassettiera cielo", "Cassettiera fondo", "Frontale cassetto 1", "Frontale cassetto appeso"):
-        b = cp[n]; dims = sorted([round(b[3] - b[0]), round(b[4] - b[1]), round(b[5] - b[2])], reverse=True)
-        q = {"Cassettiera fianco sx": 2, "Frontale cassetto 1": 3}.get(n, 1)
-        rows.append([n.replace(" sx", "").replace(" 1", ""), f"{dims[0]}×{dims[1]}", f"{dims[2]}", str(q)])
-    rows += [["Schienale (HDF)", "496×400", "4", "1"], ["Ripiano posteriore seduta", "700×300", "18", "1"]]
-    at = fig.add_axes([0.04, 0.07, 0.40, 0.25])
-    table(at, rows, ["multistrato 18 / HDF", "misure", "sp.", "n°"], [0.5, 0.25, 0.1, 0.1], fs=7, sc=1.3)
+        "3. 4 angolari a L: 2 sulla faccia esterna di G1P e 2 su quella di G4P, a 300 e 450 da terra. Viti 5×40 "
+        "nella gamba, tasselli Ø8 nel muro (nylon per mattone pieno, specifici per forato; su cartongesso "
+        "cerca il montante metallico). Se c'è il battiscopa, metti uno spessore dietro le gambe.\n\n"
+        "Predisposizioni per i moduli\n"
+        "• Alzatina (modulo 3): in ogni gamba posteriore il foro Ø12 in testa e il dado a tamburo D inserito "
+        "dal retro (fase 4), con il foro filettato in verticale: PROVA avvitando di qualche giro una barra M10 "
+        "dal foro in testa, poi sfilala. Fallo ADESSO, prima del piano: dopo non si raggiungono più. I fori nel piano si "
+        "fanno solo quando monti l'alzatina. Conserva i 4 montanti M1–M4.\n"
+        "• Cassettiera (modulo 2): nessuna lavorazione. La campata sinistra con il suo ripiano è già pronta; "
+        "le guide del cassetto appeso si avvitano direttamente su L1s e L2s."), width=62, fs=8.2)
     pdf.savefig(fig); plt.close(fig)
 
     # ================= fase 11
-    fig = page("Canaline, elettrico e controlli finali", "Fase 11")
-    img(fig, "man_f10_cassetti.png", [0.50, 0.40, 0.49, 0.52], crop=(150, 880, 40, 1480))
+    fig = page("Canaline, elettrico e controlli finali", "Fase 10")
+    img(fig, "man_f7_piano.png", [0.50, 0.40, 0.49, 0.52], crop=(110, 950, 40, 1480))
     para(fig, 0.04, 0.89, (
         "Canaline e ciabatta\n"
         "1. Una canalina per campata, sotto il piano, tra la traversa posteriore e i passacavi: "
@@ -860,14 +696,14 @@ with PdfPages("tavolo_manuale_lavorazione.pdf") as pdf:
         "2. La ciabatta va dentro la canalina della campata seduta, con l'interruttore raggiungibile dal fronte.\n"
         "3. I cavi passano da una campata all'altra nei fori Ø35 delle traverse L2s e L3s (560 dal fronte "
         "del tavolo). Salgono sul piano dai passacavi Ø60.\n"
-        "4. Usa fascette e tieni i cavi lontani dalle guide del cassetto appeso.\n"
+        "4. Usa fascette e tieni i cavi alti, lontani dalla zona del futuro cassetto appeso (campata sinistra).\n"
         "5. Un solo cavo di alimentazione scende a muro, fissato alla gamba G2P o G3P."), width=60, fs=8.4)
     checks = ["Il tavolo appoggia su 8 piedini senza dondolare (livella sul piano in due direzioni)",
               "Tutti i 32 nodi stretti; dopo 2–3 settimane ristringi (il legno si assesta)",
               "Diagonali delle campate uguali: nessun gioco spingendo il piano avanti-indietro",
               "Fissaggi a muro serrati: prova con la pressa in calibratura, il tavolo non deve muoversi",
               "Base piastre: le 4 viti stringono, le manopole bloccano la piastra senza gioco",
-              "Cassetti: scorrono, fughe regolari di 3 mm, il cassetto appeso non tocca le canaline",
+              "Campata cassetti libera e ripiano fissato: pronta per la cassettiera (modulo 2)",
               "Nessun cavo schiacciato tra cassetti, guide o traverse",
               "Finitura del piano: 2–3 mani di olio, leggera carteggiatura 240 tra una mano e l'altra"]
     para(fig, 0.04, 0.46, "Controlli finali", fs=10.5, weight="bold")

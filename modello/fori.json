@@ -4632,13 +4632,13 @@
   "note": "passante"
  },
  {
-  "part": "Mensola rialzata",
+  "part": "Mensola \u2013 tavola 1",
   "code": "M",
   "kind": "barra mensola \u00d812",
   "p0": [
    40.0,
    740,
-   1030
+   1004
   ],
   "dir": [
    0,
@@ -4646,12 +4646,9 @@
    -1
   ],
   "d": 12,
-  "depth": 40,
-  "cb": [
-   25,
-   8
-  ],
-  "note": "passante, lamatura per rondella e dado cieco"
+  "depth": 14,
+  "cb": null,
+  "note": "passante"
  },
  {
   "part": "Montante mensola 2",
@@ -4692,13 +4689,13 @@
   "note": "passante"
  },
  {
-  "part": "Mensola rialzata",
+  "part": "Mensola \u2013 tavola 1",
   "code": "M",
   "kind": "barra mensola \u00d812",
   "p0": [
    620.0,
    740,
-   1030
+   1004
   ],
   "dir": [
    0,
@@ -4706,12 +4703,9 @@
    -1
   ],
   "d": 12,
-  "depth": 40,
-  "cb": [
-   25,
-   8
-  ],
-  "note": "passante, lamatura per rondella e dado cieco"
+  "depth": 14,
+  "cb": null,
+  "note": "passante, a cavallo del giunto 1\u20132: fora a tavole accostate"
  },
  {
   "part": "Montante mensola 3",
@@ -4752,13 +4746,13 @@
   "note": "passante"
  },
  {
-  "part": "Mensola rialzata",
+  "part": "Mensola \u2013 tavola 2",
   "code": "M",
   "kind": "barra mensola \u00d812",
   "p0": [
    1400.0,
    740,
-   1030
+   1004
   ],
   "dir": [
    0,
@@ -4766,12 +4760,9 @@
    -1
   ],
   "d": 12,
-  "depth": 40,
-  "cb": [
-   25,
-   8
-  ],
-  "note": "passante, lamatura per rondella e dado cieco"
+  "depth": 14,
+  "cb": null,
+  "note": "passante, a cavallo del giunto 2\u20133: fora a tavole accostate"
  },
  {
   "part": "Montante mensola 4",
@@ -4812,13 +4803,13 @@
   "note": "passante"
  },
  {
-  "part": "Mensola rialzata",
+  "part": "Mensola \u2013 tavola 3",
   "code": "M",
   "kind": "barra mensola \u00d812",
   "p0": [
    1960.0,
    740,
-   1030
+   1004
   ],
   "dir": [
    0,
@@ -4826,12 +4817,9 @@
    -1
   ],
   "d": 12,
-  "depth": 40,
-  "cb": [
-   25,
-   8
-  ],
-  "note": "passante, lamatura per rondella e dado cieco"
+  "depth": 14,
+  "cb": null,
+  "note": "passante"
  },
  {
   "part": "Piano di lavoro",
@@ -4943,7 +4931,7 @@
    -1
   ],
   "d": 11,
-  "depth": 40,
+  "depth": 36,
   "cb": null,
   "note": "passante, poi contropiastra"
  },
@@ -5019,7 +5007,7 @@
    -1
   ],
   "d": 11,
-  "depth": 40,
+  "depth": 36,
   "cb": null,
   "note": "passante, poi contropiastra"
  }

@@ -1,4 +1,4 @@
-"""Tavole quotate versione travi KVH 80x120 -> tavolo_kvh_tavole.pdf"""
+"""Tavole quotate del tavolo base (modulo 1) -> tavolo_base_tavole.pdf"""
 import json
 from collections import Counter
 import matplotlib
@@ -8,10 +8,11 @@ from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.patches import Rectangle, Circle
 
 d = json.load(open("parts_kvh.json")); cf = json.load(open("confronto.json"))
-P, parts, legs, bays = d["params"], d["parts"], d["legs"], d["bays"]
+P, legs, bays = d["params"], d["legs"], d["bays"]
+parts = [p for p in d["parts"] if p.get("module", "base") == "base"]
 W, D, H, Lx, Ly, Rt, Rh = P["W"], P["D"], P["H"], P["Lx"], P["Ly"], P["Rt"], P["Rh"]
 A4 = (11.69, 8.27); RED = "#c0392b"
-top_z = H + P["riser_h"] + P["T_riser"]
+top_z = H
 
 def dims(p):
     x0, y0, z0, x1, y1, z1 = p["box"]
@@ -43,7 +44,7 @@ def elevation(ax, u, v, depth, sel=None, far_first_high=False):
 def header(fig, title, n):
     fig.text(0.04, 0.955, title, fontsize=15, weight="bold")
     fig.text(0.96, 0.955, f"Tavolo da lavoro 2000×800 – travi KVH 80×120 – tav. {n}", fontsize=9, ha="right", color="#555")
-    fig.text(0.04, 0.025, "Quote in mm. KVH 80×120 abete C24 giuntato, piallato. Costi nel file tavolo_costi.xlsx.",
+    fig.text(0.04, 0.025, "Quote in mm. KVH 80×120 abete C24 giuntato, piallato. Costi nel file tavolo_base_costi.xlsx.",
              fontsize=7.5, color="#555")
 
 def table(ax, cells, cols, widths, fs=8.5, sc=1.3):
@@ -53,17 +54,17 @@ def table(ax, cells, cols, widths, fs=8.5, sc=1.3):
         cell.set_edgecolor("#bbb")
         if r == 0: cell.set_facecolor("#efe6d6"); cell.set_text_props(weight="bold")
 
-with PdfPages("tavolo_kvh_tavole.pdf") as pdf:
+with PdfPages("tavolo_base_tavole.pdf") as pdf:
     # 1
     fig = plt.figure(figsize=A4); header(fig, "Vista d'insieme", 1)
-    for i, f in enumerate(["kvh_vista_frontale_sx.png", "kvh_vista_frontale_dx.png"]):
+    for i, f in enumerate(["base_vista_sx.png", "base_vista_dx.png"]):
         a = fig.add_axes([0.02 + i * 0.49, 0.33, 0.47, 0.57]); a.imshow(plt.imread(f)); a.axis("off")
     txt = (f"Telaio in travi KVH 80×120: gambe con il lato da 120 in profondità (verso la leva delle presse), traverse di coltello (120 in altezza)\n"
            f"Piano a {H} mm (seduto) – tavola lamellare abete 2000×800×40 intera · campate nette: cassetti 500 · seduta 700 · ricarica 480\n"
-           "Secondo pannello lamellare 2000×800×40: mensola rialzata, rinforzo zona ricarica, ripiani bassi di cassetti e ricarica\n"
+           "Ripiani bassi e rinforzo della ricarica (2 strati) da un pannello OSB/3 2500×1250×18\n"
            "Nodi: bullone M10 passante + dado a tamburo + 2 spine Ø12; bulloni sfalsati in altezza dove due traverse entrano nella stessa gamba\n"
            "Telaio da 4 barre KVH da 4 m (28 pezzi). Fissaggio a muro obbligatorio per l'uso delle presse\n"
-           "Rispetto alle versioni precedenti: niente pannelli di irrigidimento e niente laminazione, la sezione 80×120 basta da sola")
+           "Moduli separati: cassettiera (modulo 2) e alzatina con mensola (modulo 3), con i propri manuali e costi")
     fig.text(0.05, 0.075, txt, fontsize=8.8, va="bottom", linespacing=1.65)
     pdf.savefig(fig); plt.close(fig)
 
@@ -92,8 +93,7 @@ with PdfPages("tavolo_kvh_tavole.pdf") as pdf:
     elevation(ax, 1, 2, 0, sel=lambda p: p["box"][0] >= bays[1][1] - 1)
     dim(ax, 0, top_z, D, top_z, 80, f"{D}")
     dim(ax, 0, 0, Ly, 0, -60, f"{Ly}", fs=7); dim(ax, Ly, 0, D - Ly, 0, -60); dim(ax, D - Ly, 0, D, 0, -60, f"{Ly}", fs=7)
-    dim(ax, D, 0, D, H, 100, vertical=True); dim(ax, D, H, D, H + P["riser_h"], 100, vertical=True)
-    dim(ax, D - P["riser_d"], H + P["riser_h"], D, H + P["riser_h"], -50, f"{P['riser_d']}", fs=7)
+    dim(ax, D, 0, D, H, 100, vertical=True)
     dim(ax, 0, H - P["T_top"] - P["T_dbl"], 0, H, -90, f"{P['T_top']}+{P['T_dbl']}", vertical=True, fs=7)
     ax.set_xlim(-250, D + 330); ax.set_ylim(-200, top_z + 200)
     ax.text(D / 2, -175, "fronte ←            → muro", ha="center", fontsize=8, color="#555")
@@ -105,7 +105,7 @@ with PdfPages("tavolo_kvh_tavole.pdf") as pdf:
     # 4 travi + schema di taglio
     fig = plt.figure(figsize=A4); header(fig, "Travi KVH 80×120 – distinta e schema di taglio", 4)
     ax = fig.add_axes([0.04, 0.50, 0.50, 0.40]); ax.axis("off")
-    rows = sorted(cf["kvh_rows"], key=lambda r: -r[1])
+    rows = sorted([[k.replace("Montante mensola", "Montante alzatina (conservare)"), L, q] for k, L, q in cf["kvh_rows"]], key=lambda r: -r[1])
     tot = sum(L * q for _, L, q in rows)
     table(ax, [[k, f"{L}", f"{q}", f"{L*q}"] for k, L, q in rows] + [["TOTALE", "", f"{sum(q for *_, q in rows)}", f"{tot}"]],
           ["Pezzo", "Lungh.", "Q.tà", "Tot. mm"], [0.58, 0.14, 0.10, 0.18])
@@ -130,7 +130,7 @@ with PdfPages("tavolo_kvh_tavole.pdf") as pdf:
     pdf.savefig(fig); plt.close(fig)
 
     # 5 pannelli
-    fig = plt.figure(figsize=A4); header(fig, "Pannelli, listelli e taglio del secondo pannello lamellare", 5)
+    fig = plt.figure(figsize=A4); header(fig, "Pannelli, listelli e taglio del pannello OSB", 5)
     prow = Counter()
     for p in parts:
         if p["group"] in ("Pannelli", "Listelli reggiripiano") or (p["group"] == "Cassettiera" and "scatola" not in p["name"]):
@@ -150,13 +150,15 @@ with PdfPages("tavolo_kvh_tavole.pdf") as pdf:
           ["Pezzo", "Materiale", "Dimensioni", "Sp.", "Q.tà"], [0.34, 0.30, 0.16, 0.08, 0.08], fs=7.6, sc=1.18)
     ax = fig.add_axes([0.10, 0.07, 0.80, 0.22]); ax.set_aspect("equal"); ax.axis("off")
     ax.add_patch(Rectangle((0, 0), 2000, 800, fc="#f4ead8", ec="#333"))
-    cuts = [((0, 540), 2000, 260, "Mensola 2000×260"), ((0, 0), 480, 520, "Rinforzo\n480×520"),
-            ((484, 0), 560, 500, "Ripiano cassetti\n560×500"), ((1048, 0), 560, 480, "Ripiano ricarica\n560×480")]
+    ax.add_patch(Rectangle((0, 0), 2500, 1250, fc="#f4ead8", ec="#333"))
+    cuts = [((0, 0), 500, 560, "Ripiano cassetti\n500×560"), ((504, 0), 480, 560, "Ripiano ricarica\n480×560"),
+            ((988, 0), 480, 520, "Rinforzo A\n480×520"), ((1472, 0), 480, 520, "Rinforzo B\n480×520"),
+            ((0, 564), 700, 260, "Ripiano seduta 700×260")]
     for (x, y), w_, h_, t in cuts:
-        ax.add_patch(Rectangle((x, y), w_, h_, fc="#e2c08f", ec="#3b2f22")); ax.text(x + w_ / 2, y + h_ / 2, t, ha="center", va="center", fontsize=7)
-    ax.text(1800, 260, "avanzo", ha="center", va="center", fontsize=7, color="#777")
-    ax.set_xlim(-20, 2020); ax.set_ylim(-20, 820)
-    ax.set_title("Pannello lamellare 2 – 2000×800×40", fontsize=8.5)
+        ax.add_patch(Rectangle((x, y), w_, h_, fc="#d9c08a", ec="#3b2f22")); ax.text(x + w_ / 2, y + h_ / 2, t, ha="center", va="center", fontsize=7)
+    ax.text(1700, 900, "avanzo", ha="center", va="center", fontsize=7, color="#777")
+    ax.set_xlim(-20, 2520); ax.set_ylim(-20, 1270)
+    ax.set_title("Pannello OSB/3 2500×1250×18", fontsize=8.5)
     pdf.savefig(fig); plt.close(fig)
 
     # 6 ferramenta e montaggio
@@ -164,16 +166,14 @@ with PdfPages("tavolo_kvh_tavole.pdf") as pdf:
     hw = [("Bullone TCEI M10×180 + rondella (B1)", "16", "traverse laterali"),
           ("Bullone TCEI M10×140 + rondella (B2)", "8", "traverse longitudinali su gambe con una sola traversa"),
           ("Barra filettata M10 L 220 (R)", "4", "gambe posteriori centrali: unisce le due traverse"),
-          ("Dado a tamburo M10 (D)", "36", "32 testate di traversa + 4 mensola"),
+          ("Dado a tamburo M10 (D)", "36", "32 testate di traversa + 4 predisposizione alzatina"),
           ("Spine in faggio Ø12×50", "64", "2 per nodo, incollate"),
-          ("Barra filettata M10 L 400 + rondella + dado cieco (M)", "4", "mensola → montante → piano → gamba"),
           ("Inserti filettati M10 + piedini livellatori", "8", "base gambe"),
           ("Squadrette fissaggio piano + viti 4,5×30", "16", "piano sulle traverse superiori"),
           ("Viti 5×60 + colla", "12", "rinforzo zona ricarica sotto il piano"),
           ("Listello 30×40 + viti 5×70", "6 pz", "reggiripiano su traverse laterali inferiori"),
           ("Kit attacco piastre (acciaio, viti M10 svasate, manopole M12)", "1", "vedi dettaglio piastre"),
-          ("Angolari a L 100×100 + tasselli Ø10", "4", "fissaggio a muro (montanti mensola e gambe post.)"),
-          ("Guide a sfera 500 mm", "4 cp", "3 cassettiera + 1 appeso"),
+          ("Angolari a L 100×100 + tasselli Ø10", "4", "fissaggio a muro (G1P e G4P, 2 per gamba)"),
           ("Canaline, passacavi Ø60, ciabatta", "3+2+1", "")]
     ax = fig.add_axes([0.04, 0.45, 0.92, 0.47]); ax.axis("off")
     table(ax, [list(h) for h in hw], ["Articolo", "Q.tà", "Uso"], [0.47, 0.08, 0.45], fs=8.2, sc=1.35)
@@ -183,7 +183,7 @@ with PdfPages("tavolo_kvh_tavole.pdf") as pdf:
              "3. Collega i telai con le traverse longitudinali posteriori e con quelle anteriori della campata ricarica; controlla le diagonali.\n"
              "4. Avvita i listelli, posa i ripiani bassi; fissa il piano con le squadrette (asole per il movimento del legno).\n"
              "5. Rinforzo ricarica incollato e avvitato sotto il piano, poi base piastre e contropiastra con le viti M10 passanti.\n"
-             "6. Montanti e mensola con le barre M10, fissaggio a muro, cassettiera, canaline e ciabatta.",
+             "6. Piedini, fissaggio a muro, canaline e ciabatta. Moduli 2 e 3: vedi i loro manuali.",
              fontsize=8.3, va="bottom", linespacing=1.6)
     pdf.savefig(fig); plt.close(fig)
 print("ok")

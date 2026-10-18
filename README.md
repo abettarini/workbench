@@ -1,50 +1,61 @@
-# Workbench – tavolo da lavoro
+# Workbench – tavolo da lavoro modulare
 
 Tavolo da lavoro 2000 × 800 mm, piano a 740 mm, per elettronica, computer e ricarica cartucce.
-Telaio in travi di abete **KVH 80×120** (C24, essiccato, piallato), piano in tavola lamellare 2000×800×40.
+Il progetto è diviso in **tre moduli indipendenti**, ognuno con il proprio manuale, modello 3D e foglio costi:
+si costruisce prima il tavolo base, gli altri si aggiungono quando vuoi.
 
-![Vista d'insieme](immagini/kvh_vista_frontale_sx.png)
+![Tavolo completo](immagini/tavolo_completo.png)
 
-## Struttura
+| Modulo | Cosa comprende | Costo stimato | Cartella |
+|---|---|---|---|
+| **1 · Tavolo base** | Telaio in travi KVH 80×120, piano lamellare 40, ripiani e rinforzo in OSB/3 18, zona ricarica con piastre intercambiabili, canaline | ~589 € | [moduli/1-tavolo-base](moduli/1-tavolo-base) |
+| **2 · Cassettiera** | Cassettiera fissa a 3 cassetti per la campata sinistra + cassetto appeso sotto il piano | ~172 € | [moduli/2-cassettiera](moduli/2-cassettiera) |
+| **3 · Alzatina** | 4 montanti + mensola 2000×200 in tavole OBI 800×200×14 con listello di rinforzo | ~62 € | [moduli/3-alzatina](moduli/3-alzatina) |
 
-- 8 gambe, 3 campate nette: **cassetti** 500 (sinistra) · **seduta** 700 · **ricarica** 480 (destra)
-- Ripiani bassi, mensola rialzata su 4 montanti, canaline passacavi sotto il bordo posteriore
-- Cassettiera a 3 cassetti + cassetto appeso sotto il piano
-- Zona ricarica con base per piastre intercambiabili (Rock Chucker, Dillon 550, morsa), piano raddoppiato e contropiastra in acciaio
-- Nodi smontabili: bullone o barra M10 + dado a tamburo + 2 spine Ø12
-- Tavolo da fissare a muro
+I costi comprendono prezzi verificati (travi, lamellare, OSB, tavole OBI) e stime da sostituire, evidenziate in giallo nei fogli.
 
-## Documenti
+## Come si collegano i moduli
 
-| File | Contenuto |
-|---|---|
-| [docs/tavolo_manuale_lavorazione.pdf](docs/tavolo_manuale_lavorazione.pdf) | Manuale: ferramenta, codici pezzi, taglio, schemi di foratura di ogni pezzo, montaggio fase per fase, controlli finali |
-| [docs/tavolo_kvh_tavole.pdf](docs/tavolo_kvh_tavole.pdf) | Tavole quotate: prospetti, schema di taglio, distinte |
-| [docs/tavolo_costi.xlsx](docs/tavolo_costi.xlsx) | Confronto travi, distinta costi (celle gialle = stime da verificare), schema di taglio |
-| [modello/tavolo_kvh.step](modello/tavolo_kvh.step) | Modello 3D (FreeCAD, Fusion 360, SolidWorks) |
+- Il **tavolo base** prepara tutto: nelle 4 gambe posteriori c'è un foro Ø12 in testa e un dado a tamburo M10, e i 4 montanti dell'alzatina vengono tagliati dalle stesse travi del telaio (le 4 barre KVH bastano).
+- La **cassettiera** non richiede lavorazioni sul telaio: si appoggia al ripiano OSB della campata sinistra e si avvita alle gambe; le guide del cassetto appeso si avvitano sulle traverse.
+- L'**alzatina** si monta forando il piano in 4 punti e avvitando le barre M10 nei dadi già presenti nelle gambe.
 
-## Materiale principale
+## Contenuto di ogni modulo
 
-- 4 travi KVH 80×120 da 4 m (29,90 € l'una), schema di taglio senza scorta
-- 2 tavole lamellari abete 2000×800×40 (79 € l'una)
-- Costo stimato complessivo: circa 820 € (dettaglio nel foglio costi)
+- `*_manuale.pdf` – manuale passo passo: materiali, taglio, foratura, montaggio, sezioni quotate, controlli
+- `*_costi.xlsx` – distinta e costi con formule
+- `*.step` – modello 3D del modulo (FreeCAD, Fusion 360, SolidWorks)
+- `immagini/` – viste di montaggio
+
+Il tavolo base ha in più le tavole quotate (`tavolo_base_tavole.pdf`).
+Il modello completo con tutti i moduli è in `modello/tavolo_completo.step`.
+
+## Scelte di materiale
+
+- **Travi KVH 80×120**: il prezzo al metro più basso tra quelle trovate, legno essiccato e stabile (confronto nel foglio costi del modulo 1).
+- **OSB/3 18 per ripiani e rinforzo**: circa 10 €/m², un solo pannello basta per tutto. Il lamellare 40 costerebbe 2,5 volte tanto; le tavole OBI 800×200×14 sarebbero ancora più care e più sottili.
+- **Tavole OBI 800×200×14 per la mensola**: tre tavole e un listello costano meno di un pannello intero; il listello sotto il bordo anteriore la rende circa 18 volte più rigida.
 
 ## Rigenerare i file
 
 Gli script in `modello/` sono parametrici (Python + CadQuery). Da quella cartella:
 
 ```bash
-pip install cadquery openpyxl matplotlib
-python tavolo_kvh.py        # modello, STEP, parts_kvh.json
-python render.py kvh        # viste 3D
-python fori.py              # tutti i fori + controllo collisioni
-python costi.py             # foglio costi
-python tavole_kvh.py        # tavole quotate
-python manuale_render.py    # viste di montaggio
-python manuale.py           # manuale di lavorazione
+pip install cadquery openpyxl matplotlib vtk
+python tavolo_kvh.py          # modello completo, parts_kvh.json
+python fori.py                # tutti i fori + controllo collisioni
+python step_moduli.py         # un STEP per modulo
+python costi.py               # confronto travi (confronto.json)
+python costi_moduli.py        # i tre fogli costi
+python manuale_render.py      # viste del tavolo base
+python render_moduli.py       # viste di cassettiera e alzatina
+python tavole_kvh.py          # tavole quotate del tavolo base
+python manuale.py             # manuale del tavolo base
+python manuale_cassettiera.py
+python manuale_alzatina.py
 ```
 
-I parametri (dimensioni, sezione delle travi, campate) sono nel dizionario `P` di `tavolo_kvh.py`.
+I parametri (dimensioni, sezioni, campate, spessori) sono nel dizionario `P` di `tavolo_kvh.py`.
 Gli script si aspettano le immagini nella stessa cartella in cui vengono eseguiti.
 
 ## Archivio
@@ -52,4 +63,4 @@ Gli script si aspettano le immagini nella stessa cartella in cui vengono eseguit
 Versioni precedenti, non più in sviluppo:
 
 - `archivio/quadrotti-8x8/` – prima versione in quadrotti di abete 8×8
-- `archivio/listelli-25x50/` – versione in listelli 25×50 laminati con pannelli di irrigidimento
+- `archivio/listelli-25x50/` – versione in listelli 25×50 laminati

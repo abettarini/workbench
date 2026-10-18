@@ -16,10 +16,10 @@ P = dict(
     Lx=80, Ly=120,          # sezione gambe (X, Y)
     Rt=80, Rh=120,          # traverse: spessore, altezza
     bays=[500, 700, 480],   # luci nette: cassetti (sx), seduta, ricarica (dx)
-    T_top=40, T_dbl=40,
+    T_top=40, T_dbl=36,
     lower_z=70,
-    T_shelf=40, T_ply=18, rear_shelf_d=300,
-    riser_h=250, riser_d=260, T_riser=40,
+    T_shelf=18, T_ply=18, rear_shelf_d=260,
+    riser_h=250, riser_d=200, T_riser=14, mbat=(30, 40),   # mensola: tavole OBI 800×200×14 + listello sotto il bordo anteriore
     cleat=(30, 40),
     tray_w=100, tray_h=60, grommet_d=60, cable_hole=35,
     case_h=400, case_d=600, T_case=18, n_drawers=3, slide_len=500, slide_t=12.7,
@@ -69,7 +69,7 @@ def build():
 
     # zona ricarica
     a, c = bays[2]; mx = (a + c) / 2
-    add("Rinforzo piano ricarica", "Pannelli", "lamellare abete 40 – pannello 2", a, Rt, leg_h - P["T_dbl"], c,
+    add("Rinforzo piano ricarica", "Pannelli", "OSB/3 18 ×2 incollati", a, Rt, leg_h - P["T_dbl"], c,
         tray_y - P["tray_w"] / 2 - 15, leg_h, "#e0c08f")
     bw, bd, bt = P["backer"]
     add("Contropiastra acciaio", "Ricarica", "acciaio S235", mx - bw / 2, Rt, leg_h - P["T_dbl"] - bt,
@@ -85,16 +85,20 @@ def build():
         for s, xa in (("sx", x0), ("dx", x1 - cw)):
             add(f"Listello reggiripiano – {name} {s}", "Listelli reggiripiano", "abete 30x40",
                 xa, y0, zs0 - ch, xa + cw, y1, zs0, "#d4ae7c")
-    shelf("Ripiano basso cassetti", 0, Ly, D - Ly, P["T_shelf"], "lamellare abete 40 – pannello 2", "#e6caa0")
-    shelf("Ripiano basso ricarica", 2, Ly, D - Ly, P["T_shelf"], "lamellare abete 40 – pannello 2", "#e6caa0")
-    shelf("Ripiano basso post. seduta", 1, D - Ly - P["rear_shelf_d"], D - Ly, P["T_ply"], "multistrato 18", "#e8cfa0")
+    shelf("Ripiano basso cassetti", 0, Ly, D - Ly, P["T_shelf"], "OSB/3 18", "#d9c08a")
+    shelf("Ripiano basso ricarica", 2, Ly, D - Ly, P["T_shelf"], "OSB/3 18", "#d9c08a")
+    shelf("Ripiano basso post. seduta", 1, D - Ly - P["rear_shelf_d"], D - Ly, P["T_shelf"], "OSB/3 18", "#d9c08a")
 
     # mensola rialzata
     for i, x in enumerate(xs):
         add(f"Montante mensola {i+1}", BEAM, "KVH 80x120", x, D - Ly, H, x + Lx, D, H + P["riser_h"], LEG, role="montante")
     zr = H + P["riser_h"]
-    add("Mensola rialzata", "Pannelli", "lamellare abete 40 – pannello 2", 0, D - P["riser_d"], zr, W, D,
-        zr + P["T_riser"], "#ecd3a8")
+    joints = [0] + [x + Lx / 2 for x in xs[1:3]] + [W]      # giunti in asse ai montanti 2 e 3
+    for k in range(3):
+        add(f"Mensola – tavola {k+1}", "Alzatina", "tavola OBI abete 800×200×14", joints[k], D - P["riser_d"], zr,
+            joints[k + 1], D, zr + P["T_riser"], "#ecd3a8" if k % 2 == 0 else "#e4c99a")
+    bw_, bh_ = P["mbat"]
+    add("Listello mensola", "Alzatina", "abete 30×40", 0, D - P["riser_d"], zr - bh_, W, D - P["riser_d"] + bw_, zr, "#d4ae7c")
 
     # canaline e ciabatta
     for i, (a, c) in enumerate(bays):
@@ -126,6 +130,10 @@ def build():
     add("Frontale cassetto appeso", "Cassettiera", "multistrato 18", x0, 0, hz1 - P["hang_front_h"], x1, T, hz1, FRONT)
     add("Cassetto appeso (scatola)", "Cassettiera", "multistrato 15", a + P["slide_t"], T, zu[0] + 20,
         c - P["slide_t"], T + P["slide_len"], zu[0] + 20 + P["hang_box_h"], "#e2c79a")
+    for p in parts:
+        n = p["name"]
+        p["module"] = ("cassettiera" if p["group"] == "Cassettiera" else
+                       "alzatina" if (p["group"] == "Alzatina" or n.startswith("Montante")) else "base")
     return xs, legs, bays
 
 def solid(p):
