@@ -101,6 +101,7 @@ U = {  # link prodotti (dalle ricerche del 18/10/2026)
  "pio15": "https://www.tecnomat.it/it/pioppo-spess-15-mm-120x60-cm-25022690/",
  "fibra3": "https://www.tecnomat.it/it/fibra-grezza-spess-3-mm-dim-250x125-cm-10048894/",
  "guide": "https://www.tecnomat.it/it/guide-p-cas-acc-estraz-tot-h45-500mm-bnc-25060371/",
+ "morale": "https://www.tecnomat.it/it/morale-abete-grezzo-80x80x4000-mm-10041080/",
  "tps160": "https://www.tecnomat.it/it/p-viti-legno-tps-snk-8x160-mm-100pz-25026900/",
  "tav18": "https://www.tecnomat.it/it/tavola-abete-lam-100x20-cm-spess-18-10074965/",
 }
@@ -109,8 +110,10 @@ U = {  # link prodotti (dalle ricerche del 18/10/2026)
 wb = Workbook(); ws = wb.active; ws.title = "Distinta costi"
 V, S, B = "ver", "stima", "base"
 base_items = [
-    ("Legno", "Trave legno massiccio strutturale KVH giuntato 80×120×4000", "gambe, traverse laterali, 3 fasce da 1990, traverse basse anteriori e i 4 montanti dell'alzatina",
+    ("Legno", "Trave legno massiccio strutturale KVH giuntato 80×120×4000", "gambe, traverse laterali, 2 fasce posteriori da 1990, traverse basse anteriori e i 4 montanti dell'alzatina",
      "='Confronto travi'!I8", "pz", "='Confronto travi'!D8", V, True, TM, U["kvh"], "Solo Tecnomat; OBI e Leroy Merlin non hanno KVH"),
+    ("Legno", "Morale abete grezzo 80×80×4000", "fascia anteriore FA da 1990 (avanzano ~2 m)", 1, "pz", 13.90, V, False, TM, U["morale"],
+     "Grezzo: scegli un pezzo dritto, secco e senza fessure, poi levigalo. LM: piallato 78×78×2000 a 9,40 € (online)"),
     ("Legno", "Tavola abete lamellare 2000×800×40", "piano di lavoro (intero)", 1, "pz", 79.00, V, False, TM, U["lam40"],
      "Leroy Merlin: 147,45 € (marketplace); OBI: non c'è lo spessore 40"),
     ("Legno", "OSB 3 pioppo 18 mm 2500×1250", "3 ripiani bassi + rinforzo ricarica (2 strati)", 1, "pz", 27.50, V, False, TM, U["osb"],
@@ -123,7 +126,6 @@ base_items = [
      "Non venduto dai tre negozi: ferramenta, Würth o online. Misura il diametro prima di forare"),
     ("Ferramenta telaio", "Viti legno SNK TPS Rothoblaas 8×160, conf. 100 pz (V)", "fasce sulle gambe: 2 per gamba per fascia (24)", 1, "conf", 27.45, V, False, TM, U["tps160"],
      "Ne avanzano molte: utili per altri lavori. OBI vende 8×180 a 3,99 € ogni 2 pz (12 conf. = 47,88 €)"),
-    ("Ferramenta telaio", "Tondo faggio zigrinato Ø20 (tappi)", "chiude le 8 lamature della fascia anteriore (facoltativo)", 1, "pz", 1.50, S, False, TM, "", ""),
     ("Ferramenta telaio", "Spine in faggio zigrinato Ø12, conf. 25 pz", "2 per testata (40)", 2, "conf", 3.69, V, False, OB, U["spine"],
      "Lunghezza non indicata: servono ~50 mm. In alternativa tondo faggio Ø12×1000 Tecnomat 0,80 € da tagliare"),
     ("Ferramenta telaio", "Collante vinilico D3 Tover 500 ml", "spine, rinforzo, listelli", 1, "pz", 4.95, V, False, TM, U["colla"], ""),
@@ -156,7 +158,7 @@ distinta(ws, "Modulo 1 – Tavolo base: distinta e costi",
          ["Tecnomat: taglio legno in negozio, 1° taglio gratis poi 1 € a taglio (solo per pannelli e listelli comprati lì).",
           "I prezzi Tecnomat sono del negozio predefinito del sito (Roma Prenestina): controlla quello dove andrai.",
           "I 4 dadi a tamburo della predisposizione alzatina vanno inseriti durante il montaggio del tavolo.",
-          "Telaio: 4 telai laterali imbullonati + 3 fasce a tutta lunghezza avvitate (2 posteriori, 1 anteriore di piatto)."])
+          "Telaio: 4 telai laterali imbullonati + 3 fasce a tutta lunghezza avvitate (2 posteriori KVH, 1 anteriore in morale 80×80)."])
 
 wt = wb.create_sheet("Confronto travi")
 wt["A1"] = "Confronto travi per il telaio"; wt["A1"].font = H1
@@ -197,7 +199,7 @@ for i, bar in enumerate(cf["kvh_bars"], 1):
     row = 3 + i
     setc(wc, f"A{row}", f"Barra {i}"); setc(wc, f"B{row}", " + ".join(map(str, bar)))
     setc(wc, f"C{row}", sum(bar) + 4 * len(bar) + 10, BLUE, "#,##0"); setc(wc, f"D{row}", f"=4000-C{row}", NORM, "#,##0")
-wc[f"A{5 + len(cf['kvh_bars'])}"] = "1990 = fasce (2 posteriori + 1 anteriore). I 4 pezzi da 250 sono i montanti dell'alzatina: tagliali e conservali. Tecnomat taglia in negozio (1 € a taglio dopo il primo)."
+wc[f"A{5 + len(cf['kvh_bars'])}"] = "1990 = fasce posteriori FPa e FPb (la fascia anteriore è un morale 80×80 a parte). I 4 pezzi da 250 sono i montanti dell'alzatina: tagliali e conservali. Tecnomat taglia in negozio (1 € a taglio dopo il primo)."
 wc[f"A{5 + len(cf['kvh_bars'])}"].font = NOTE
 wb.save("tavolo_base_costi.xlsx")
 
@@ -305,6 +307,8 @@ R = [
  ("Vite strutturale Ø8", TM, "Viti legno SNK TPS Rothoblaas 8×160", "8×160", 27.45, "100", U["tps160"], "scelta (fasce)"),
  ("Vite strutturale Ø8", TM, "Viti legno SNK TPS Rothoblaas 8×200", "8×200", 41.90, "100", "https://www.tecnomat.it/it/p-viti-legno-tps-snk-8x200-mm-100pz-25026876/", ""),
  ("Vite strutturale Ø8", OB, "Vite legno testa svasata T40 8×180", "8×180", 3.99, "2", "https://www.obi-italia.it/p/5045984", "24 viti = 47,88 €"),
+ ("Fascia anteriore 80×80", TM, "Morale abete grezzo 80×80×4000", "80×80×4000", 13.90, "1", "https://www.tecnomat.it/it/morale-abete-grezzo-80x80x4000-mm-10041080/", "scelta"),
+ ("Fascia anteriore 80×80", LM, "Morale listello travetto piallato 78×78 (MP)", "78×78×2000", 9.40, "1", "", "2 mm più piccolo, solo online"),
  ("Fascia 2000 (alternativa)", TM, "Tavola abete lamellare 200×60 sp. 28 (da refilare)", "2000×600×28", 42.00, "1", "https://www.tecnomat.it/it/tavola-abete-lam-200x60-cm-spess-28-10074970/", "scartata: KVH dalle stesse barre a costo zero"),
  ("Fascia 2000 (alternativa)", TM, "Tavola abete lamellare 200×40 sp. 18 (da refilare)", "2000×400×18", 18.00, "1", "https://www.tecnomat.it/it/tavola-abete-lam-200x40-cm-spess-18-10074956/", "troppo sottile su 2 m"),
  ("Fascia 2000 (alternativa)", LM, "Tavola abete grezzo 2000×380×50", "2000×380×50", 48.99, "1", "https://www.leroymerlin.it/prodotti/tavola-rettangolare-in-abete-grezzo-2000-x-380-x-50-mm-36596630.html", "massello grezzo, da piallare"),

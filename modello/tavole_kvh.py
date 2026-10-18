@@ -64,7 +64,7 @@ with PdfPages("tavolo_base_tavole.pdf") as pdf:
         a = fig.add_axes([0.02 + i * 0.49, 0.33, 0.47, 0.57]); a.imshow(plt.imread(f)); a.axis("off")
     nb = len(cf["kvh_bars"]); npz = sum(len(b) for b in cf["kvh_bars"])
     txt = (f"Telaio in travi KVH 80×120: 4 telai laterali (gamba ant. + gamba post. + traverse laterali alta e bassa) uniti da 3 fasce da 1990\n"
-           f"Fasce: 2 posteriori di coltello (alta e bassa, contro il muro) e 1 anteriore alta posata di piatto (80 di altezza, 620 mm liberi sotto)\n"
+           f"Fasce: 2 posteriori di coltello (alta e bassa, contro il muro) e 1 anteriore alta in morale di abete 80×80 (620 mm liberi sotto)\n"
            f"Piano a {H} mm (seduto) – tavola lamellare abete 2000×800×40 intera · campate nette: cassetti 500 · seduta 700 · ricarica 480\n"
            "Telai: bullone M10 + dado a tamburo + 2 spine Ø12 · fasce: 2 viti strutturali 8×160 per gamba, perpendicolari · ripiani e rinforzo in OSB/3 18\n"
            f"Telaio da {nb} barre KVH da 4 m ({npz} pezzi, montanti dell'alzatina compresi). Fissaggio a muro obbligatorio per l'uso delle presse\n"
@@ -117,7 +117,7 @@ with PdfPages("tavolo_base_tavole.pdf") as pdf:
             x += L + 4
         ax.text(4020, y + 0.45, f"avanzo {4000 - x:.0f}", va="center", fontsize=7.5, color="#555")
     ax.text(0, -0.35, "Schema di taglio (barre da 4000 mm, taglio 4 mm, 10 mm di rifilatura in testa)", fontsize=9)
-    fig.text(0.58, 0.62, "Note\n• Le 3 fasce da 1990 vanno tagliate per prime, una o due per barra.\n"
+    fig.text(0.58, 0.62, "Note\n• Le 2 fasce posteriori da 1990 occupano la barra 1.\n• La fascia anteriore si taglia dal morale 80×80×4000.\n"
              "• Se il rivenditore taglia a misura, porta questa pagina.\n"
              "• Poi i pezzi da 700 e controlla la squadra.\n"
              "• Gambe e traverse laterali sono tutte uguali: tagliale con una battuta.\n"

@@ -26,10 +26,10 @@ def pieces_for(b, h):
     seat, cass = 700, 500
     rel = max(free - seat - cass, 0)       # la campata ricarica prende il resto
     bays = [cass, seat, rel]
-    # 4 telai laterali + 3 fasce a tutta lunghezza (2 posteriori di coltello, 1 anteriore di piatto)
+    # 4 telai laterali + 2 fasce posteriori a tutta lunghezza (la fascia anteriore è un morale 80×80 a parte)
     fascia = W - 2 * 5
-    pcs = [("Gamba", LEG_H, 8), ("Traversa laterale (profondità)", D - b - h - 2 * h, 8),
-           ("Fascia (tutta lunghezza)", fascia, 3), ("Montante mensola", RISER, 4)]
+    pcs = [("Gamba", LEG_H, 8), ("Traversa laterale (profondità)", D - b - 80 - 2 * h, 8),
+           ("Fascia (tutta lunghezza)", fascia, 2), ("Montante mensola", RISER, 4)]
     long_ = Counter()
     for i, L in enumerate(bays):
         if i in (0, 2): long_[L] += 1      # traverse basse anteriori: cassetti e ricarica

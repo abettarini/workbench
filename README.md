@@ -8,7 +8,7 @@ si costruisce prima il tavolo base, gli altri si aggiungono quando vuoi.
 
 | Modulo | Cosa comprende | Costo stimato | Cartella |
 |---|---|---|---|
-| **1 · Tavolo base** | Telaio in travi KVH 80×120 (5 barre da 4 m): 4 telai laterali uniti da 3 fasce a tutta lunghezza; piano lamellare 40, ripiani e rinforzo in OSB/3 18, zona ricarica con piastre intercambiabili, canaline | ~608 € | [moduli/1-tavolo-base](moduli/1-tavolo-base) |
+| **1 · Tavolo base** | Telaio in travi KVH 80×120 (4 barre da 4 m) + un morale 80×80: 4 telai laterali uniti da 3 fasce a tutta lunghezza; piano lamellare 40, ripiani e rinforzo in OSB/3 18, zona ricarica con piastre intercambiabili, canaline | ~591 € | [moduli/1-tavolo-base](moduli/1-tavolo-base) |
 | **2 · Cassettiera** | Cassettiera fissa a 3 cassetti per la campata sinistra | ~134 € | [moduli/2-cassettiera](moduli/2-cassettiera) |
 | **3 · Alzatina** | 4 montanti + mensola 2000×200 in tavole lamellari 1000×200×18 con listello di rinforzo | ~42 € | [moduli/3-alzatina](moduli/3-alzatina) |
 
@@ -19,13 +19,13 @@ I prezzi sono stati verificati il 18/10/2026 sui siti di **Tecnomat, OBI e Leroy
 ## Struttura del telaio
 
 - **4 telai laterali**: gamba anteriore + gamba posteriore + traversa laterale alta e bassa, imbullonate (M10 + dado a tamburo + 2 spine Ø12).
-- **3 fasce a tutta lunghezza (1990)** avvitate sulle facce delle gambe con 2 viti strutturali 8×160 per gamba: due posteriori di coltello (alta e bassa, contro il muro) e una anteriore alta posata di piatto, che lascia 620 mm liberi per le ginocchia.
+- **3 fasce a tutta lunghezza (1990)** avvitate sulle facce delle gambe con 2 viti strutturali 8×160 per gamba: due posteriori in KVH 80×120 di coltello (alta e bassa, contro il muro) e una anteriore alta in morale di abete 80×80, che lascia 620 mm liberi per le ginocchia.
 - **Traverse basse anteriori** ACi e ARi nelle campate dei ripiani.
 - Nessun giunto di testa tra due traverse sulla stessa gamba: ogni nodo si stringe da una testa accessibile.
 
 ## Come si collegano i moduli
 
-- Il **tavolo base** prepara tutto: nelle 4 gambe posteriori c'è un foro Ø12 in testa e un dado a tamburo M10 (inserito dalla faccia laterale), e i 4 montanti dell'alzatina vengono tagliati dalle stesse 5 travi del telaio.
+- Il **tavolo base** prepara tutto: nelle 4 gambe posteriori c'è un foro Ø12 in testa e un dado a tamburo M10 (inserito dalla faccia laterale), e i 4 montanti dell'alzatina vengono tagliati dalle stesse 4 travi del telaio.
 - La **cassettiera** non richiede lavorazioni sul telaio: si appoggia al ripiano OSB della campata sinistra, sotto la fascia anteriore, e si avvita alle gambe.
 - L'**alzatina** si monta forando il piano in 4 punti e avvitando le barre M10 nei dadi già presenti nelle gambe.
 

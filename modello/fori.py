@@ -98,7 +98,7 @@ for fas, fside, pts, vite in FASCIA_SCREWS:
     for i, x0 in enumerate(legs_x):
         xc = x0 + Lx / 2
         for dx, z in pts:
-            cb, nt = ((20, 40), "passante Ø9 + lamatura Ø20 prof. 40 (tappo Ø20)") if fside == "ant" else ((16, 5), "passante Ø9 + svasatura")
+            cb, nt = (16, 5), "passante Ø9 + svasatura"
             H_(fas, "V", vite, (xc + dx, yent, z), (0, dy_, 0), SCREW_D + 1, b[4] - b[1], cb=cb,
                note=f"gamba {i+1}: {nt}")
 

@@ -71,7 +71,7 @@ if __name__ == "__main__":
         if is_long(p): return (0, 0, 220)
         return (0, 0, 0)
     stage("man_f5_collegamento.png", frame, off2, labels=[
-        ("Fascia ant. alta", "front", "FA – fascia anteriore 1990, di piatto\n2 viti 8×160 in ogni gamba anteriore", "L", 150),
+        ("Fascia ant. alta", "front", "FA – fascia anteriore 1990, morale 80×80\n2 viti 8×160 in ogni gamba anteriore", "L", 150),
         ("Fascia post. alta", "top", "FPa – fascia posteriore alta 1990", "R", 120),
         ("Fascia post. bassa", "c", "FPb – fascia posteriore bassa 1990", "R", 860),
         ("Trav. inf. ant. cassetti", "top", "ACi – bassa anteriore cassetti\n(bulloni B2)", "L", 760),

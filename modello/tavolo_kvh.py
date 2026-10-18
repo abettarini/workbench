@@ -4,7 +4,7 @@ Unità mm. Origine: spigolo anteriore-sinistro a terra. X larghezza, Y profondit
 
 - 4 telai laterali (gamba ant. + gamba post. + traversa laterale alta e bassa, bulloni M10 + dadi a tamburo).
 - Telai uniti da fasce a tutta lunghezza avvitate sulle facce delle gambe (viti strutturali Ø8):
-  2 fasce posteriori 80x120 di coltello (alta e bassa) e 1 fascia anteriore alta 120x80 posata di piatto.
+  2 fasce posteriori KVH 80x120 di coltello (alta e bassa) e 1 fascia anteriore alta in morale di abete 80x80.
 - Gambe 80 (X) x 120 (Y), arretrate dello spessore delle fasce: il piano 2000x800 copre tutto.
 - Piano lamellare abete 2000x800x40 (pannello commerciale intero, nessun taglio).
 Rilancia con: python tavolo_kvh.py
@@ -25,7 +25,7 @@ P = dict(
     tray_w=100, tray_h=60, grommet_d=60, cable_hole=35,
     case_h=400, case_d=596, T_case=18, n_drawers=3, slide_len=500, slide_t=12.7,
     mount=(180, 180, 12), backer=(220, 220, 6),
-    Fb=80, Ff_d=120, Ff_h=80, fascia_gap=5,   # fasce: post. 80 (Y) x 120 (Z); ant. 120 (Y) x 80 (Z); lunghe 1990 (2 per barra da 4 m), 5 mm per lato dai fianchi
+    Fb=80, Ff_d=80, Ff_h=80, fascia_gap=5,   # fasce: post. 80 (Y) x 120 (Z); ant. morale 80 x 80; lunghe 1990 (2 per barra da 4 m), 5 mm per lato dai fianchi
 )
 BEAM = "Travi KVH 80x120"
 parts = []
@@ -64,7 +64,7 @@ def build():
     g = P["fascia_gap"]
     add("Fascia post. alta", BEAM, "KVH 80x120", g, yB1, zu[0], W - g, D, zu[1], RAIL2, role="fascia")
     add("Fascia post. bassa", BEAM, "KVH 80x120", g, yB1, zl[0], W - g, D, zl[1], RAIL2, role="fascia")
-    add("Fascia ant. alta", BEAM, "KVH 80x120 (di piatto)", g, 0, leg_h - P["Ff_h"], W - g, yF0, leg_h, RAIL2, role="fascia")
+    add("Fascia ant. alta", "Morale abete 80x80", "morale abete 80x80", g, 0, leg_h - P["Ff_h"], W - g, yF0, leg_h, RAIL2, role="fascia")
     for i, (a, c) in enumerate(bays):  # traverse basse anteriori, filo faccia anteriore gambe
         if names[i] in ("cassetti", "ricarica"):
             add(f"Trav. inf. ant. {names[i]}", BEAM, "KVH 80x120", a, yF0, zl[0], c, yF0 + Rt, zl[1], RAIL2, role="trav-long")

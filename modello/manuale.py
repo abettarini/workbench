@@ -205,8 +205,7 @@ def sec_laterale(ax):
     ax.plot([yB0 - 5, yB1 + 5], [zc, zc], color=INK, lw=0.6, ls=(0, (4, 3)))
     # viti fascia anteriore (lamatura Ø20 prof. 40)
     for (u, z) in screws_of("Fascia ant. alta")[:2]:
-        R(ax, 0, z - 10, 40, 20, "white", ec=HCOL["V"], ls="--", lw=0.6)
-        R(ax, 40, z - 3.5, 160, 7, "#d8b84a", lw=0.5); R(ax, 37, z - 7.5, 3, 15, "#a8861c", lw=0.4)
+        R(ax, 3, z - 3.5, 160, 7, "#d8b84a", lw=0.5); R(ax, 0, z - 7.5, 3, 15, "#a8861c", lw=0.4)
     for (u, z) in screws_of("Fascia post. alta")[:2]:
         R(ax, D - 160, z - 3.5, 160, 7, "#d8b84a", lw=0.5); R(ax, D - 3, z - 7.5, 3, 15, "#a8861c", lw=0.4)
     # bulloni laterali
@@ -220,11 +219,11 @@ def sec_laterale(ax):
     dim(ax, yB1, H, D, H, 22, f"{Fb}", fs=6.3)
     dim(ax, 0, LEG_H - Ffh, 0, LEG_H, -14, f"{Ffh}", vertical=True, fs=6.3)
     dim(ax, D, LEG_H - Rh, D, LEG_H, 30, f"{Rh}", vertical=True, fs=6.3)
-    ax.text(-30, LEG_H - Ffh - 22, "FA (di piatto)", fontsize=6.2)
+    ax.text(-30, LEG_H - Ffh - 22, "FA 80×80", fontsize=6.2)
     ax.text(yB1 + 4, LEG_H - Rh - 22, "FPa", fontsize=6.2)
     ax.text(yF1 + 120, LEG_H - Rh / 2, "traversa laterale alta", fontsize=6.2, va="center")
     ax.text(yF0 + 4, zc + 40, "gamba\nant.", fontsize=6.2); ax.text(yB0 + 4, zc + 40, "gamba\npost.", fontsize=6.2)
-    ax.text(-30, LEG_H - Ffh - 70, "vite 8×160 in lamatura\nØ20 prof. 40 (tappo)", fontsize=5.6, color=HCOL["V"])
+    ax.text(-30, LEG_H - Ffh - 55, "viti 8×160", fontsize=5.6, color=HCOL["V"])
     ax.text(yB0 - 10, LEG_H - Rh - 40, "viti 8×160", fontsize=5.6, color=HCOL["V"], ha="right")
     ax.text(yF0 + 14, zb - 22, "B1", fontsize=6, color=RED); ax.text(yB1 - 30, zb - 22, "B1", fontsize=6, color=RED)
     ax.set_xlim(-50, D + 60); ax.set_ylim(zc - 30, H + 70)
@@ -302,7 +301,7 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
         "• Troncatrice o sega circolare con guida (tagli a 90° precisi; le fasce sono lunghe 1990)\n"
         "• Trapano a colonna oppure guida per trapano (fori perpendicolari)\n"
         "• Punte legno: Ø3, Ø5, Ø9, Ø11, Ø12; punta lunga Ø12 da 300 mm; punta Ø5 da almeno 120 mm\n"
-        "• Punte Forstner: Ø15, Ø20, Ø25, Ø35; sega a tazza Ø60; svasatore\n"
+        "• Punte Forstner: Ø15, Ø25, Ø35; sega a tazza Ø60; svasatore\n"
         "• Avvitatore con inserto TX40 (viti 8×160), chiave a brugola 8 (TCEI M10), chiave 17\n"
         "• Cacciavite piatto largo (per orientare i dadi a tamburo)\n"
         "• 4 morsetti da almeno 600 mm + 2 morsetti lunghi o cinghie per le fasce\n"
@@ -315,12 +314,14 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
         "(sono riferite alla testa e all'asse dei pezzi), ma ricontrolla campate e profondità.\n"
         "2. Lunghezza delle barre: le fasce sono 1990 perché da una barra da 4000 ne escono due (taglio 4 mm + "
         "rifilatura 10). Se le barre sono più corte di 4000, accorcia tutte e tre le fasce della stessa misura.\n"
-        "3. Dado a tamburo: non lo vendono Tecnomat, OBI e Leroy Merlin (ferramenta o online). Il manuale usa Ø15: "
+        "3. Morale 80×80 della fascia anteriore: è grezzo, meno preciso del KVH (±2–3 mm). Scegline uno dritto, secco e "
+        "senza fessure, e levigalo bene: sta sotto le mani.\n"
+        "4. Dado a tamburo: non lo vendono Tecnomat, OBI e Leroy Merlin (ferramenta o online). Il manuale usa Ø15: "
         "se il tuo è Ø14 o Ø16 usa la Forstner dello stesso diametro.\n"
-        "4. Piedini: le gambe sono da 700 mm e il piano finito è a 740 senza piedini. Per restare a 740 con i piedini, "
+        "5. Piedini: le gambe sono da 700 mm e il piano finito è a 740 senza piedini. Per restare a 740 con i piedini, "
         "accorcia tutte le gambe dal lato del PIEDE: le quote dei fori 'dalla testa' non cambiano.\n"
-        "5. Il muro: tipo (pieno, forato, cartongesso) e battiscopa, che può allontanare il tavolo dal muro."),
-        width=60, fs=8.4)
+        "6. Il muro: tipo (pieno, forato, cartongesso) e battiscopa, che può allontanare il tavolo dal muro."),
+        width=60, fs=8.0)
     para(fig, 0.04, 0.5, "Convenzioni del manuale", fs=11, weight="bold")
     para(fig, 0.04, 0.47, (
         "• Fronte = lato dove ti siedi. Sinistra/destra viste stando seduto davanti al tavolo.\n"
@@ -330,11 +331,11 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
         "• Nelle traverse le quote sono dal filo superiore del pezzo e dalla testata.\n"
         "• Passante = il foro attraversa tutto il pezzo; il punto di uscita è indicato con l'apice (es. 3')."),
         width=62, fs=8.6)
-    box_note(fig, 0.52, 0.10, 0.44, 0.38, "Come sta in piedi il tavolo",
+    box_note(fig, 0.52, 0.06, 0.44, 0.355, "Come sta in piedi il tavolo",
              "• 4 TELAI LATERALI: gamba anteriore + gamba posteriore + traversa laterale alta e bassa. Nodi con "
              "bullone M10 + dado a tamburo + 2 spine Ø12 (bullone a 90 dalla testa della traversa, spine a 35).\n"
              "• 3 FASCE a tutta lunghezza li uniscono: FPa e FPb dietro, di coltello, contro il muro; FA davanti, "
-             "posata di piatto sotto il bordo del piano. Ogni fascia si avvita a ogni gamba con 2 viti 8×160 "
+             "in morale di abete 80×80, sotto il bordo del piano. Ogni fascia si avvita a ogni gamba con 2 viti 8×160 "
              "perpendicolari: lavorano nel legno di fianco, tengono molto e si possono togliere e rimettere.\n"
              "• 2 traverse basse anteriori ACi e ARi chiudono le campate dei ripiani.\n"
              "• Il piano avvitato e il fissaggio a muro completano la rigidezza: indispensabili per le presse.",
@@ -401,7 +402,8 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
     rows = []; groups = OrderedDict()
     for n in legs + fasce + rails + risers:
         c = code(n); L = length(n)
-        typ = ("gamba" if n.startswith("Gamba") else "fascia (tutta lunghezza)" if n.startswith("Fascia") else
+        typ = ("gamba" if n.startswith("Gamba") else "fascia anteriore (morale 80×80)" if n.startswith("Fascia ant") else
+               "fascia posteriore (KVH)" if n.startswith("Fascia") else
                "traversa laterale" if ". lat." in n else "montante alzatina (conservare)" if n.startswith("Mont") else
                "traversa bassa anteriore")
         groups.setdefault((typ, L), []).append(c)
@@ -413,7 +415,7 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
         "Appena tagliato ogni pezzo, scrivi il codice a matita su una faccia che resterà nascosta (gambe: la testa; "
         "traverse: la faccia inferiore; fasce: la faccia verso l'interno) e una freccia verso il FRONTE.\n\n"
         "Sezioni: gambe e traverse laterali 80 (largh.) × 120 (prof./altezza); fasce posteriori 80 × 120 di coltello; fascia "
-        "anteriore 120 × 80 posata di piatto (stessa trave, ruotata); ACi e ARi 80 × 120 di coltello.\n\n"
+        "anteriore in morale di abete 80 × 80 (unico pezzo non in KVH); ACi e ARi 80 × 120 di coltello.\n\n"
         "Gli altri pezzi hanno il loro nome: Piano (lamellare), Rinforzo, Ripiano cassetti, Ripiano ricarica, Ripiano seduta "
         "(tutti in OSB), Listelli reggiripiano. I 4 montanti M1–M4 non servono al tavolo base: tagliali, marcali e "
         "conservali per l'alzatina (modulo 3)."), width=112, fs=8.6)
@@ -426,7 +428,8 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
     fig = page("Taglio delle travi e dei pannelli", "Fase 1")
     ax = fig.add_axes([0.04, 0.50, 0.92, 0.38]); ax.axis("off")
     pool = {}
-    for n in legs + fasce + rails + risers: pool.setdefault(length(n), []).append(code(n))
+    for n in legs + fasce + rails + risers:
+        if parts[n]["group"].startswith("Travi KVH"): pool.setdefault(length(n), []).append(code(n))
     for k in pool: pool[k] = sorted(pool[k], key=lambda c: (c[0] != "G", c))
     bars = cf["kvh_bars"]
     ax.set_xlim(-300, 4250); ax.set_ylim(len(bars) * 1.5 + 0.2, -0.8)
@@ -446,7 +449,8 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
     para(fig, 0.04, 0.46, (
         "1. Rifila 10 mm a una testa di ogni barra per avere un'estremità a 90° pulita.\n"
         f"2. Le fasce da {FAS} per prime: due sulla barra 1 (la seconda è quello che resta: misurala, deve essere ≥ {FAS}). "
-        "Le tre fasce devono essere identiche: segna la prima e usala come campione.\n"
+        "Le fasce devono essere identiche: segna la prima e usala come campione. La fascia anteriore FA si taglia a "
+        f"{FAS} dal morale 80×80×4000.\n"
         "3. Gambe (700) e traverse laterali (" + f"{LAT}" + "): tagliale con un fermo (battuta) sulla troncatrice, non misurandole una a una.\n"
         "4. Controlla ogni taglio con la squadra su due facce. Una testata storta apre il nodo.\n"
         "5. Tieni un avanzo di ~100 mm: serve per la dima di foratura.\n"
@@ -497,8 +501,7 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
         "• Traverse BASSE ANTERIORI (ACi, ARi) e facce laterali delle gambe anteriori 1, 2, 3, 4: dima capovolta → bullone "
         "a 30 dalla testa della traversa, spine a 85; sulla gamba la dima va a filo del bordo ANTERIORE (asse a 40).\n\n"
         "Fasce (senza dima)\n"
-        "• Fori Ø9 passanti nella fascia al trapano a colonna (o con guida), poi svasatura (FPa, FPb) o lamatura Ø20 "
-        "prof. 40 (FA).\n"
+        "• Fori Ø9 passanti nella fascia al trapano a colonna (o con guida), poi svasatura per la testa della vite.\n"
         "• Il preforo Ø5 nella gamba si fa a fascia montata, passando dal foro Ø9 (fase 5): così i fori coincidono.\n\n"
         "Ordine dei fori in ogni pezzo\n"
         "1. Fori Ø11 (bulloni) e Ø12 (spine) con la dima.  2. Lamature Ø25×12 con la Forstner, centrate sul Ø11.\n"
@@ -629,8 +632,8 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
         "5. Passando dai fori Ø9 della fascia, fai il preforo Ø5 profondo 80 nella gamba, poi avvita le viti V 8×160 "
         "fino a portare la testa a filo. Una gamba alla volta, partendo dal centro (G2P, G3P).\n"
         "6. Fascia posteriore alta FPa allo stesso modo, a filo della testa delle gambe (quota 580–700).\n"
-        "7. Fascia anteriore FA, di piatto, davanti alle gambe anteriori e a filo della loro testa: viti dentro le "
-        "lamature Ø20. Poi incolla i tappi Ø20 e rasali.\n"
+        "7. Fascia anteriore FA (morale 80×80) davanti alle gambe anteriori, a filo della loro testa (quota 620–700): "
+        "stesse viti e stesso procedimento.\n"
         "8. Ricontrolla diagonali e piombo: con le fasce il telaio è rigido."), width=52, fs=8.2)
     a = fig.add_axes([0.45, 0.04, 0.52, 0.30]); sec_laterale(a)
     pdf.savefig(fig); plt.close(fig)

@@ -274,11 +274,11 @@ def pagine_fasce(new_page, pdf, plt, phase=None):
     fig = new_page("Fasce a tutta lunghezza: misure e fori", phase)
     specs = [("Fascia post. alta", "FPa · fascia posteriore alta – di coltello, 80 × 120"),
              ("Fascia post. bassa", "FPb · fascia posteriore bassa – di coltello, 80 × 120"),
-             ("Fascia ant. alta", "FA · fascia anteriore – posata di piatto, 120 × 80")]
+             ("Fascia ant. alta", "FA · fascia anteriore – morale di abete 80 × 80")]
     for j, (n, t) in enumerate(specs):
         scheda_fascia(fig.add_axes([0.03, 0.635 - j * 0.28, 0.94, 0.26]), n, t)
-    fig.text(0.04, 0.05, "Viola: fori Ø9 passanti per le viti 8×160 (svasatura sulle fasce posteriori; lamatura Ø20 prof. 40 sulla fascia "
-             "anteriore, da chiudere con un tappo) · blu scuro: 2 fori Ø11 verticali della base piastre (fase 8). In ogni asse gamba 2 fori "
+    fig.text(0.04, 0.05, "Viola: fori Ø9 passanti per le viti 8×160, con svasatura per la testa "
+             "· blu scuro: 2 fori Ø11 verticali della base piastre (fase 8). In ogni asse gamba 2 fori "
              "a ±16 mm dall'asse, alle quote dal basso indicate a destra. Quote sempre dalla testata lato G1 (sinistra guardando il tavolo "
              "dal fronte): sulle fasce posteriori, che si forano dal lato muro, segna le quote dalla stessa testata.", fontsize=6.6, color=MUTE, wrap=True)
     pdf.savefig(fig); plt.close(fig)
@@ -287,7 +287,7 @@ def pagine_viste(new_page, pdf, plt, phase=None):
     """aggiunge al pdf le pagine delle viste quotate. new_page(title, phase) -> fig"""
     fig = new_page("Pianta del telaio quotata (senza piano)", phase)
     pianta_telaio(fig.add_axes([0.02, 0.06, 0.96, 0.84]))
-    fig.text(0.04, 0.05, "Pezzi alti pieni, pezzi solo bassi (ACi, ARi) tratteggiati. FA = fascia anteriore (di piatto), FPa/FPb = fasce "
+    fig.text(0.04, 0.05, "Pezzi alti pieni, pezzi solo bassi (ACi, ARi) tratteggiati. FA = fascia anteriore (morale 80×80), FPa/FPb = fasce "
              "posteriori alta e bassa (sovrapposte in pianta). Codice e lunghezza su ogni pezzo.", fontsize=7.5, color=MUTE)
     pdf.savefig(fig); plt.close(fig)
     fig = new_page("Prospetto anteriore quotato", phase)
