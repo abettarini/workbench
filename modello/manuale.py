@@ -42,12 +42,12 @@ def draw_hw(ax, kind):
         R(ax, 10, 12, 30, 16, "#222"); R(ax, 40, 18, 20, 4, STEEL); R(ax, 60, 14, 5, 12, STEEL)
 
 HW = [  # codice, nome, quantità, dove, disegno
-    ("B1", "Bullone TCEI M10×180 + rondella Ø20", "16", "traverse laterali (L): dalla faccia esterna della gamba", "B1"),
-    ("B2", "Bullone TCEI M10×140 + rondella Ø20", "10", "traverse longitudinali su gambe con una sola traversa", "B2"),
+    ("B1", "Vite M10×180 testa cilindrica (TCEI) + rondella Ø20", "16", "traverse laterali (L): dalla faccia esterna della gamba", "B1"),
+    ("B2", "Vite M10×140 testa cilindrica (M10×160 accorciata) + rondella", "10", "traverse longitudinali su gambe con una sola traversa", "B2"),
     ("R", "Barra filettata M10, spezzone 220 mm", "4", "gambe 2P e 3P: unisce le due traverse longitudinali", "R"),
     ("D", "Dado a tamburo M10 (Ø15 circa)", "38", "34 nelle traverse + 4 nelle gambe posteriori (predisposizione alzatina)", "D"),
     ("S", "Spina in faggio Ø12×50", "68", "2 per testata di traversa", "S"),
-    ("I", "Inserto filettato M10 + piedino livellatore", "8", "sotto ogni gamba", "I"),
+    ("I", "Dado ragno M10 (o inserto filettato) + piedino M10", "8", "sotto ogni gamba", "I"),
     ("Q", "Squadretta con asola + viti 4,5×25", "16", "fissaggio del piano alle traverse superiori", "Q"),
     ("V", "Viti legno: 5×60, 5×70, 4×45, 4×50, 3,5×25", "sfuse", "rinforzo, listelli, cassettiera, cassetti", "V"),
     ("X", "Viti TSPEI M10 + dadi autobloccanti", "2+2", "base piastre ricarica: 2 × M10×110 e 2 × M10×200", "X"),
@@ -256,9 +256,9 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
     para(fig, 0.52, 0.86, (
         "1. Sezione reale delle travi: devono essere 80×120. Se misurano 78×118 (capita) le quote dei fori "
         "restano valide perché sono riferite alla testa e all'asse dei pezzi, ma rifai i conti delle campate.\n"
-        "2. Diametro del dado a tamburo acquistato: il manuale usa Ø15. Se il tuo è Ø14 o Ø16 usa la Forstner "
-        "dello stesso diametro.\n"
-        "3. Inserto per i piedini: il foro Ø14 è indicativo, usa quello indicato sulla confezione.\n"
+        "2. Dado a tamburo: non lo vendono Tecnomat, OBI e Leroy Merlin (ferramenta o online). Il manuale usa Ø15: "
+        "se il tuo è Ø14 o Ø16 usa la Forstner dello stesso diametro.\n"
+        "3. Sede per i piedini: con il dado ragno M10 il foro è Ø12 (Ø14 per un inserto a vite); segui la confezione.\n"
         "4. Altezza del piedino: le gambe sono da 700 mm e il piano finito è a 740 mm senza piedini. "
         "Se vuoi restare a 740 con i piedini, accorcia tutte le gambe dell'altezza del piedino dal lato "
         "del PIEDE: le quote dei fori, date 'dalla testa', non cambiano.\n"

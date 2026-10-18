@@ -8,11 +8,13 @@ si costruisce prima il tavolo base, gli altri si aggiungono quando vuoi.
 
 | Modulo | Cosa comprende | Costo stimato | Cartella |
 |---|---|---|---|
-| **1 · Tavolo base** | Telaio in travi KVH 80×120 (5 barre da 4 m), piano lamellare 40, ripiani e rinforzo in OSB/3 18, zona ricarica con piastre intercambiabili, canaline | ~623 € | [moduli/1-tavolo-base](moduli/1-tavolo-base) |
-| **2 · Cassettiera** | Cassettiera fissa a 3 cassetti per la campata sinistra + cassetto appeso sotto il piano | ~172 € | [moduli/2-cassettiera](moduli/2-cassettiera) |
-| **3 · Alzatina** | 4 montanti + mensola 2000×200 in tavole OBI 800×200×14 con listello di rinforzo | ~62 € | [moduli/3-alzatina](moduli/3-alzatina) |
+| **1 · Tavolo base** | Telaio in travi KVH 80×120 (5 barre da 4 m), piano lamellare 40, ripiani e rinforzo in OSB/3 18, zona ricarica con piastre intercambiabili, canaline | ~613 € | [moduli/1-tavolo-base](moduli/1-tavolo-base) |
+| **2 · Cassettiera** | Cassettiera fissa a 3 cassetti per la campata sinistra + cassetto appeso sotto il piano | ~165 € | [moduli/2-cassettiera](moduli/2-cassettiera) |
+| **3 · Alzatina** | 4 montanti + mensola 2000×200 in tavole lamellari 1000×200×18 con listello di rinforzo | ~42 € | [moduli/3-alzatina](moduli/3-alzatina) |
 
-I costi comprendono prezzi verificati (travi, lamellare, OSB, tavole OBI) e stime da sostituire, evidenziate in giallo nei fogli.
+I prezzi sono stati verificati il 18/10/2026 sui siti di **Tecnomat, OBI e Leroy Merlin** (circa il 75% del totale); le poche voci non trovate a scaffale sono stime, evidenziate in giallo. Ogni voce dei fogli costi indica negozio e link. Il confronto completo tra i tre negozi, con il costo dei sistemi di giunzione alternativi, è in [confronto_prezzi_negozi.xlsx](confronto_prezzi_negozi.xlsx).
+
+**Dove comprare:** quasi tutto da Tecnomat (unico con travi KVH 80×120 e lamellare 40; OSB e pannelli più economici; taglio in negozio). Da OBI viti M10 lunghe, spine Ø12 e staffe nervate. I dadi a tamburo M10 non li vende nessuno dei tre: ferramenta o online.
 
 ## Come si collegano i moduli
 
@@ -33,8 +35,8 @@ Il modello completo con tutti i moduli è in `modello/tavolo_completo.step`.
 ## Scelte di materiale
 
 - **Travi KVH 80×120**: il prezzo al metro più basso tra quelle trovate, legno essiccato e stabile (confronto nel foglio costi del modulo 1).
-- **OSB/3 18 per ripiani e rinforzo**: circa 10 €/m², un solo pannello basta per tutto. Il lamellare 40 costerebbe 2,5 volte tanto; le tavole OBI 800×200×14 sarebbero ancora più care e più sottili.
-- **Tavole OBI 800×200×14 per la mensola**: tre tavole e un listello costano meno di un pannello intero; il listello sotto il bordo anteriore la rende circa 18 volte più rigida.
+- **OSB/3 18 per ripiani e rinforzo**: 27,50 € (Tecnomat), un solo pannello basta per tutto. Il lamellare 40 costerebbe 2,5 volte tanto; le tavole OBI 800×200×14 sarebbero ancora più care e più sottili.
+- **Tavole lamellari 1000×200×18 per la mensola**: 4,50 € l'una (Tecnomat), più spesse ed economiche delle OBI 800×200×14; con il listello sotto il bordo anteriore la mensola è rigida anche su 78 cm di luce.
 
 ## Rigenerare i file
 

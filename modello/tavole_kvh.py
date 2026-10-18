@@ -152,8 +152,8 @@ with PdfPages("tavolo_base_tavole.pdf") as pdf:
 
     # 6 ferramenta e montaggio
     fig = plt.figure(figsize=A4); header(fig, "Ferramenta e montaggio", 6)
-    hw = [("Bullone TCEI M10×180 + rondella (B1)", "16", "traverse laterali"),
-          ("Bullone TCEI M10×140 + rondella (B2)", "10", "traverse longitudinali su gambe con una sola traversa"),
+    hw = [("Vite M10×180 testa cilindrica + rondella (B1)", "16", "traverse laterali"),
+          ("Vite M10×140 testa cilindrica (M10×160 accorciata) (B2)", "10", "traverse longitudinali su gambe con una sola traversa"),
           ("Barra filettata M10 L 220 (R)", "4", "gambe posteriori centrali: unisce le due traverse"),
           ("Dado a tamburo M10 (D)", "38", "34 testate di traversa + 4 predisposizione alzatina"),
           ("Spine in faggio Ø12×50", "68", "2 per nodo, incollate"),

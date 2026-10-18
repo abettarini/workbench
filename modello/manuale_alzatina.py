@@ -27,8 +27,8 @@ with PdfPages("alzatina_manuale.pdf") as pdf:
              fontsize=9, va="top", linespacing=1.9)
     box_note(fig, 0.05, 0.12, 0.28, 0.38, "In breve",
              f"Mensola lunga 2000, profonda {MD}, a {RH + TM} mm sopra il piano, su 4 montanti KVH 80×120 allineati "
-             "alle gambe posteriori.\n\nMensola: 3 tavole lamellari OBI 800×200×14 + un listello 30×40 incollato "
-             "sotto il bordo anteriore, che la irrigidisce circa 18 volte.\n\nSi monta sul tavolo base usando le "
+             "alle gambe posteriori.\n\nMensola: 3 tavole lamellari abete 1000×200×18 (Tecnomat) + un listello 30×40 incollato "
+             "sotto il bordo anteriore, che la irrigidisce molto.\n\nSi monta sul tavolo base usando le "
              "predisposizioni: foro e dado a tamburo in ogni gamba posteriore.\n\nCosti in alzatina_costi.xlsx.",
              fs=8.3, width=44)
     pdf.savefig(fig); plt.close(fig)
@@ -37,7 +37,7 @@ with PdfPages("alzatina_manuale.pdf") as pdf:
     fig = page("Cosa serve")
     para(fig, 0.04, 0.89, "Materiali", fs=11, weight="bold")
     para(fig, 0.04, 0.86, (
-        "• 3 tavole lamellari abete OBI 800×200×14 (art. 2423135)\n"
+        "• 3 tavole lamellari abete 1000×200×18 (Tecnomat, 4,50 € l'una)\n"
         "• 1 listello abete 30×40 da 2400\n"
         "• 4 montanti KVH 80×120×250 (tagliati insieme alle travi del tavolo base)\n"
         f"• 2 barre filettate M10 da 1 m → 4 spezzoni da {ROD}\n"
@@ -48,12 +48,11 @@ with PdfPages("alzatina_manuale.pdf") as pdf:
     para(fig, 0.04, 0.52, (
         "• Sega (troncatrice o circolare), seghetto per metalli\n• Trapano con punta Ø12 normale e punta lunga Ø12 da 300\n"
         "• Punta Ø3 e svasatore, avvitatore, chiave 17\n• Morsetti, squadra, livella, metro"), width=60, fs=8.8)
-    box_note(fig, 0.52, 0.48, 0.44, 0.40, "Prima di comprare: verifica le tavole OBI",
-             "La scheda del prodotto riporta misure contrastanti (800×200×14 nel titolo, 600×200×18 nella "
-             "descrizione). Il progetto è fatto su 800×200×14: misurale in negozio.\n\n"
-             f"Se fossero lunghe 600, la tavola centrale ({blen[1]} mm) non si ricava: servono 4 tavole con un "
-             "giunto in più a metà della campata centrale, sostenuto solo dal listello. Avvisami e ricalcolo.",
-             fs=8.3, width=64)
+    box_note(fig, 0.52, 0.48, 0.44, 0.40, "Perché tavole da 18 mm",
+             "La tavola lamellare 1000×200×18 di Tecnomat costa 4,50 € (prezzo verificato il 18/10/2026): meno della "
+             "tavola OBI 800×200×14 (8,19 €), è più spessa e più lunga. Ogni pezzo della mensola (massimo 780 mm) si "
+             "ricava da una sola tavola.\n\nCon il listello sotto il bordo anteriore la mensola è più "
+             "rigida (circa +25%) della versione da 14 mm.", fs=8.3, width=64)
     box_note(fig, 0.52, 0.10, 0.44, 0.32, "Prerequisiti dal tavolo base",
              "• Nelle 4 gambe posteriori: foro Ø12 in testa e dado a tamburo inserito dal retro, con il foro "
              "filettato in verticale.\n• I 4 montanti M1–M4 tagliati e conservati.\n"
@@ -65,7 +64,7 @@ with PdfPages("alzatina_manuale.pdf") as pdf:
     fig = page("Taglio e foratura", "Fase 1")
     para(fig, 0.04, 0.89, (
         "Taglio\n"
-        f"1. Tavole OBI a lunghezza: {blen[0]}, {blen[1]} e {blen[2]} mm (tutte larghe 200). I giunti cadono al centro "
+        f"1. Tavole a lunghezza: {blen[0]}, {blen[1]} e {blen[2]} mm (tutte larghe 200). I giunti cadono al centro "
         "dei montanti 2 e 3. Tagli a 90° precisi: le teste si accostano a vista.\n"
         "2. Listello 30×40 a 2000 mm.\n"
         f"3. Barre M10: 4 spezzoni da {ROD} mm, due per barra. Smussa le estremità con la lima.\n\n"
@@ -103,7 +102,7 @@ with PdfPages("alzatina_manuale.pdf") as pdf:
         "2. Stendi la colla sul listello e appoggialo a filo del bordo ANTERIORE (che ora è verso di te, a "
         "rovescio), dall'inizio alla fine della mensola.\n"
         "3. Viti 4×50 dal listello nella tavola ogni 150 mm, a 15 mm dal bordo: preforo Ø3 nel listello, "
-        "svasatura. La vite entra 10 mm nella tavola da 14: non usare viti più lunghe.\n"
+        "svasatura. La vite entra 10 mm nella tavola da 18: non usare viti più lunghe.\n"
         "4. Ai giunti metti una vite a 30 mm per parte: il listello tiene unite le tavole.\n"
         "5. A colla asciutta, gira la mensola. Fora Ø12 nei 4 punti (a 60 dal filo posteriore): sui giunti il foro "
         "è metà in una tavola e metà nell'altra, va bene così. La rondella e il dado cieco le stringeranno entrambe.\n"
@@ -113,7 +112,7 @@ with PdfPages("alzatina_manuale.pdf") as pdf:
     R(ax, 12.5, -bh_, 5, bh_ + 10, STEEL, lw=0.3)
     R(ax, MD - 66, -30, 12, TM + 30, "white", ec=HCOL["M"], ls="--")
     dim(ax, 0, TM, MD, TM, 14, f"{MD}"); dim(ax, -10, -bh_, -10, TM, -12, f"{bh_ + TM}", vertical=True)
-    ax.text(40, -20, "listello 30×40", fontsize=6.5); ax.text(60, 4, "tavola 14", fontsize=6.5)
+    ax.text(40, -20, "listello 30×40", fontsize=6.5); ax.text(60, 5, f"tavola {TM}", fontsize=6.5)
     ax.text(MD - 60, -40, "Ø12", fontsize=6.5, color=HCOL["M"], ha="center")
     ax.set_xlim(-50, MD + 30); ax.set_ylim(-70, 50)
     ax.set_title("Sezione della mensola (fronte a sinistra)", fontsize=8, loc="left")

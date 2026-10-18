@@ -4910,7 +4910,7 @@
   "p0": [
    40.0,
    740,
-   1004
+   1008
   ],
   "dir": [
    0,
@@ -4918,7 +4918,7 @@
    -1
   ],
   "d": 12,
-  "depth": 14,
+  "depth": 18,
   "cb": null,
   "note": "passante"
  },
@@ -4967,7 +4967,7 @@
   "p0": [
    620.0,
    740,
-   1004
+   1008
   ],
   "dir": [
    0,
@@ -4975,7 +4975,7 @@
    -1
   ],
   "d": 12,
-  "depth": 14,
+  "depth": 18,
   "cb": null,
   "note": "passante, a cavallo del giunto 1\u20132: fora a tavole accostate"
  },
@@ -5024,7 +5024,7 @@
   "p0": [
    1400.0,
    740,
-   1004
+   1008
   ],
   "dir": [
    0,
@@ -5032,7 +5032,7 @@
    -1
   ],
   "d": 12,
-  "depth": 14,
+  "depth": 18,
   "cb": null,
   "note": "passante, a cavallo del giunto 2\u20133: fora a tavole accostate"
  },
@@ -5081,7 +5081,7 @@
   "p0": [
    1960.0,
    740,
-   1004
+   1008
   ],
   "dir": [
    0,
@@ -5089,7 +5089,7 @@
    -1
   ],
   "d": 12,
-  "depth": 14,
+  "depth": 18,
   "cb": null,
   "note": "passante"
  },

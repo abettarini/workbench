@@ -20,7 +20,7 @@
   "rear_shelf_d": 260,
   "riser_h": 250,
   "riser_d": 200,
-  "T_riser": 14,
+  "T_riser": 18,
   "mbat": [
    30,
    40
@@ -877,7 +877,7 @@
   {
    "name": "Mensola \u2013 tavola 1",
    "group": "Alzatina",
-   "mat": "tavola OBI abete 800\u00d7200\u00d714",
+   "mat": "tavola lamellare abete 1000\u00d7200\u00d718",
    "role": "",
    "box": [
     0,
@@ -885,7 +885,7 @@
     990,
     620.0,
     800,
-    1004
+    1008
    ],
    "color": "#ecd3a8",
    "holes": [],
@@ -895,7 +895,7 @@
   {
    "name": "Mensola \u2013 tavola 2",
    "group": "Alzatina",
-   "mat": "tavola OBI abete 800\u00d7200\u00d714",
+   "mat": "tavola lamellare abete 1000\u00d7200\u00d718",
    "role": "",
    "box": [
     620.0,
@@ -903,7 +903,7 @@
     990,
     1400.0,
     800,
-    1004
+    1008
    ],
    "color": "#e4c99a",
    "holes": [],
@@ -913,7 +913,7 @@
   {
    "name": "Mensola \u2013 tavola 3",
    "group": "Alzatina",
-   "mat": "tavola OBI abete 800\u00d7200\u00d714",
+   "mat": "tavola lamellare abete 1000\u00d7200\u00d718",
    "role": "",
    "box": [
     1400.0,
@@ -921,7 +921,7 @@
     990,
     2000,
     800,
-    1004
+    1008
    ],
    "color": "#ecd3a8",
    "holes": [],

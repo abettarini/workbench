@@ -64,7 +64,7 @@ def off_ai(p):
     if p["name"].startswith("Montante"): return (0, 0, 120)
     return (0, 0, 0)
 stage("alz_installazione.png", base + alz, off_ai, color=lambda p: p["color"] if p["module"] == "alzatina" else GHOST,
-      labels=[("Mensola – tavola 2", "top", "Mensola: 3 tavole OBI 800×200×14\n(620 + 780 + 600)", "L", 140),
+      labels=[("Mensola – tavola 2", "top", "Mensola: 3 tavole lamellari 1000×200×18\n(tagliate a 620 + 780 + 600)", "L", 140),
               ("Listello mensola", "front", "Listello 30×40 incollato sotto\nil bordo anteriore", "L", 320),
               ("Montante mensola 1", "c", "4 montanti KVH 80×120×250\n(tagliati con il tavolo base)", "L", 560),
               ("Montante mensola 4", "bottom", "Barre M10 nei dadi a tamburo\npredisposti nelle gambe posteriori", "R", 640)],

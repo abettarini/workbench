@@ -19,7 +19,7 @@ P = dict(
     T_top=40, T_dbl=36,
     lower_z=70,
     T_shelf=18, T_ply=18, rear_shelf_d=260,
-    riser_h=250, riser_d=200, T_riser=14, mbat=(30, 40),   # mensola: tavole OBI 800×200×14 + listello sotto il bordo anteriore
+    riser_h=250, riser_d=200, T_riser=18, mbat=(30, 40),   # mensola: tavole lamellari 1000×200×18 (Tecnomat) + listello sotto il bordo anteriore
     cleat=(30, 40),
     tray_w=100, tray_h=60, grommet_d=60, cable_hole=35,
     case_h=400, case_d=600, T_case=18, n_drawers=3, slide_len=500, slide_t=12.7,
@@ -95,7 +95,7 @@ def build():
     zr = H + P["riser_h"]
     joints = [0] + [x + Lx / 2 for x in xs[1:3]] + [W]      # giunti in asse ai montanti 2 e 3
     for k in range(3):
-        add(f"Mensola – tavola {k+1}", "Alzatina", "tavola OBI abete 800×200×14", joints[k], D - P["riser_d"], zr,
+        add(f"Mensola – tavola {k+1}", "Alzatina", "tavola lamellare abete 1000×200×18", joints[k], D - P["riser_d"], zr,
             joints[k + 1], D, zr + P["T_riser"], "#ecd3a8" if k % 2 == 0 else "#e4c99a")
     bw_, bh_ = P["mbat"]
     add("Listello mensola", "Alzatina", "abete 30×40", 0, D - P["riser_d"], zr - bh_, W, D - P["riser_d"] + bw_, zr, "#d4ae7c")

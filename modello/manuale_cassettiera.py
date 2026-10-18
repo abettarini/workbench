@@ -26,6 +26,28 @@ def pack(items, W=1250, H=1250, k=4):
             rows.append({"y": y, "h": w, "x": L + k}); placed.append((name, 0, y, L, w))
     return placed, (rows[-1]["y"] + rows[-1]["h"]) if rows else 0
 
+def pack_multi(items, W, H, k=4):
+    """riempie più pannelli W×H: ritorna lista di (placed, altezza usata)"""
+    rest = sorted(items, key=lambda it: (-max(it[1], it[2]), -min(it[1], it[2])))
+    sheets = []
+    while rest:
+        rows, placed, left = [], [], []
+        for name, a, b in rest:
+            L, w = max(a, b), min(a, b)
+            ok = False
+            for r in rows:
+                if r["x"] + L <= W and w <= r["h"]:
+                    placed.append((name, r["x"], r["y"], L, w)); r["x"] += L + k; ok = True; break
+            if not ok:
+                y = (rows[-1]["y"] + rows[-1]["h"] + k) if rows else 0
+                if y + w <= H and L <= W:
+                    rows.append({"y": y, "h": w, "x": L + k}); placed.append((name, 0, y, L, w))
+                else:
+                    left.append((name, a, b))
+        if not placed: raise ValueError("pezzo più grande del pannello")
+        sheets.append(placed); rest = left
+    return sheets
+
 def draw_sheet(ax, title, placed, W=1250, H=1250, col="#efdcb8"):
     ax.set_aspect("equal"); ax.axis("off")
     R(ax, 0, 0, W, H, "#f6f1e7")
@@ -55,9 +77,9 @@ with PdfPages("cassettiera_manuale.pdf") as pdf:
     fig = page("Cosa serve")
     para(fig, 0.04, 0.89, "Materiali", fs=11, weight="bold")
     para(fig, 0.04, 0.86, (
-        "• Multistrato pioppo 18 mm: mezzo pannello 1250×1250 (scatola e frontali)\n"
-        "• Multistrato pioppo 15 mm: mezzo pannello 1250×1250 (scatole dei cassetti)\n"
-        "• HDF 4 mm: pannello 2500×1250 (fondi e schienale)\n"
+        "• Multistrato pioppo 18 mm: 2 pannelli 1200×600 (scatola e frontali)\n"
+        "• Multistrato pioppo 15 mm: 2 pannelli 1200×600 (scatole dei cassetti)\n"
+        "• Fibra grezza 3 mm: pannello 2500×1250 (fondi e schienale)\n"
         "• 4 coppie di guide a sfera a estrazione totale, lunghezza 500 mm, spessore 12,7 mm\n"
         "• 4 maniglie\n"
         "• Viti: 4×45 (scatola), 3,5×30 (cassetti), 3×16 (fondi e schienale), 3,5×25 (frontali), "
@@ -83,17 +105,21 @@ with PdfPages("cassettiera_manuale.pdf") as pdf:
 
     # ---------- taglio
     fig = page("Taglio dei pannelli", "Fase 1")
-    p18, h18 = pack([(n.replace("Cassettiera ", "").replace("Frontale cassetto", "Frontale"), a, b) for n, a, b in pieces["multistrato 18"]])
-    p15, h15 = pack([(n, a, b) for n, a, b in pieces["multistrato 15"]])
-    p4, h4 = pack([(n, a, b) for n, a, b in pieces["HDF 4"]], W=2500, H=1250)
-    draw_sheet(fig.add_axes([0.03, 0.42, 0.30, 0.47]), "Multistrato 18 – 1250×1250", p18)
-    draw_sheet(fig.add_axes([0.35, 0.42, 0.30, 0.47]), "Multistrato 15 – 1250×1250", p15, col="#e8d3a6")
-    draw_sheet(fig.add_axes([0.67, 0.55, 0.31, 0.34]), "HDF 4 – 2500×1250", p4, W=2500, H=1250, col="#d8cbb5")
+    s18 = pack_multi([(n.replace("Cassettiera ", "").replace("Frontale cassetto", "Frontale"), a, b) for n, a, b in pieces["multistrato 18"]], 1200, 600)
+    s15 = pack_multi([(n.replace("cassetto ", "c."), a, b) for n, a, b in pieces["multistrato 15"]], 1200, 600)
+    s4 = pack_multi([(n, a, b) for n, a, b in pieces["HDF 4"]], 2500, 1250)
+    for k, pl in enumerate(s18):
+        draw_sheet(fig.add_axes([0.03 + k * 0.32, 0.66, 0.30, 0.23]), f"Multistrato 18 – 1200×600 (n. {k+1})", pl, W=1200, H=600)
+    for k, pl in enumerate(s15):
+        draw_sheet(fig.add_axes([0.03 + k * 0.32, 0.40, 0.30, 0.23]), f"Multistrato 15 – 1200×600 (n. {k+1})", pl, W=1200, H=600, col="#e8d3a6")
+    draw_sheet(fig.add_axes([0.67, 0.42, 0.31, 0.40]), "Fibra grezza 3 – 2500×1250", s4[0], W=2500, H=1250, col="#d8cbb5")
+    h18 = h15 = 0
     para(fig, 0.04, 0.36, (
         "• Le venature esterne del multistrato vanno in verticale su fianchi e frontali: tieni conto del verso quando tagli.\n"
-        "• Taglia i 4 frontali da una sola striscia, uno dopo l'altro: le venature restano continue.\n"
+        "• I frontali dei cassetti 1–2 e 3–appeso sono affiancati sullo stesso pannello: le venature restano continue a coppie.\n"
         "• Tolleranza ±0,5 mm. Se il negozio taglia a misura, porta questa pagina.\n"
-        f"• Avanzi: multistrato 18 ≈ {1250 - h18:.0f} mm di striscia, 15 ≈ {1250 - h15:.0f} mm: utili per spessori e prove."),
+        f"• Pannelli pretagliati Tecnomat 1200×600: servono {len(s18)} da 18 mm e {len(s15)} da 15 mm. Tecnomat taglia in negozio (1° taglio gratis, poi 1 €).\n"
+        "• Fondi in fibra da 3 mm: per carichi fino a ~15 kg per cassetto; per carichi maggiori usa MDF/HDF da 4–5 mm."),
         width=150, fs=8.4)
     pdf.savefig(fig); plt.close(fig)
 
