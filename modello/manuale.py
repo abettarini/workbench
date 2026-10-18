@@ -43,10 +43,10 @@ def draw_hw(ax, kind):
 
 HW = [  # codice, nome, quantità, dove, disegno
     ("B1", "Bullone TCEI M10×180 + rondella Ø20", "16", "traverse laterali (L): dalla faccia esterna della gamba", "B1"),
-    ("B2", "Bullone TCEI M10×140 + rondella Ø20", "8", "traverse longitudinali su gambe con una sola traversa", "B2"),
+    ("B2", "Bullone TCEI M10×140 + rondella Ø20", "10", "traverse longitudinali su gambe con una sola traversa", "B2"),
     ("R", "Barra filettata M10, spezzone 220 mm", "4", "gambe 2P e 3P: unisce le due traverse longitudinali", "R"),
-    ("D", "Dado a tamburo M10 (Ø15 circa)", "36", "32 nelle traverse + 4 nelle gambe posteriori (predisposizione alzatina)", "D"),
-    ("S", "Spina in faggio Ø12×50", "64", "2 per testata di traversa", "S"),
+    ("D", "Dado a tamburo M10 (Ø15 circa)", "38", "34 nelle traverse + 4 nelle gambe posteriori (predisposizione alzatina)", "D"),
+    ("S", "Spina in faggio Ø12×50", "68", "2 per testata di traversa", "S"),
     ("I", "Inserto filettato M10 + piedino livellatore", "8", "sotto ogni gamba", "I"),
     ("Q", "Squadretta con asola + viti 4,5×25", "16", "fissaggio del piano alle traverse superiori", "Q"),
     ("V", "Viti legno: 5×60, 5×70, 4×45, 4×50, 3,5×25", "sfuse", "rinforzo, listelli, cassettiera, cassetti", "V"),
@@ -280,7 +280,7 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
              "• Traverse laterali: bullone a 90 mm dalla testa, spine a 35.\n"
              "• Spine a ±15 mm dall'asse del pezzo.\n"
              "• Dado a tamburo a 60 mm dalla testata della traversa.\n\n"
-             "Le due regole sono una lo specchio dell'altra: con UNA sola dima (pag. 7) fori tutti i nodi, "
+             "Le due regole sono una lo specchio dell'altra: con UNA sola dima (pag. 12) fori tutti i nodi, "
              "basta girarla.\n\n"
              "Spine incollate solo nella traversa: nella gamba entrano a secco, così il tavolo resta smontabile.",
              fs=8.3, width=64)
@@ -334,6 +334,10 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
         "Ripiano seduta (tutti in OSB), Listelli reggiripiano. I 4 montanti M1–M4 non servono al tavolo base: "
         "tagliali, marcali e conservali per l'alzatina (modulo 3)."), width=110, fs=8.8)
     pdf.savefig(fig); plt.close(fig)
+
+    # ================= viste quotate
+    import disegni
+    disegni.pagine_viste(page, pdf, plt)
 
     # ================= 5. taglio
     fig = page("Taglio delle travi e dei pannelli", "Fase 1")
@@ -483,6 +487,9 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
     ax.set_title("Montanti M1–M4 (80×120×250) per l'alzatina, vista dal fianco", fontsize=8, loc="left")
     pdf.savefig(fig); plt.close(fig)
 
+    # ================= schede traverse
+    disegni.pagine_traverse(page, pdf, plt, "Fase 2")
+
     # ================= pannelli
     fig = page("Foratura di piano, rinforzo e contropiastra", "Fase 2")
     ax = fig.add_axes([0.03, 0.42, 0.62, 0.46]); ax.set_aspect("equal"); ax.axis("off")
@@ -542,7 +549,7 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
 
     # ================= fase 5
     fig = page("Collegamento dei telai", "Fase 5")
-    img(fig, "man_f5_collegamento.png", [0.36, 0.08, 0.63, 0.84], crop=(80, 940, 40, 1480))
+    img(fig, "man_f5_collegamento.png", [0.44, 0.32, 0.55, 0.60], crop=(80, 940, 40, 1480))
     para(fig, 0.04, 0.89, (
         "Serve un aiutante. Lavora con il tavolo in piedi, sul pavimento piano.\n\n"
         "1. Prepara le traverse longitudinali: dadi a tamburo D e spine S incollate in entrambe le testate.\n"
@@ -554,12 +561,13 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
         "entra nel loro dado. Ruota i dadi a tamburo con il cacciavite per tirare le traverse contro la gamba.\n"
         "4. Telaio 4 con le traverse posteriori della ricarica PRs e PRi: barre R in G3P, bulloni B2 dalla "
         "faccia destra di G4P.\n"
-        "5. Traverse anteriori della ricarica ARs e ARi tra G3A e G4A: bulloni B2 dalla faccia sinistra di G3A "
+        "5. Traversa bassa anteriore dei cassetti ACi tra G1A e G2A: bulloni B2 dalla faccia sinistra di G1A e dalla faccia destra di G2A (lato seduta).\n"
+        "6. Traverse anteriori della ricarica ARs e ARi tra G3A e G4A: bulloni B2 dalla faccia sinistra di G3A "
         "(lato seduta) e dalla faccia destra di G4A.\n"
-        "6. Prima di stringere tutto: controlla che il tavolo appoggi su tutte le 8 gambe e misura le "
+        "7. Prima di stringere tutto: controlla che il tavolo appoggi su tutte le 8 gambe e misura le "
         "diagonali di ogni campata, viste dall'alto (uguali entro 3 mm).\n"
-        "7. Stringi tutti i nodi partendo dal centro verso le estremità."), width=52, fs=8.4)
-    a = fig.add_axes([0.04, 0.08, 0.30, 0.20]); sec_nodo_centrale(a)
+        "8. Stringi tutti i nodi partendo dal centro verso le estremità."), width=52, fs=8.4)
+    a = fig.add_axes([0.47, 0.05, 0.48, 0.25]); sec_nodo_centrale(a)
     pdf.savefig(fig); plt.close(fig)
 
     # ================= fase 6
@@ -605,7 +613,7 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
             ["L2s (faccia sinistra e destra)", "1 a sinistra, 2 a destra", "3"],
             ["L3s (faccia sinistra)", "a 200 e 450 dal fronte", "2"],
             ["campata ricarica", "nessuna (vedi fase 8)", "–"],
-            ["totale", "", "13 (+3 di scorta)"]]
+            ["totale", "", "13 (+3)"]]
     at = fig.add_axes([0.04, 0.32, 0.37, 0.18]); table(at, rows, ["dove", "posizione", "n°"], [0.42, 0.45, 0.13], fs=6.8, sc=1.3)
     ax = fig.add_axes([0.44, 0.06, 0.52, 0.30]); ax.set_aspect("equal"); ax.axis("off")
     R(ax, 0, 0, 80, 120, WOOD2); R(ax, -200, 120, 380, 40, "#efe0c2")
@@ -699,7 +707,7 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
         "4. Usa fascette e tieni i cavi alti, lontani dalla zona del futuro cassetto appeso (campata sinistra).\n"
         "5. Un solo cavo di alimentazione scende a muro, fissato alla gamba G2P o G3P."), width=60, fs=8.4)
     checks = ["Il tavolo appoggia su 8 piedini senza dondolare (livella sul piano in due direzioni)",
-              "Tutti i 32 nodi stretti; dopo 2–3 settimane ristringi (il legno si assesta)",
+              "Tutti i 34 nodi stretti; dopo 2–3 settimane ristringi (il legno si assesta)",
               "Diagonali delle campate uguali: nessun gioco spingendo il piano avanti-indietro",
               "Fissaggi a muro serrati: prova con la pressa in calibratura, il tavolo non deve muoversi",
               "Base piastre: le 4 viti stringono, le manopole bloccano la piastra senza gioco",

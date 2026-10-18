@@ -8,7 +8,7 @@ si costruisce prima il tavolo base, gli altri si aggiungono quando vuoi.
 
 | Modulo | Cosa comprende | Costo stimato | Cartella |
 |---|---|---|---|
-| **1 · Tavolo base** | Telaio in travi KVH 80×120, piano lamellare 40, ripiani e rinforzo in OSB/3 18, zona ricarica con piastre intercambiabili, canaline | ~589 € | [moduli/1-tavolo-base](moduli/1-tavolo-base) |
+| **1 · Tavolo base** | Telaio in travi KVH 80×120 (5 barre da 4 m), piano lamellare 40, ripiani e rinforzo in OSB/3 18, zona ricarica con piastre intercambiabili, canaline | ~623 € | [moduli/1-tavolo-base](moduli/1-tavolo-base) |
 | **2 · Cassettiera** | Cassettiera fissa a 3 cassetti per la campata sinistra + cassetto appeso sotto il piano | ~172 € | [moduli/2-cassettiera](moduli/2-cassettiera) |
 | **3 · Alzatina** | 4 montanti + mensola 2000×200 in tavole OBI 800×200×14 con listello di rinforzo | ~62 € | [moduli/3-alzatina](moduli/3-alzatina) |
 
@@ -16,7 +16,7 @@ I costi comprendono prezzi verificati (travi, lamellare, OSB, tavole OBI) e stim
 
 ## Come si collegano i moduli
 
-- Il **tavolo base** prepara tutto: nelle 4 gambe posteriori c'è un foro Ø12 in testa e un dado a tamburo M10, e i 4 montanti dell'alzatina vengono tagliati dalle stesse travi del telaio (le 4 barre KVH bastano).
+- Il **tavolo base** prepara tutto: nelle 4 gambe posteriori c'è un foro Ø12 in testa e un dado a tamburo M10, e i 4 montanti dell'alzatina vengono tagliati dalle stesse 5 travi del telaio.
 - La **cassettiera** non richiede lavorazioni sul telaio: si appoggia al ripiano OSB della campata sinistra e si avvita alle gambe; le guide del cassetto appeso si avvitano sulle traverse.
 - L'**alzatina** si monta forando il piano in 4 punti e avvitando le barre M10 nei dadi già presenti nelle gambe.
 
@@ -27,7 +27,7 @@ I costi comprendono prezzi verificati (travi, lamellare, OSB, tavole OBI) e stim
 - `*.step` – modello 3D del modulo (FreeCAD, Fusion 360, SolidWorks)
 - `immagini/` – viste di montaggio
 
-Il tavolo base ha in più le tavole quotate (`tavolo_base_tavole.pdf`).
+Il tavolo base ha in più le tavole quotate (`tavolo_base_tavole.pdf`): pianta, prospetti, fianchi e schede di ogni traversa.
 Il modello completo con tutti i moduli è in `modello/tavolo_completo.step`.
 
 ## Scelte di materiale

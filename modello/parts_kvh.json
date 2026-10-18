@@ -430,6 +430,24 @@
    "module": "base"
   },
   {
+   "name": "Trav. inf. ant. cassetti",
+   "group": "Travi KVH 80x120",
+   "mat": "KVH 80x120",
+   "role": "trav-long",
+   "box": [
+    80,
+    0,
+    70,
+    580,
+    80,
+    190
+   ],
+   "color": "#bd8d55",
+   "holes": [],
+   "tray": false,
+   "module": "base"
+  },
+  {
    "name": "Trav. sup. post. seduta",
    "group": "Travi KVH 80x120",
    "mat": "KVH 80x120",

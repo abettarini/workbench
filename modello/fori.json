@@ -121,6 +121,66 @@
  },
  {
   "part": "Gamba 1 ant",
+  "code": "S",
+  "kind": "spina",
+  "p0": [
+   80,
+   25,
+   105
+  ],
+  "dir": [
+   -1,
+   0,
+   0
+  ],
+  "d": 12,
+  "depth": 25,
+  "cb": null,
+  "note": "inf: spina long. dx"
+ },
+ {
+  "part": "Gamba 1 ant",
+  "code": "S",
+  "kind": "spina",
+  "p0": [
+   80,
+   55,
+   105
+  ],
+  "dir": [
+   -1,
+   0,
+   0
+  ],
+  "d": 12,
+  "depth": 25,
+  "cb": null,
+  "note": "inf: spina long. dx"
+ },
+ {
+  "part": "Gamba 1 ant",
+  "code": "B2",
+  "kind": "bullone long. M10\u00d7140",
+  "p0": [
+   0,
+   40,
+   160
+  ],
+  "dir": [
+   1,
+   0,
+   0
+  ],
+  "d": 11,
+  "depth": 80,
+  "cb": [
+   25,
+   12
+  ],
+  "note": "inf: passante, lamatura sulla faccia sinistra"
+ },
+ {
+  "part": "Gamba 1 ant",
   "code": "I",
   "kind": "inserto M10 piedino",
   "p0": [
@@ -554,6 +614,66 @@
   "depth": 25,
   "cb": null,
   "note": "inf: spina laterale"
+ },
+ {
+  "part": "Gamba 2 ant",
+  "code": "S",
+  "kind": "spina",
+  "p0": [
+   580,
+   25,
+   105
+  ],
+  "dir": [
+   1,
+   0,
+   0
+  ],
+  "d": 12,
+  "depth": 25,
+  "cb": null,
+  "note": "inf: spina long. sx"
+ },
+ {
+  "part": "Gamba 2 ant",
+  "code": "S",
+  "kind": "spina",
+  "p0": [
+   580,
+   55,
+   105
+  ],
+  "dir": [
+   1,
+   0,
+   0
+  ],
+  "d": 12,
+  "depth": 25,
+  "cb": null,
+  "note": "inf: spina long. sx"
+ },
+ {
+  "part": "Gamba 2 ant",
+  "code": "B2",
+  "kind": "bullone long. M10\u00d7140",
+  "p0": [
+   660,
+   40,
+   160
+  ],
+  "dir": [
+   -1,
+   0,
+   0
+  ],
+  "d": 11,
+  "depth": 80,
+  "cb": [
+   25,
+   12
+  ],
+  "note": "inf: passante, lamatura sulla faccia destra"
  },
  {
   "part": "Gamba 2 ant",
@@ -3669,6 +3789,158 @@
   "p0": [
    580,
    775.0,
+   105
+  ],
+  "dir": [
+   -1,
+   0,
+   0
+  ],
+  "d": 12,
+  "depth": 30,
+  "cb": null,
+  "note": "testata"
+ },
+ {
+  "part": "Trav. inf. ant. cassetti",
+  "code": "A",
+  "kind": "assiale bullone",
+  "p0": [
+   80,
+   40.0,
+   160
+  ],
+  "dir": [
+   1,
+   0,
+   0
+  ],
+  "d": 11,
+  "depth": 80,
+  "cb": null,
+  "note": "testata"
+ },
+ {
+  "part": "Trav. inf. ant. cassetti",
+  "code": "T",
+  "kind": "dado a tamburo",
+  "p0": [
+   140,
+   40.0,
+   190
+  ],
+  "dir": [
+   0,
+   0,
+   -1
+  ],
+  "d": 15,
+  "depth": 45,
+  "cb": null,
+  "note": "dall'alto"
+ },
+ {
+  "part": "Trav. inf. ant. cassetti",
+  "code": "S",
+  "kind": "spina",
+  "p0": [
+   80,
+   25.0,
+   105
+  ],
+  "dir": [
+   1,
+   0,
+   0
+  ],
+  "d": 12,
+  "depth": 30,
+  "cb": null,
+  "note": "testata"
+ },
+ {
+  "part": "Trav. inf. ant. cassetti",
+  "code": "S",
+  "kind": "spina",
+  "p0": [
+   80,
+   55.0,
+   105
+  ],
+  "dir": [
+   1,
+   0,
+   0
+  ],
+  "d": 12,
+  "depth": 30,
+  "cb": null,
+  "note": "testata"
+ },
+ {
+  "part": "Trav. inf. ant. cassetti",
+  "code": "A",
+  "kind": "assiale bullone",
+  "p0": [
+   580,
+   40.0,
+   160
+  ],
+  "dir": [
+   -1,
+   0,
+   0
+  ],
+  "d": 11,
+  "depth": 80,
+  "cb": null,
+  "note": "testata"
+ },
+ {
+  "part": "Trav. inf. ant. cassetti",
+  "code": "T",
+  "kind": "dado a tamburo",
+  "p0": [
+   520,
+   40.0,
+   190
+  ],
+  "dir": [
+   0,
+   0,
+   -1
+  ],
+  "d": 15,
+  "depth": 45,
+  "cb": null,
+  "note": "dall'alto"
+ },
+ {
+  "part": "Trav. inf. ant. cassetti",
+  "code": "S",
+  "kind": "spina",
+  "p0": [
+   580,
+   25.0,
+   105
+  ],
+  "dir": [
+   -1,
+   0,
+   0
+  ],
+  "d": 12,
+  "depth": 30,
+  "cb": null,
+  "note": "testata"
+ },
+ {
+  "part": "Trav. inf. ant. cassetti",
+  "code": "S",
+  "kind": "spina",
+  "p0": [
+   580,
+   55.0,
    105
   ],
   "dir": [

@@ -70,14 +70,14 @@ def dims(p):
 wb = Workbook(); ws = wb.active; ws.title = "Distinta costi"
 OSB = 31.49
 base_items = [
-    ("Legno", "Trave KVH giuntato 80×120, barra 4 m", "gambe, traverse e i 4 montanti dell'alzatina (schema senza scorta)",
+    ("Legno", "Trave KVH giuntato 80×120, barra 4 m", "gambe, traverse e i 4 montanti dell'alzatina (~2,6 m di scorta)",
      "='Confronto travi'!I8", "pz", "='Confronto travi'!D8", "fornito", True),
     ("Legno", "Tavola abete lamellare 2000×800×40", "piano di lavoro (intero)", 1, "pz", 79.00, "fornito", False),
     ("Legno", "Pannello OSB/3 2500×1250×18", "3 ripiani bassi + rinforzo ricarica (2 strati)", 1, "pz", OSB, "obi", False),
     ("Legno", "Listello abete 30×40, barra 2,4 m", "reggiripiano: 4 × 560 + 2 × 260", 2, "pz", 5.00, "stima", False),
     ("Ferramenta telaio", "Bullone TCEI M10×180 + rondella Ø20 (B1)", "traverse laterali", 16, "pz", 1.20, "stima", False),
-    ("Ferramenta telaio", "Bullone TCEI M10×140 + rondella Ø20 (B2)", "traverse longitudinali, gambe d'estremità", 8, "pz", 1.00, "stima", False),
-    ("Ferramenta telaio", "Dado a tamburo M10 (D)", "32 nodi + 4 predisposizione alzatina", 36, "pz", 0.80, "stima", False),
+    ("Ferramenta telaio", "Bullone TCEI M10×140 + rondella Ø20 (B2)", "traverse longitudinali, gambe con una sola traversa", 10, "pz", 1.00, "stima", False),
+    ("Ferramenta telaio", "Dado a tamburo M10 (D)", "34 nodi + 4 predisposizione alzatina", 38, "pz", 0.80, "stima", False),
     ("Ferramenta telaio", "Barra filettata M10 da 1 m (R)", "4 spezzoni da 220 per le gambe centrali", 1, "pz", 3.50, "stima", False),
     ("Ferramenta telaio", "Spine in faggio Ø12×50 (conf. 100)", "2 per nodo", 1, "conf", 6.00, "stima", False),
     ("Ferramenta telaio", "Colla vinilica D3 750 g", "spine, rinforzo, listelli", 1, "pz", 9.00, "stima", False),

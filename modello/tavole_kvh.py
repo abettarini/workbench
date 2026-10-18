@@ -41,7 +41,9 @@ def elevation(ax, u, v, depth, sel=None, far_first_high=False):
         ax.add_patch(Rectangle((b[u], b[v]), b[u + 3] - b[u], b[v + 3] - b[v], fc=p["color"], ec="#3b2f22", lw=0.45))
     ax.set_aspect("equal"); ax.axis("off")
 
-def header(fig, title, n):
+NUM = [0]
+def header(fig, title, n=None):
+    NUM[0] += 1; n = NUM[0]
     fig.text(0.04, 0.955, title, fontsize=15, weight="bold")
     fig.text(0.96, 0.955, f"Tavolo da lavoro 2000×800 – travi KVH 80×120 – tav. {n}", fontsize=9, ha="right", color="#555")
     fig.text(0.04, 0.025, "Quote in mm. KVH 80×120 abete C24 giuntato, piallato. Costi nel file tavolo_base_costi.xlsx.",
@@ -63,32 +65,20 @@ with PdfPages("tavolo_base_tavole.pdf") as pdf:
            f"Piano a {H} mm (seduto) – tavola lamellare abete 2000×800×40 intera · campate nette: cassetti 500 · seduta 700 · ricarica 480\n"
            "Ripiani bassi e rinforzo della ricarica (2 strati) da un pannello OSB/3 2500×1250×18\n"
            "Nodi: bullone M10 passante + dado a tamburo + 2 spine Ø12; bulloni sfalsati in altezza dove due traverse entrano nella stessa gamba\n"
-           "Telaio da 4 barre KVH da 4 m (28 pezzi). Fissaggio a muro obbligatorio per l'uso delle presse\n"
+           "Telaio da 5 barre KVH da 4 m (29 pezzi, ~2,6 m di scorta). Fissaggio a muro obbligatorio per l'uso delle presse\n"
            "Moduli separati: cassettiera (modulo 2) e alzatina con mensola (modulo 3), con i propri manuali e costi")
     fig.text(0.05, 0.075, txt, fontsize=8.8, va="bottom", linespacing=1.65)
     pdf.savefig(fig); plt.close(fig)
 
-    # 2 prospetto frontale
-    fig = plt.figure(figsize=A4); header(fig, "Prospetto frontale", 2)
-    ax = fig.add_axes([0.05, 0.08, 0.9, 0.84])
-    elevation(ax, 0, 2, 1, sel=lambda p: "scatola" not in p["name"], far_first_high=True)
-    dim(ax, 0, top_z, W, top_z, 90, f"{W}")
-    for a, c in bays: dim(ax, a, 0, c, 0, -70)
-    for a, c in legs: dim(ax, a, 0, c, 0, -70, f"{c-a:.0f}", fs=6.5)
-    dim(ax, W, 0, W, H, 110, vertical=True); dim(ax, W, 0, W, top_z, 260, vertical=True)
-    dim(ax, 0, 0, 0, P["lower_z"], -110, vertical=True, fs=7)
-    dim(ax, 0, P["lower_z"], 0, P["lower_z"] + Rh, -110, vertical=True, fs=7)
-    dim(ax, 0, H - P["T_top"] - Rh, 0, H - P["T_top"], -110, vertical=True, fs=7)
-    dim(ax, bays[1][0], 0, bays[1][0], H - P["T_top"], 60, f"spazio gambe {H - P['T_top']:.0f}*", vertical=True, fs=7)
-    for (a, c), lab in zip(bays, ["CASSETTI", "SEDUTA", "RICARICA"]):
-        ax.text((a + c) / 2, -210, lab, ha="center", fontsize=9, weight="bold", color="#333")
-    ax.text(0, -300, "* nella campata seduta non c'è traversa anteriore: dal pavimento al piano restano 700 mm liberi "
-            "(la traversa visibile in vista è quella posteriore, con la canalina).", fontsize=7.5, color="#555")
-    ax.set_xlim(-300, W + 380); ax.set_ylim(-330, top_z + 220)
-    pdf.savefig(fig); plt.close(fig)
+    # 2 viste ortogonali quotate + schede traverse
+    import disegni
+    def new_page(title, phase=None):
+        f = plt.figure(figsize=A4); header(f, title); return f
+    disegni.pagine_viste(new_page, pdf, plt)
+    disegni.pagine_traverse(new_page, pdf, plt)
 
     # 3 laterale + nodo
-    fig = plt.figure(figsize=A4); header(fig, "Vista laterale da destra · dettaglio nodo", 3)
+    fig = plt.figure(figsize=A4); header(fig, "Vista laterale da destra · dettaglio nodo")
     ax = fig.add_axes([0.02, 0.10, 0.40, 0.80])
     elevation(ax, 1, 2, 0, sel=lambda p: p["box"][0] >= bays[1][1] - 1)
     dim(ax, 0, top_z, D, top_z, 80, f"{D}")
@@ -122,8 +112,7 @@ with PdfPages("tavolo_base_tavole.pdf") as pdf:
             x += L + 4
         ax.text(4020, y + 0.45, f"avanzo {4000 - x:.0f}", va="center", fontsize=7.5, color="#555")
     ax.text(0, -0.35, "Schema di taglio (barre da 4000 mm, taglio 4 mm, 10 mm di rifilatura in testa)", fontsize=9)
-    fig.text(0.58, 0.62, "Note\n• 4 barre senza scorta: misura due volte, taglia una.\n"
-             "  Se preferisci un margine, prendi una 5ª barra (29,90 €).\n"
+    fig.text(0.58, 0.62, "Note\n• La 5ª barra lascia ~2,6 m di scorta per errori di taglio.\n"
              "• Se il rivenditore taglia a misura, porta questa pagina.\n"
              "• Taglia prima i pezzi lunghi (700) e controlla la squadra.\n"
              "• Le gambe sono tutte uguali: puoi tagliarle in pacco.", fontsize=8.5, va="top", linespacing=1.6)
@@ -164,10 +153,10 @@ with PdfPages("tavolo_base_tavole.pdf") as pdf:
     # 6 ferramenta e montaggio
     fig = plt.figure(figsize=A4); header(fig, "Ferramenta e montaggio", 6)
     hw = [("Bullone TCEI M10×180 + rondella (B1)", "16", "traverse laterali"),
-          ("Bullone TCEI M10×140 + rondella (B2)", "8", "traverse longitudinali su gambe con una sola traversa"),
+          ("Bullone TCEI M10×140 + rondella (B2)", "10", "traverse longitudinali su gambe con una sola traversa"),
           ("Barra filettata M10 L 220 (R)", "4", "gambe posteriori centrali: unisce le due traverse"),
-          ("Dado a tamburo M10 (D)", "36", "32 testate di traversa + 4 predisposizione alzatina"),
-          ("Spine in faggio Ø12×50", "64", "2 per nodo, incollate"),
+          ("Dado a tamburo M10 (D)", "38", "34 testate di traversa + 4 predisposizione alzatina"),
+          ("Spine in faggio Ø12×50", "68", "2 per nodo, incollate"),
           ("Inserti filettati M10 + piedini livellatori", "8", "base gambe"),
           ("Squadrette fissaggio piano + viti 4,5×30", "16", "piano sulle traverse superiori"),
           ("Viti 5×60 + colla", "12", "rinforzo zona ricarica sotto il piano"),

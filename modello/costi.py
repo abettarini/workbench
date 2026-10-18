@@ -32,6 +32,7 @@ def pieces_for(b, h):
     for i, L in enumerate(bays):
         long_[L] += 2                      # sup. + inf. posteriore
         if i == 2: long_[L] += 2           # ricarica: sup. + inf. anteriore
+        if i == 0: long_[L] += 1           # cassetti: inf. anteriore
     for L, n in sorted(long_.items(), reverse=True):
         pcs.append((f"Traversa longitudinale {L}", L, n))
     return pcs, bays

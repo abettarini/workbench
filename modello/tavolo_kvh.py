@@ -61,7 +61,7 @@ def build():
         add(f"Trav. inf. post. {names[i]}", BEAM, "KVH 80x120", a, D - Rt, zl[0], c, D, zl[1], RAIL2, role="trav-long")
         if names[i] == "ricarica":
             add(f"Trav. sup. ant. {names[i]}", BEAM, "KVH 80x120", a, 0, zu[0], c, Rt, zu[1], RAIL2, role="trav-long")
-        if names[i] == "ricarica":
+        if names[i] in ("cassetti", "ricarica"):
             add(f"Trav. inf. ant. {names[i]}", BEAM, "KVH 80x120", a, 0, zl[0], c, Rt, zl[1], RAIL2, role="trav-long")
 
     gh = [("z", (bb[0] + bb[1]) / 2, tray_y, P["grommet_d"]) for bb in bays[1:]]

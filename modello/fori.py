@@ -27,10 +27,19 @@ def H_(part, code, kind, p0, dir_, dia, depth, cb=None, note=""):
                       depth=round(depth, 1), cb=cb, note=note))
 
 # ---------------------------------------------------------------- gambe
-long_faces = {   # (indice gamba, lato) -> facce X con traversa longitudinale
-    (0, "post"): ["dx"], (1, "post"): ["sx", "dx"], (2, "post"): ["sx", "dx"], (3, "post"): ["sx"],
-    (2, "ant"): ["dx"], (3, "ant"): ["sx"],
-}
+def long_faces(i, side, ztop):
+    """facce X della gamba su cui arriva una traversa longitudinale con filo superiore ztop (dal modello)"""
+    x0 = legs_x[i]; x1 = x0 + Lx
+    y0, y1 = (0, Ly) if side == "ant" else (D - Ly, D)
+    out = []
+    for p in parts.values():
+        if p.get("role") != "trav-long": continue
+        b = p["box"]
+        if abs(b[5] - ztop) > 0.5 or b[4] <= y0 or b[1] >= y1: continue
+        if abs(b[0] - x1) < 0.5: out.append("dx")
+        if abs(b[3] - x0) < 0.5: out.append("sx")
+    return sorted(out, reverse=True)   # "sx" prima di "dx"
+
 for i, x0 in enumerate(legs_x):
     xc = x0 + Lx / 2
     for side in ("ant", "post"):
@@ -46,7 +55,7 @@ for i, x0 in enumerate(legs_x):
             for dx in (-15, 15):
                 H_(name, "S", "spina", (xc + dx, inner_y, ztop - 35), (0, -into, 0), DOW_D, 25, note=f"{lev}: spina laterale")
             # traverse longitudinali
-            faces = long_faces.get((i, side), [])
+            faces = long_faces(i, side, ztop)
             for f in faces:
                 fx, fdir = (x0, 1) if f == "sx" else (x0 + Lx, -1)
                 for dy in (-15, 15):
