@@ -33,7 +33,6 @@ def off_ci(p):
     return (0, -420, 0)
 stage("cas_installazione.png", left + cas, off_ci, color=lambda p: p["color"] if p["module"] == "cassettiera" else GHOST,
       labels=[("Cassettiera fianco dx", "c", "La cassettiera completa entra dal fronte\ne appoggia sul ripiano OSB", "R", 760),
-              ("Frontale cassetto appeso", "front", "Cassetto appeso: guide su L1s/G1A e L2s/G2A", "L", 240),
               ("Ripiano basso cassetti", "front", "Ripiano della campata cassetti (tavolo base)", "L", 860)],
       az=-38, el=20, zoom=1.0)
 
@@ -52,7 +51,7 @@ box_parts = [p for p in cas if "appeso" not in p["name"]]
 stage("cas_esploso.png", box_parts, off_ce, labels=[
     ("Cassettiera fianco sx", "c", "Fianchi 582×400 (multistrato 18)", "L", 520),
     ("Cassettiera cielo", "top", "Cielo e fondo TRA i fianchi", "L", 200),
-    ("Cassettiera schienale", "c", "Schienale HDF 4", "R", 200),
+    ("Cassettiera schienale", "c", "Schienale in fibra 3", "R", 200),
     ("Cassetto 3 (scatola)", "c", "Scatole dei cassetti (multistrato 15)", "R", 520),
     ("Frontale cassetto 1", "front", "Frontali 496×131 (multistrato 18)", "R", 800),
 ], az=-35, el=22, zoom=1.0)
@@ -65,14 +64,14 @@ def off_ai(p):
     return (0, 0, 0)
 stage("alz_installazione.png", base + alz, off_ai, color=lambda p: p["color"] if p["module"] == "alzatina" else GHOST,
       labels=[("Mensola – tavola 2", "top", "Mensola: 3 tavole lamellari 1000×200×18\n(tagliate a 620 + 780 + 600)", "L", 140),
-              ("Listello mensola", "front", "Listello 30×40 incollato sotto\nil bordo anteriore", "L", 320),
+              ("Listello mensola 2", "front", "Listello 30×40 incollato sotto il bordo\nanteriore, in 3 pezzi tra i montanti", "L", 320),
               ("Montante mensola 1", "c", "4 montanti KVH 80×120×250\n(tagliati con il tavolo base)", "L", 560),
               ("Montante mensola 4", "bottom", "Barre M10 nei dadi a tamburo\npredisposti nelle gambe posteriori", "R", 640)],
       az=-25, el=22, zoom=1.1)
 
 # --- alzatina: mensola vista da sotto
 stage("alz_mensola_sotto.png", alz, lambda p: (0, 0, 0) if not p["name"].startswith("Montante") else (0, 0, -60),
-      labels=[("Listello mensola", "bottom", "Listello 30×40 unico da 2000:\nunisce le tre tavole", "L", 760),
+      labels=[("Listello mensola 1", "bottom", "Listello 30×40 in 3 pezzi:\nun pezzo per campata", "L", 760),
               ("Mensola – tavola 2", "bottom", "Giunti in asse ai montanti 2 e 3", "R", 250),
               ("Montante mensola 2", "bottom", "Montanti", "R", 820)],
       az=-30, el=-25, zoom=1.0)

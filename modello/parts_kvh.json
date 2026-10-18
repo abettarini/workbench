@@ -34,13 +34,11 @@
   "grommet_d": 60,
   "cable_hole": 35,
   "case_h": 400,
-  "case_d": 600,
+  "case_d": 596,
   "T_case": 18,
   "n_drawers": 3,
   "slide_len": 500,
   "slide_t": 12.7,
-  "hang_front_h": 97,
-  "hang_box_h": 70,
   "mount": [
    180,
    180,
@@ -50,7 +48,11 @@
    220,
    220,
    6
-  ]
+  ],
+  "Fb": 80,
+  "Ff_d": 120,
+  "Ff_h": 80,
+  "fascia_gap": 5
  },
  "legs_x": [
   0,
@@ -98,10 +100,10 @@
    "role": "gamba",
    "box": [
     0,
-    0,
+    120,
     0,
     80,
-    120,
+    240,
     700
    ],
    "color": "#d9b382",
@@ -116,10 +118,10 @@
    "role": "gamba",
    "box": [
     0,
-    680,
+    600,
     0,
     80,
-    800,
+    720,
     700
    ],
    "color": "#d9b382",
@@ -134,10 +136,10 @@
    "role": "gamba",
    "box": [
     580,
-    0,
+    120,
     0,
     660,
-    120,
+    240,
     700
    ],
    "color": "#d9b382",
@@ -152,10 +154,10 @@
    "role": "gamba",
    "box": [
     580,
-    680,
+    600,
     0,
     660,
-    800,
+    720,
     700
    ],
    "color": "#d9b382",
@@ -170,10 +172,10 @@
    "role": "gamba",
    "box": [
     1360,
-    0,
+    120,
     0,
     1440,
-    120,
+    240,
     700
    ],
    "color": "#d9b382",
@@ -188,10 +190,10 @@
    "role": "gamba",
    "box": [
     1360,
-    680,
+    600,
     0,
     1440,
-    800,
+    720,
     700
    ],
    "color": "#d9b382",
@@ -206,10 +208,10 @@
    "role": "gamba",
    "box": [
     1920,
-    0,
+    120,
     0,
     2000,
-    120,
+    240,
     700
    ],
    "color": "#d9b382",
@@ -224,10 +226,10 @@
    "role": "gamba",
    "box": [
     1920,
-    680,
+    600,
     0,
     2000,
-    800,
+    720,
     700
    ],
    "color": "#d9b382",
@@ -242,10 +244,10 @@
    "role": "trav-lat",
    "box": [
     0,
-    120,
+    240,
     580,
     80,
-    680,
+    600,
     700
    ],
    "color": "#c99a62",
@@ -260,10 +262,10 @@
    "role": "trav-lat",
    "box": [
     0,
-    120,
+    240,
     70,
     80,
-    680,
+    600,
     190
    ],
    "color": "#c99a62",
@@ -278,17 +280,17 @@
    "role": "trav-lat",
    "box": [
     580,
-    120,
+    240,
     580,
     660,
-    680,
+    600,
     700
    ],
    "color": "#c99a62",
    "holes": [
     [
      "x",
-     560,
+     420.0,
      650,
      35
     ]
@@ -303,10 +305,10 @@
    "role": "trav-lat",
    "box": [
     580,
-    120,
+    240,
     70,
     660,
-    680,
+    600,
     190
    ],
    "color": "#c99a62",
@@ -321,17 +323,17 @@
    "role": "trav-lat",
    "box": [
     1360,
-    120,
+    240,
     580,
     1440,
-    680,
+    600,
     700
    ],
    "color": "#c99a62",
    "holes": [
     [
      "x",
-     560,
+     420.0,
      650,
      35
     ]
@@ -346,10 +348,10 @@
    "role": "trav-lat",
    "box": [
     1360,
-    120,
+    240,
     70,
     1440,
-    680,
+    600,
     190
    ],
    "color": "#c99a62",
@@ -364,10 +366,10 @@
    "role": "trav-lat",
    "box": [
     1920,
-    120,
+    240,
     580,
     2000,
-    680,
+    600,
     700
    ],
    "color": "#c99a62",
@@ -382,10 +384,10 @@
    "role": "trav-lat",
    "box": [
     1920,
-    120,
+    240,
     70,
     2000,
-    680,
+    600,
     190
    ],
    "color": "#c99a62",
@@ -394,15 +396,15 @@
    "module": "base"
   },
   {
-   "name": "Trav. sup. post. cassetti",
+   "name": "Fascia post. alta",
    "group": "Travi KVH 80x120",
    "mat": "KVH 80x120",
-   "role": "trav-long",
+   "role": "fascia",
    "box": [
-    80,
+    5,
     720,
     580,
-    580,
+    1995,
     800,
     700
    ],
@@ -412,17 +414,35 @@
    "module": "base"
   },
   {
-   "name": "Trav. inf. post. cassetti",
+   "name": "Fascia post. bassa",
    "group": "Travi KVH 80x120",
    "mat": "KVH 80x120",
-   "role": "trav-long",
+   "role": "fascia",
    "box": [
-    80,
+    5,
     720,
     70,
-    580,
+    1995,
     800,
     190
+   ],
+   "color": "#bd8d55",
+   "holes": [],
+   "tray": false,
+   "module": "base"
+  },
+  {
+   "name": "Fascia ant. alta",
+   "group": "Travi KVH 80x120",
+   "mat": "KVH 80x120 (di piatto)",
+   "role": "fascia",
+   "box": [
+    5,
+    0,
+    620,
+    1995,
+    120,
+    700
    ],
    "color": "#bd8d55",
    "holes": [],
@@ -436,101 +456,11 @@
    "role": "trav-long",
    "box": [
     80,
-    0,
+    120,
     70,
     580,
-    80,
+    200,
     190
-   ],
-   "color": "#bd8d55",
-   "holes": [],
-   "tray": false,
-   "module": "base"
-  },
-  {
-   "name": "Trav. sup. post. seduta",
-   "group": "Travi KVH 80x120",
-   "mat": "KVH 80x120",
-   "role": "trav-long",
-   "box": [
-    660,
-    720,
-    580,
-    1360,
-    800,
-    700
-   ],
-   "color": "#bd8d55",
-   "holes": [],
-   "tray": false,
-   "module": "base"
-  },
-  {
-   "name": "Trav. inf. post. seduta",
-   "group": "Travi KVH 80x120",
-   "mat": "KVH 80x120",
-   "role": "trav-long",
-   "box": [
-    660,
-    720,
-    70,
-    1360,
-    800,
-    190
-   ],
-   "color": "#bd8d55",
-   "holes": [],
-   "tray": false,
-   "module": "base"
-  },
-  {
-   "name": "Trav. sup. post. ricarica",
-   "group": "Travi KVH 80x120",
-   "mat": "KVH 80x120",
-   "role": "trav-long",
-   "box": [
-    1440,
-    720,
-    580,
-    1920,
-    800,
-    700
-   ],
-   "color": "#bd8d55",
-   "holes": [],
-   "tray": false,
-   "module": "base"
-  },
-  {
-   "name": "Trav. inf. post. ricarica",
-   "group": "Travi KVH 80x120",
-   "mat": "KVH 80x120",
-   "role": "trav-long",
-   "box": [
-    1440,
-    720,
-    70,
-    1920,
-    800,
-    190
-   ],
-   "color": "#bd8d55",
-   "holes": [],
-   "tray": false,
-   "module": "base"
-  },
-  {
-   "name": "Trav. sup. ant. ricarica",
-   "group": "Travi KVH 80x120",
-   "mat": "KVH 80x120",
-   "role": "trav-long",
-   "box": [
-    1440,
-    0,
-    580,
-    1920,
-    80,
-    700
    ],
    "color": "#bd8d55",
    "holes": [],
@@ -544,10 +474,10 @@
    "role": "trav-long",
    "box": [
     1440,
-    0,
+    120,
     70,
     1920,
-    80,
+    200,
     190
    ],
    "color": "#bd8d55",
@@ -593,7 +523,7 @@
    "role": "",
    "box": [
     1440,
-    80,
+    120,
     664,
     1920,
     600.0,
@@ -611,10 +541,10 @@
    "role": "",
    "box": [
     1570.0,
-    80,
+    120,
     658,
     1790.0,
-    300,
+    340,
     664
    ],
    "color": "#7d848c",
@@ -647,10 +577,10 @@
    "role": "",
    "box": [
     80,
-    120,
+    200,
     172,
     580,
-    680,
+    720,
     190
    ],
    "color": "#d9c08a",
@@ -665,10 +595,10 @@
    "role": "",
    "box": [
     80,
-    120,
+    200,
     132,
     110,
-    680,
+    720,
     172
    ],
    "color": "#d4ae7c",
@@ -683,10 +613,10 @@
    "role": "",
    "box": [
     550,
-    120,
+    200,
     132,
     580,
-    680,
+    720,
     172
    ],
    "color": "#d4ae7c",
@@ -701,10 +631,10 @@
    "role": "",
    "box": [
     1440,
-    120,
+    200,
     172,
     1920,
-    680,
+    720,
     190
    ],
    "color": "#d9c08a",
@@ -719,10 +649,10 @@
    "role": "",
    "box": [
     1440,
-    120,
+    200,
     132,
     1470,
-    680,
+    720,
     172
    ],
    "color": "#d4ae7c",
@@ -737,10 +667,10 @@
    "role": "",
    "box": [
     1890,
-    120,
+    200,
     132,
     1920,
-    680,
+    720,
     172
    ],
    "color": "#d4ae7c",
@@ -755,10 +685,10 @@
    "role": "",
    "box": [
     660,
-    420,
+    460,
     172,
     1360,
-    680,
+    720,
     190
    ],
    "color": "#d9c08a",
@@ -773,10 +703,10 @@
    "role": "",
    "box": [
     660,
-    420,
+    460,
     132,
     690,
-    680,
+    720,
     172
    ],
    "color": "#d4ae7c",
@@ -791,10 +721,10 @@
    "role": "",
    "box": [
     1330,
-    420,
+    460,
     132,
     1360,
-    680,
+    720,
     172
    ],
    "color": "#d4ae7c",
@@ -809,10 +739,10 @@
    "role": "montante",
    "box": [
     0,
-    680,
+    600,
     740,
     80,
-    800,
+    720,
     990
    ],
    "color": "#d9b382",
@@ -827,10 +757,10 @@
    "role": "montante",
    "box": [
     580,
-    680,
+    600,
     740,
     660,
-    800,
+    720,
     990
    ],
    "color": "#d9b382",
@@ -845,10 +775,10 @@
    "role": "montante",
    "box": [
     1360,
-    680,
+    600,
     740,
     1440,
-    800,
+    720,
     990
    ],
    "color": "#d9b382",
@@ -863,10 +793,10 @@
    "role": "montante",
    "box": [
     1920,
-    680,
+    600,
     740,
     2000,
-    800,
+    720,
     990
    ],
    "color": "#d9b382",
@@ -929,15 +859,51 @@
    "module": "alzatina"
   },
   {
-   "name": "Listello mensola",
+   "name": "Listello mensola 1",
    "group": "Alzatina",
    "mat": "abete 30\u00d740",
    "role": "",
    "box": [
-    0,
+    80,
     600,
     950,
-    2000,
+    580,
+    630,
+    990
+   ],
+   "color": "#d4ae7c",
+   "holes": [],
+   "tray": false,
+   "module": "alzatina"
+  },
+  {
+   "name": "Listello mensola 2",
+   "group": "Alzatina",
+   "mat": "abete 30\u00d740",
+   "role": "",
+   "box": [
+    660,
+    600,
+    950,
+    1360,
+    630,
+    990
+   ],
+   "color": "#d4ae7c",
+   "holes": [],
+   "tray": false,
+   "module": "alzatina"
+  },
+  {
+   "name": "Listello mensola 3",
+   "group": "Alzatina",
+   "mat": "abete 30\u00d740",
+   "role": "",
+   "box": [
+    1440,
+    600,
+    950,
+    1920,
     630,
     990
    ],
@@ -1025,10 +991,10 @@
    "role": "",
    "box": [
     82,
-    18,
+    138,
     190,
     100,
-    600,
+    716,
     590
    ],
    "color": "#f0e2c4",
@@ -1043,10 +1009,10 @@
    "role": "",
    "box": [
     560,
-    18,
+    138,
     190,
     578,
-    600,
+    716,
     590
    ],
    "color": "#f0e2c4",
@@ -1061,10 +1027,10 @@
    "role": "",
    "box": [
     100,
-    18,
+    138,
     572,
     560,
-    600,
+    716,
     590
    ],
    "color": "#f0e2c4",
@@ -1079,10 +1045,10 @@
    "role": "",
    "box": [
     100,
-    18,
+    138,
     190,
     560,
-    600,
+    716,
     208
    ],
    "color": "#f0e2c4",
@@ -1093,14 +1059,14 @@
   {
    "name": "Cassettiera schienale",
    "group": "Cassettiera",
-   "mat": "HDF 4",
+   "mat": "pannello di fibra 3",
    "role": "",
    "box": [
     82,
-    600,
+    716,
     190,
     578,
-    604,
+    719,
     590
    ],
    "color": "#f0e2c4",
@@ -1115,10 +1081,10 @@
    "role": "",
    "box": [
     82,
-    0,
+    120,
     190.0,
     578,
-    18,
+    138,
     321.33
    ],
    "color": "#5f7a8c",
@@ -1133,10 +1099,10 @@
    "role": "",
    "box": [
     112.7,
-    18,
+    138,
     212.0,
     547.3,
-    518,
+    638,
     297.0
    ],
    "color": "#e2c79a",
@@ -1151,10 +1117,10 @@
    "role": "",
    "box": [
     82,
-    0,
+    120,
     324.33,
     578,
-    18,
+    138,
     455.67
    ],
    "color": "#5f7a8c",
@@ -1169,10 +1135,10 @@
    "role": "",
    "box": [
     112.7,
-    18,
+    138,
     346.33,
     547.3,
-    518,
+    638,
     431.33
    ],
    "color": "#e2c79a",
@@ -1187,10 +1153,10 @@
    "role": "",
    "box": [
     82,
-    0,
+    120,
     458.67,
     578,
-    18,
+    138,
     590.0
    ],
    "color": "#5f7a8c",
@@ -1205,47 +1171,11 @@
    "role": "",
    "box": [
     112.7,
-    18,
+    138,
     480.67,
     547.3,
-    518,
+    638,
     565.67
-   ],
-   "color": "#e2c79a",
-   "holes": [],
-   "tray": false,
-   "module": "cassettiera"
-  },
-  {
-   "name": "Frontale cassetto appeso",
-   "group": "Cassettiera",
-   "mat": "multistrato 18",
-   "role": "",
-   "box": [
-    82,
-    0,
-    600,
-    578,
-    18,
-    697
-   ],
-   "color": "#5f7a8c",
-   "holes": [],
-   "tray": false,
-   "module": "cassettiera"
-  },
-  {
-   "name": "Cassetto appeso (scatola)",
-   "group": "Cassettiera",
-   "mat": "multistrato 15",
-   "role": "",
-   "box": [
-    92.7,
-    18,
-    600,
-    567.3,
-    518,
-    670
    ],
    "color": "#e2c79a",
    "holes": [],

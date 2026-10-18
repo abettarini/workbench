@@ -26,15 +26,15 @@ def pieces_for(b, h):
     seat, cass = 700, 500
     rel = max(free - seat - cass, 0)       # la campata ricarica prende il resto
     bays = [cass, seat, rel]
-    pcs = [("Gamba", LEG_H, 8), ("Traversa laterale (profondità)", D - 2 * h, 8),
-           ("Montante mensola", RISER, 4)]
+    # 4 telai laterali + 3 fasce a tutta lunghezza (2 posteriori di coltello, 1 anteriore di piatto)
+    fascia = W - 2 * 5
+    pcs = [("Gamba", LEG_H, 8), ("Traversa laterale (profondità)", D - b - h - 2 * h, 8),
+           ("Fascia (tutta lunghezza)", fascia, 3), ("Montante mensola", RISER, 4)]
     long_ = Counter()
     for i, L in enumerate(bays):
-        long_[L] += 2                      # sup. + inf. posteriore
-        if i == 2: long_[L] += 2           # ricarica: sup. + inf. anteriore
-        if i == 0: long_[L] += 1           # cassetti: inf. anteriore
+        if i in (0, 2): long_[L] += 1      # traverse basse anteriori: cassetti e ricarica
     for L, n in sorted(long_.items(), reverse=True):
-        pcs.append((f"Traversa longitudinale {L}", L, n))
+        pcs.append((f"Traversa bassa anteriore {L}", L, n))
     return pcs, bays
 
 def ffd(lengths, stock):
@@ -89,11 +89,21 @@ mk = json.load(open("parts_kvh.json"))
 beam_parts = [p for p in mk["parts"] if p["group"].startswith("Travi KVH")]
 def plen(p):
     x0, y0, z0, x1, y1, z1 = p["box"]; return round(max(x1 - x0, y1 - y0, z1 - z0))
-ROLE = {"gamba": "Gamba", "trav-lat": "Traversa laterale (profondità)", "trav-long": "Traversa longitudinale",
+ROLE = {"gamba": "Gamba", "trav-lat": "Traversa laterale (profondità)", "trav-long": "Traversa bassa anteriore",
+        "fascia": "Fascia (tutta lunghezza)",
         "montante": "Montante mensola"}
 kvh_rows = Counter((ROLE[p["role"]], plen(p)) for p in beam_parts)
 kvh_lens = [plen(p) for p in beam_parts]
-kvh_bars = best_pack(kvh_lens, 4000)
+# le fasce lunghe vanno a coppie su una barra intera; il resto con l'ottimizzazione
+_fas = sorted([L for L in kvh_lens if L > 1500], reverse=True)
+_rest = [L for L in kvh_lens if L <= 1500]
+kvh_bars = [_fas[i:i + 2] for i in range(0, len(_fas), 2)]
+_last = kvh_bars[-1]
+if len(_last) == 1:   # fascia rimasta sola: riempi la sua barra con i pezzi più lunghi che ci stanno
+    for L in sorted(_rest, reverse=True):
+        if TRIM + sum(_last) + KERF * len(_last) + L <= 4000 - 150:
+            _last.append(L); _rest.remove(L)
+kvh_bars += best_pack(_rest, 4000)
 sel = next(r for r in results if r["name"].startswith("KVH giuntato 80"))
 assert sorted(kvh_lens) == sorted(L for _, L, n in sel["pcs"] for _ in range(n)), "distinta modello ≠ confronto"
 

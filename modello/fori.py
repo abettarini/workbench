@@ -2,7 +2,8 @@
 Definizione di TUTTI i fori del tavolo KVH a partire da regole fisse + controllo collisioni.
 
 Regole (quote "dalla testa" = dal filo superiore della traversa):
-  traverse longitudinali (lungo X): bullone/barra a -30, spine a -85 (y = asse ± 15)
+  traverse basse anteriori (lungo X): bullone a -30, spine a -85 (y = asse ± 15)
+  fasce (a tutta lunghezza): viti strutturali Ø8 perpendicolari, 2 per gamba, preforo Ø5 nella gamba
   traverse laterali (lungo Y):      bullone a -90,       spine a -35 (x = asse ± 15)
   dado a tamburo a 60 mm dalla testata della traversa
   fori: Ø11 passante (bullone M10), Ø12 spine (prof. 25 gamba / 30 traversa),
@@ -27,10 +28,13 @@ def H_(part, code, kind, p0, dir_, dia, depth, cb=None, note=""):
                       depth=round(depth, 1), cb=cb, note=note))
 
 # ---------------------------------------------------------------- gambe
+def leg_y(i, side):
+    b = parts[f"Gamba {i+1} {side}"]["box"]; return b[1], b[4]
+
 def long_faces(i, side, ztop):
     """facce X della gamba su cui arriva una traversa longitudinale con filo superiore ztop (dal modello)"""
     x0 = legs_x[i]; x1 = x0 + Lx
-    y0, y1 = (0, Ly) if side == "ant" else (D - Ly, D)
+    y0, y1 = leg_y(i, side)
     out = []
     for p in parts.values():
         if p.get("role") != "trav-long": continue
@@ -40,39 +44,63 @@ def long_faces(i, side, ztop):
         if abs(b[3] - x0) < 0.5: out.append("sx")
     return sorted(out, reverse=True)   # "sx" prima di "dx"
 
+FAS = {n: p["box"] for n, p in parts.items() if p.get("role") == "fascia"}
+# viti strutturali delle fasce: (fascia, gamba "ant"/"post", [(dx, z), ...], vite)
+FASCIA_SCREWS = [
+    ("Fascia ant. alta",   "ant",  [(-16, LEG_H - 25), (16, LEG_H - 55)], "vite strutturale Ø8×160"),
+    ("Fascia post. alta",  "post", [(-16, LEG_H - 18), (16, LEG_H - 38)], "vite strutturale Ø8×160"),
+    ("Fascia post. bassa", "post", [(-16, P["lower_z"] + 90), (16, P["lower_z"] + 60)], "vite strutturale Ø8×160"),
+]
+SCREW_D, PILOT_D = 8, 5
+
 for i, x0 in enumerate(legs_x):
     xc = x0 + Lx / 2
     for side in ("ant", "post"):
         name = f"Gamba {i+1} {side}"
-        y0, y1 = (0, Ly) if side == "ant" else (D - Ly, D)
+        y0, y1 = leg_y(i, side)
         outer_y, inner_y = (y0, y1) if side == "ant" else (y1, y0)
         into = 1 if side == "ant" else -1                     # direzione verso l'interno (Y)
-        ryc = Rh * 0 + (40 if side == "ant" else D - 40)    # asse traverse longitudinali (prof. 80)
+        ryc = y0 + P["Rt"] / 2                                 # asse traverse basse anteriori (prof. 80, filo faccia ant.)
         for lev, ztop in LEV.items():
-            # traversa laterale: bullone dall'esterno, attraversa la gamba
+            # traversa laterale: bullone dalla faccia esterna (poi coperta dalla fascia), attraversa la gamba
             H_(name, "B1", "bullone laterale M10×180", (xc, outer_y, ztop - 90), (0, into, 0), BOLT_D, Ly,
                cb=(CB_D, CB_H), note=f"{lev}: passante, lamatura sulla faccia {'anteriore' if side=='ant' else 'posteriore'}")
             for dx in (-15, 15):
                 H_(name, "S", "spina", (xc + dx, inner_y, ztop - 35), (0, -into, 0), DOW_D, 25, note=f"{lev}: spina laterale")
-            # traverse longitudinali
             faces = long_faces(i, side, ztop)
             for f in faces:
                 fx, fdir = (x0, 1) if f == "sx" else (x0 + Lx, -1)
                 for dy in (-15, 15):
                     H_(name, "S", "spina", (fx, ryc + dy, ztop - 85), (fdir, 0, 0), DOW_D, 25, note=f"{lev}: spina long. {f}")
-            if len(faces) == 2:
-                H_(name, "R", "barra M10 L220 passante", (x0, ryc, ztop - 30), (1, 0, 0), BOLT_D, Lx,
-                   note=f"{lev}: passante per barra che unisce le due traverse")
-            elif len(faces) == 1:
+            assert len(faces) <= 1, "traverse longitudinali da due lati: non previsto"
+            if faces:
                 f = faces[0]
                 ent, dirx = (x0 + Lx, -1) if f == "sx" else (x0, 1)   # entra dalla faccia opposta
                 H_(name, "B2", "bullone long. M10×140", (ent, ryc, ztop - 30), (dirx, 0, 0), BOLT_D, Lx,
                    cb=(CB_D, CB_H), note=f"{lev}: passante, lamatura sulla faccia {'sinistra' if f=='dx' else 'destra'}")
-        # piede: inserto filettato
+        # viti delle fasce: preforo Ø5 nella gamba, prof. 80
+        for fas, fside, pts, vite in FASCIA_SCREWS:
+            if fside != side: continue
+            for dx, z in pts:
+                H_(name, "V", vite, (xc + dx, outer_y, z), (0, into, 0), PILOT_D, 80, note=f"{fas}: preforo Ø5")
         H_(name, "I", "inserto M10 piedino", (xc, (y0 + y1) / 2, 0), (0, 0, 1), 14, 25, note="foro per inserto (Ø secondo inserto)")
-        if side == "post":   # mensola: barra verticale + dado a tamburo dal retro
-            H_(name, "M", "barra mensola Ø12", (xc, D - 60, LEG_H), (0, 0, -1), 12, 75, note="dalla testa, per barra M10 mensola")
-            H_(name, "T", "dado a tamburo mensola", (xc, D, LEG_H - 60), (0, -1, 0), NUT_D, 70, note="dal retro, a 60 dalla testa")
+        if side == "post":   # alzatina: barra verticale + dado a tamburo dalla faccia anteriore
+            yc = (y0 + y1) / 2
+            H_(name, "M", "barra mensola Ø12", (xc, yc, LEG_H), (0, 0, -1), 12, 75, note="dalla testa, per barra M10 mensola")
+            fx, fdir, fn = (x0 + Lx, -1, "destra") if i < 3 else (x0, 1, "sinistra")
+            H_(name, "T", "dado a tamburo mensola", (fx, yc, LEG_H - 60), (fdir, 0, 0), NUT_D, 60,
+               note=f"dalla faccia {fn} (lato campata), a 60 dalla testa")
+
+# fori passanti nelle fasce, in corrispondenza delle viti
+for fas, fside, pts, vite in FASCIA_SCREWS:
+    b = FAS[fas]
+    yent, dy_ = (b[1], 1) if fside == "ant" else (b[4], -1)
+    for i, x0 in enumerate(legs_x):
+        xc = x0 + Lx / 2
+        for dx, z in pts:
+            cb, nt = ((20, 40), "passante Ø9 + lamatura Ø20 prof. 40 (tappo Ø20)") if fside == "ant" else ((16, 5), "passante Ø9 + svasatura")
+            H_(fas, "V", vite, (xc + dx, yent, z), (0, dy_, 0), SCREW_D + 1, b[4] - b[1], cb=cb,
+               note=f"gamba {i+1}: {nt}")
 
 # ---------------------------------------------------------------- traverse
 def rail_holes(name):
@@ -96,20 +124,21 @@ def rail_holes(name):
     for ax, u, v, dia in p["holes"]:     # passacavi
         H_(name, "C", "passacavi", (x0, u, v), (1, 0, 0), dia, x1 - x0, note="passante")
 
-rails = [n for n in parts if n.startswith("Trav.")]
+rails = [n for n in parts if n.startswith("Trav.")]  # laterali + basse anteriori
 for n in rails: rail_holes(n)
 
 # ---------------------------------------------------------------- montanti, piano, mensola, rinforzo
+YM = (parts["Gamba 1 post"]["box"][1] + parts["Gamba 1 post"]["box"][4]) / 2   # asse barre mensola
 for i, x0 in enumerate(legs_x):
     xc = x0 + Lx / 2
-    H_(f"Montante mensola {i+1}", "M", "barra mensola Ø12", (xc, D - 60, H), (0, 0, 1), 12, P["riser_h"],
+    H_(f"Montante mensola {i+1}", "M", "barra mensola Ø12", (xc, YM, H), (0, 0, 1), 12, P["riser_h"],
        note="passante, forare metà da ogni testa")
-    H_("Piano di lavoro", "M", "barra mensola Ø12", (xc, D - 60, H), (0, 0, -1), 12, P["T_top"], note="passante")
+    H_("Piano di lavoro", "M", "barra mensola Ø12", (xc, YM, H), (0, 0, -1), 12, P["T_top"], note="passante")
     zt_m = H + P["riser_h"] + P["T_riser"]
     boards = [n for n in parts if n.startswith("Mensola – tavola")]
     owner = [b for b in boards if parts[b]["box"][0] <= xc <= parts[b]["box"][3]]
     note = "passante" if len(owner) == 1 else f"passante, a cavallo del giunto {owner[0][-1]}–{owner[1][-1]}: fora a tavole accostate"
-    H_(owner[0], "M", "barra mensola Ø12", (xc, D - 60, zt_m), (0, 0, -1), 12, P["T_riser"], note=note)
+    H_(owner[0], "M", "barra mensola Ø12", (xc, YM, zt_m), (0, 0, -1), 12, P["T_riser"], note=note)
 pz = parts["Piano di lavoro"]
 for ax, u, v, dia in pz["holes"]:
     H_("Piano di lavoro", "C", "passacavi Ø60", (u, v, H), (0, 0, -1), dia, P["T_top"], note="sega a tazza")
@@ -118,9 +147,9 @@ for dx in (-65, 65):
     for dy in (-65, 65):
         y = my + dy
         H_("Piano di lavoro", "P", "vite base piastre M10", (mx + dx, y, H), (0, 0, -1), BOLT_D, P["T_top"], note="passante")
-        if y < P["Rt"]:   # sopra la traversa anteriore: la vite la attraversa
-            H_("Trav. sup. ant. ricarica", "P", "vite base piastre M10×200", (mx + dx, y, LEG_H), (0, 0, -1), BOLT_D, Rh,
-               note="passante verticale, dado sotto la traversa")
+        if y < P["Ff_d"]:   # sopra la fascia anteriore: la vite la attraversa
+            H_("Fascia ant. alta", "P", "vite base piastre M10×160", (mx + dx, y, LEG_H), (0, 0, -1), BOLT_D, P["Ff_h"],
+               note="passante verticale, dado sotto la fascia")
         else:
             H_("Rinforzo piano ricarica", "P", "vite base piastre M10×110", (mx + dx, y, LEG_H), (0, 0, -1), BOLT_D,
                P["T_dbl"], note="passante, poi contropiastra")
@@ -153,7 +182,6 @@ def check():
         for i in range(len(hs)):
             for j in range(i + 1, len(hs)):
                 v = cs[i].intersect(cs[j]).Volume()
-                same_axis = hs[i]["code"] in ("A", "T", "B1", "B2", "R", "M") and hs[j]["code"] in ("A", "T", "B1", "B2", "R", "M")
                 if v > 1.0:
                     # intersezioni volute: assiale×dado a tamburo, barra mensola×dado
                     wanted = {hs[i]["code"], hs[j]["code"]} in ({"A", "T"}, {"M", "T"})

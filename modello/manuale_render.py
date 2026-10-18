@@ -15,6 +15,8 @@ def code(n):
     if m: return f"L{m.group(2)}{'s' if m.group(1)=='sup' else 'i'}"
     m = re.match(r"Trav\. (sup|inf)\. (post|ant)\. (\w+)", n)
     if m: return f"{'P' if m.group(2)=='post' else 'A'}{m.group(3)[0].upper()}{'s' if m.group(1)=='sup' else 'i'}"
+    m = re.match(r"Fascia (post|ant)\. (alta|bassa)", n)
+    if m: return "FA" if m.group(1) == "ant" else ("FPa" if m.group(2) == "alta" else "FPb")
     m = re.match(r"Montante mensola (\d)", n)
     if m: return f"M{m.group(1)}"
     return n
@@ -40,7 +42,8 @@ def stage(fname, inc, off=lambda p: (0, 0, 0), labels=(), az=-35, el=24, zoom=1.
 is_leg = lambda p: p["name"].startswith("Gamba")
 is_lat = lambda p: ". lat." in p["name"]
 is_long = lambda p: p["name"].startswith("Trav.") and not is_lat(p)
-frame = lambda p: is_leg(p) or p["role"] in ("trav-lat", "trav-long")
+is_fas = lambda p: p.get("role") == "fascia"
+frame = lambda p: is_leg(p) or p["role"] in ("trav-lat", "trav-long", "fascia")
 
 if __name__ == "__main__":
     # 1. telai laterali: telaio 1 esploso, altri montati e distanziati
@@ -60,16 +63,20 @@ if __name__ == "__main__":
         ("Gamba 4 ant", "front", "Telai 2, 3 e 4 già montati", "R", 700),
     ], az=-40, el=22, zoom=1.15)
 
-    # 2. collegamento telai
+    # 2. collegamento telai: traverse basse anteriori + fasce
     def off2(p):
-        return (0, 0, 220) if is_long(p) else (0, 0, 0)
+        n = p["name"]
+        if n.startswith("Fascia ant"): return (0, -320, 0)
+        if n.startswith("Fascia post"): return (0, 320, 0)
+        if is_long(p): return (0, 0, 220)
+        return (0, 0, 0)
     stage("man_f5_collegamento.png", frame, off2, labels=[
-        ("Trav. sup. post. cassetti", "top", "PCs / PCi – posteriori cassetti", "L", 220),
-        ("Trav. sup. post. seduta", "top", "PSs / PSi – posteriori seduta", "L", 120),
-        ("Trav. sup. post. ricarica", "top", "PRs / PRi – posteriori ricarica", "R", 120),
-        ("Trav. sup. ant. ricarica", "top", "ARs / ARi – anteriori ricarica", "R", 300),
-        ("Gamba 2 post", "c", "Gambe 2P e 3P: barra passante\nche unisce le due traverse", "L", 700),
-    ], az=-30, el=26, zoom=1.1)
+        ("Fascia ant. alta", "front", "FA – fascia anteriore 1990, di piatto\n2 viti 8×160 in ogni gamba anteriore", "L", 150),
+        ("Fascia post. alta", "top", "FPa – fascia posteriore alta 1990", "R", 120),
+        ("Fascia post. bassa", "c", "FPb – fascia posteriore bassa 1990", "R", 860),
+        ("Trav. inf. ant. cassetti", "top", "ACi – bassa anteriore cassetti\n(bulloni B2)", "L", 760),
+        ("Trav. inf. ant. ricarica", "top", "ARi – bassa anteriore ricarica", "R", 620),
+    ], az=-30, el=24, zoom=1.05)
 
     # 3. listelli e ripiani bassi
     shelf = lambda p: p["name"].startswith("Ripiano") or p["group"] == "Listelli reggiripiano"
@@ -99,8 +106,9 @@ if __name__ == "__main__":
             n = p["name"]
             if n in ("Piano di lavoro",):
                 q = copy.deepcopy(p); q["box"][0] = 1360; q["holes"] = [h for h in q["holes"] if h[1] > 1360]; out.append(q)
-            elif n in ("Rinforzo piano ricarica", "Contropiastra acciaio", "Base attacco piastre", "Trav. sup. ant. ricarica",
-                       "Trav. sup. post. ricarica", "Trav. sup. lat. 3", "Trav. sup. lat. 4"):
+            elif n in ("Fascia ant. alta", "Fascia post. alta"):
+                q = copy.deepcopy(p); q["box"][0] = 1360; out.append(q)
+            elif n in ("Rinforzo piano ricarica", "Contropiastra acciaio", "Base attacco piastre", "Trav. sup. lat. 3", "Trav. sup. lat. 4"):
                 out.append(p)
             elif n in ("Gamba 3 ant", "Gamba 4 ant", "Gamba 3 post", "Gamba 4 post"):
                 q = copy.deepcopy(p); q["box"][2] = 450; out.append(q)
@@ -115,7 +123,7 @@ if __name__ == "__main__":
     stage("man_f8_ricarica.png", lambda p: True, off5, labels=[
         ("Contropiastra acciaio", "c", "Contropiastra 220×220×6: 2 viti posteriori M10×110", "L", 860),
         ("Rinforzo piano ricarica", "c", "Rinforzo OSB 36 mm incollato + 12 viti 5×60", "L", 640),
-        ("Trav. sup. ant. ricarica", "c", "ARs: le 2 viti anteriori M10×200\nla attraversano, dado sotto", "R", 820),
+        ("Fascia ant. alta", "c", "FA: le 2 viti anteriori M10×160\nla attraversano, dado sotto", "R", 820),
         ("Base attacco piastre", "c", "Base 180×180×12 (sopra il piano)", "R", 300),
     ], az=-35, el=-28, zoom=1.0)
     parts[:] = _saved

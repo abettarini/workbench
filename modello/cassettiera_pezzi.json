@@ -2,22 +2,22 @@
  "multistrato 18": [
   [
    "Cassettiera fianco sx",
-   582,
+   578,
    400
   ],
   [
    "Cassettiera fianco dx",
-   582,
+   578,
    400
   ],
   [
    "Cassettiera cielo",
-   582,
+   578,
    460
   ],
   [
    "Cassettiera fondo",
-   582,
+   578,
    460
   ],
   [
@@ -34,11 +34,6 @@
    "Frontale cassetto 3",
    496,
    131
-  ],
-  [
-   "Frontale cassetto appeso",
-   496,
-   97
   ]
  ],
  "multistrato 15": [
@@ -101,29 +96,9 @@
    "cassetto 3: testata",
    405,
    85
-  ],
-  [
-   "appeso: fianco",
-   500,
-   70
-  ],
-  [
-   "appeso: fianco",
-   500,
-   70
-  ],
-  [
-   "appeso: testata",
-   445,
-   70
-  ],
-  [
-   "appeso: testata",
-   445,
-   70
   ]
  ],
- "HDF 4": [
+ "pannello di fibra 3": [
   [
    "Cassettiera schienale",
    496,
@@ -143,11 +118,6 @@
    "cassetto 3: fondo",
    500,
    435
-  ],
-  [
-   "appeso: fondo",
-   500,
-   475
   ]
  ]
 }

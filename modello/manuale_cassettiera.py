@@ -66,10 +66,10 @@ with PdfPages("cassettiera_manuale.pdf") as pdf:
     fig.text(0.05, 0.76, "Contenuto", fontsize=11, weight="bold")
     fig.text(0.05, 0.735, "\n".join(["Cosa serve", "Fase 1 · Taglio dei pannelli", "Fase 2 · Scatola della cassettiera",
                                      "Fase 3 · Guide e cassetti", "Fase 4 · Installazione nel tavolo",
-                                     "Fase 5 · Cassetto appeso", "Controlli finali"]), fontsize=9, va="top", linespacing=1.9)
+                                     "Controlli finali"]), fontsize=9, va="top", linespacing=1.9)
     box_note(fig, 0.05, 0.12, 0.28, 0.32, "In breve",
-             "Cassettiera fissa con 3 cassetti per la campata sinistra del tavolo (luce 500 mm), più un cassetto "
-             "appeso sotto il piano.\n\nSi monta quando vuoi, anche dopo il tavolo: non servono fori o modifiche "
+             "Cassettiera fissa con 3 cassetti per la campata sinistra del tavolo (luce 500 mm), sotto la fascia "
+             "anteriore del piano.\n\nSi monta quando vuoi, anche dopo il tavolo: non servono fori o modifiche "
              "al telaio.\n\nCosti nel file cassettiera_costi.xlsx.", fs=8.3, width=44)
     pdf.savefig(fig); plt.close(fig)
 
@@ -78,10 +78,10 @@ with PdfPages("cassettiera_manuale.pdf") as pdf:
     para(fig, 0.04, 0.89, "Materiali", fs=11, weight="bold")
     para(fig, 0.04, 0.86, (
         "• Multistrato pioppo 18 mm: 2 pannelli 1200×600 (scatola e frontali)\n"
-        "• Multistrato pioppo 15 mm: 2 pannelli 1200×600 (scatole dei cassetti)\n"
+        "• Multistrato pioppo 15 mm: 1 pannello 1200×600 (scatole dei cassetti)\n"
         "• Fibra grezza 3 mm: pannello 2500×1250 (fondi e schienale)\n"
-        "• 4 coppie di guide a sfera a estrazione totale, lunghezza 500 mm, spessore 12,7 mm\n"
-        "• 4 maniglie\n"
+        "• 3 coppie di guide a sfera a estrazione totale, lunghezza 500 mm, spessore 12,7 mm\n"
+        "• 3 maniglie\n"
         "• Viti: 4×45 (scatola), 3,5×30 (cassetti), 3×16 (fondi e schienale), 3,5×25 (frontali), "
         "4×16 (guide), 4×30 e 4×50 (fissaggio al tavolo)\n"
         "• Colla vinilica D3, nastro biadesivo, 4 spessori da 2 mm"), width=62, fs=8.6)
@@ -92,7 +92,7 @@ with PdfPages("cassettiera_manuale.pdf") as pdf:
     para(fig, 0.04, 0.38, "Prerequisiti dal tavolo base", fs=11, weight="bold")
     para(fig, 0.04, 0.35, (
         "• Ripiano OSB della campata cassetti montato e avvitato ai listelli.\n"
-        "• Nessuna lavorazione sul telaio: le guide del cassetto appeso si avvitano su L1s/G1A e L2s/G2A."),
+        "• Nessuna lavorazione sul telaio: la cassettiera si avvita al ripiano e alle gambe anteriori G1A e G2A."),
         width=62, fs=8.6)
     rows = []
     for mat, lst in pieces.items():
@@ -107,7 +107,7 @@ with PdfPages("cassettiera_manuale.pdf") as pdf:
     fig = page("Taglio dei pannelli", "Fase 1")
     s18 = pack_multi([(n.replace("Cassettiera ", "").replace("Frontale cassetto", "Frontale"), a, b) for n, a, b in pieces["multistrato 18"]], 1200, 600)
     s15 = pack_multi([(n.replace("cassetto ", "c."), a, b) for n, a, b in pieces["multistrato 15"]], 1200, 600)
-    s4 = pack_multi([(n, a, b) for n, a, b in pieces["HDF 4"]], 2500, 1250)
+    s4 = pack_multi([(n, a, b) for n, a, b in pieces["pannello di fibra 3"]], 2500, 1250)
     for k, pl in enumerate(s18):
         draw_sheet(fig.add_axes([0.03 + k * 0.32, 0.66, 0.30, 0.23]), f"Multistrato 18 – 1200×600 (n. {k+1})", pl, W=1200, H=600)
     for k, pl in enumerate(s15):
@@ -116,7 +116,7 @@ with PdfPages("cassettiera_manuale.pdf") as pdf:
     h18 = h15 = 0
     para(fig, 0.04, 0.36, (
         "• Le venature esterne del multistrato vanno in verticale su fianchi e frontali: tieni conto del verso quando tagli.\n"
-        "• I frontali dei cassetti 1–2 e 3–appeso sono affiancati sullo stesso pannello: le venature restano continue a coppie.\n"
+        "• I frontali dei cassetti sono affiancati sullo stesso pannello: le venature restano continue.\n"
         "• Tolleranza ±0,5 mm. Se il negozio taglia a misura, porta questa pagina.\n"
         f"• Pannelli pretagliati Tecnomat 1200×600: servono {len(s18)} da 18 mm e {len(s15)} da 15 mm. Tecnomat taglia in negozio (1° taglio gratis, poi 1 €).\n"
         "• Fondi in fibra da 3 mm: per carichi fino a ~15 kg per cassetto; per carichi maggiori usa MDF/HDF da 4–5 mm."),
@@ -133,7 +133,7 @@ with PdfPages("cassettiera_manuale.pdf") as pdf:
         "4 viti per giunto.\n"
         "2. Cielo e fondo vanno TRA i due fianchi. Colla sulle testate, accosta, stringi con i morsetti.\n"
         "3. Preforo Ø3 attraverso il fianco e dentro il cielo/fondo per 30 mm, svasa, avvita 4×45.\n"
-        "4. Controlla la squadra (diagonali uguali) e appoggia lo schienale HDF: avvitalo con 3×16 ogni 120 mm. "
+        "4. Controlla la squadra (diagonali uguali) e appoggia lo schienale in fibra: avvitalo con 3×16 ogni 120 mm. "
         "Lo schienale tiene in squadra la scatola: fissalo prima che la colla tiri.\n"
         "5. Leviga gli spigoli e tratta la scatola (vernice o olio)."), width=62, fs=8.5)
     ax = fig.add_axes([0.04, 0.06, 0.38, 0.40]); ax.set_aspect("equal"); ax.axis("off")
@@ -166,7 +166,7 @@ with PdfPages("cassettiera_manuale.pdf") as pdf:
         "bordo anteriore, con viti 4×16 nelle asole: regolerai dopo.\n\n"
         f"Scatole dei cassetti (multistrato 15) – {bw:.0f} × {bl:.0f} × alt. {bh:.0f}\n"
         "3. Le testate vanno TRA i fianchi. Colla + 2 viti 3,5×30 per giunto, preforo Ø2,5, svasatura.\n"
-        "4. Controlla la squadra e avvita sotto il fondo HDF con 3×16 ogni 100 mm: blocca la squadra.\n"
+        "4. Controlla la squadra e avvita sotto il fondo in fibra con 3×16 ogni 100 mm: blocca la squadra.\n"
         "5. Avvita la parte mobile delle guide sui fianchi della scatola, a metà altezza, a filo davanti.\n"
         f"6. Larghezza della scatola = luce interna − 2 × 12,7 = {bw:.1f} mm. Se le tue guide hanno uno spessore "
         "diverso, ricalcola prima di tagliare le testate.\n\n"
@@ -183,43 +183,43 @@ with PdfPages("cassettiera_manuale.pdf") as pdf:
     for yy in (7.5, bl - 7.5):
         for xx in (-12, bw + 12): ax.plot([xx - 14 * (1 if xx < 0 else -1), xx + 10 * (1 if xx < 0 else -1)], [yy, yy], color=INK, lw=1.4)
     dim(ax, 0, bl, bw, bl, 18, f"{bw:.1f}"); dim(ax, bw, 0, bw, bl, 60, f"{bl:.0f}", vertical=True)
-    ax.text(bw / 2, bl / 2, "fondo HDF\navvitato sotto", ha="center", va="center", fontsize=7)
+    ax.text(bw / 2, bl / 2, "fondo in fibra\navvitato sotto", ha="center", va="center", fontsize=7)
     ax.text(-45, -25, "guida 12,7", fontsize=6.5); ax.text(bw / 2, -25, "fronte", ha="center", fontsize=6.5, color=MUTE)
     ax.set_xlim(-70, bw + 110); ax.set_ylim(-45, bl + 50)
     ax.set_title("Scatola del cassetto vista dall'alto", fontsize=8, loc="left")
     pdf.savefig(fig); plt.close(fig)
 
-    # ---------- installazione + cassetto appeso
-    fig = page("Installazione nel tavolo e cassetto appeso", "Fasi 4 e 5")
+    # ---------- installazione
+    fig = page("Installazione nel tavolo", "Fase 4")
     img(fig, "cas_installazione.png", [0.48, 0.38, 0.51, 0.54], crop=(60, 900, 0, 1500))
-    hb = B("Cassetto appeso (scatola)"); hf = B("Frontale cassetto appeso")
-    zc_h = (hb[2] + hb[5]) / 2; top_rail = P["H"] - P["T_top"]
+    yF0 = P["Ff_d"]; zFA = P["H"] - P["T_top"] - P["Ff_h"]
+    cs = B("Cassettiera cielo")
     para(fig, 0.04, 0.89, (
-        "Installazione (fase 4)\n"
-        "1. Togli i cassetti. Infila la scatola nella campata sinistra, appoggiata sul ripiano OSB, a filo del "
-        "fronte delle gambe G1A e G2A.\n"
-        "2. Centra la scatola: 2 mm di gioco per lato. Metti gli spessori da 2 mm tra fianco e gamba.\n"
-        "3. Fissala: 4 viti 4×30 dall'interno del fondo nel ripiano (preforo Ø3) e 2 viti 4×50 per fianco "
-        "dentro le gambe anteriori, a 250 e 500 da terra e 60 mm dal fronte (preforo Ø3 nella gamba).\n"
-        "4. Rimetti i cassetti e regola le guide nelle asole finché le fughe sono uniformi; poi aggiungi le viti "
+        "1. Togli i cassetti. Infila la scatola nella campata sinistra dal fronte, sotto la fascia anteriore FA, "
+        "appoggiata sul ripiano OSB.\n"
+        f"2. Frontali a filo della faccia anteriore delle gambe G1A e G2A ({yF0:.0f} mm dietro il bordo del piano): "
+        "la fascia FA sporge sopra i cassetti come una visiera.\n"
+        "3. Centra la scatola: 2 mm di gioco per lato. Metti gli spessori da 2 mm tra fianco e gamba.\n"
+        "4. Fissala: 4 viti 4×30 dall'interno del fondo nel ripiano (preforo Ø3) e 2 viti 4×50 per fianco "
+        "dentro le gambe anteriori, a 250 e 500 da terra e 60 mm dalla faccia anteriore della gamba (preforo Ø3).\n"
+        "5. Rimetti i cassetti e regola le guide nelle asole finché le fughe sono uniformi; poi aggiungi le viti "
         "nei fori tondi.\n\n"
-        "Cassetto appeso (fase 5)\n"
-        f"5. Guide sulle facce interne della campata: a sinistra su G1A + L1s, a destra su G2A + L2s. Asse della "
-        f"guida a {top_rail - zc_h:.0f} mm sotto il filo superiore delle traverse ({zc_h:.0f} da terra), a filo "
-        "del fronte delle gambe. Le facce di gamba e traversa sono complanari.\n"
-        "6. Viti 4×16 nelle asole. Non avvitare entro 100 mm dalle testate delle traverse (lì ci sono i dadi a tamburo).\n"
-        f"7. Scatola {hb[3] - hb[0]:.1f} × {hb[4] - hb[1]:.0f} × alt. {hb[5] - hb[2]:.0f}, costruita come gli altri cassetti; "
-        f"frontale {hf[3] - hf[0]:.0f}×{hf[5] - hf[2]:.0f}, con 3 mm di fuga sotto il piano."), width=64, fs=8.3)
+        f"Spazio libero: tra il cielo della cassettiera (quota {cs[5]:.0f}) e la fascia FA (quota {zFA:.0f}) restano "
+        f"{zFA - cs[5]:.0f} mm; i cassetti si aprono senza toccarla."), width=64, fs=8.4)
     ax = fig.add_axes([0.52, 0.05, 0.44, 0.28]); ax.set_aspect("equal"); ax.axis("off")
-    R(ax, 0, 580, 80, 120, WOOD2); R(ax, 580, 580, 80, 120, WOOD2); R(ax, -20, 700, 700, 40, "#efe0c2", hatch="///")
-    R(ax, 80, zc_h - 22, 12.7, 45, STEEL); R(ax, 580 - 12.7, zc_h - 22, 12.7, 45, STEEL)
-    R(ax, hb[0], hb[2], hb[3] - hb[0], hb[5] - hb[2], "#e8d3a6")
-    R(ax, 2, 190, 576 - 2 + 2, 400, "#efdcb8", alpha=0.5)
-    ax.text(5, 640, "L1s", fontsize=6.5); ax.text(585, 640, "L2s", fontsize=6.5)
-    ax.text(300, 630, "cassetto appeso", ha="center", fontsize=6.5); ax.text(300, 400, "cassettiera", ha="center", fontsize=6.5)
-    dim(ax, 660, zc_h, 660, 700, 15, f"{700 - zc_h:.0f}", vertical=True, fs=6.5)
-    ax.set_xlim(-30, 720); ax.set_ylim(170, 760)
-    ax.set_title("Sezione frontale della campata cassetti", fontsize=8, loc="left")
+    LEG = P["H"] - P["T_top"]
+    R(ax, 0, 0, 80, LEG, WOOD); R(ax, 580, 0, 80, LEG, WOOD); R(ax, -20, LEG, 700, 40, "#efe0c2", hatch="///")
+    R(ax, -20, zFA, 700, P["Ff_h"], "#b98d55")
+    R(ax, 80, 70, 500, 120, WOOD2, alpha=0.6)
+    fl = [B(f"Frontale cassetto {k}") for k in (1, 2, 3)]
+    for f_ in fl: R(ax, f_[0], f_[2], f_[3] - f_[0], f_[5] - f_[2], "#5f7a8c")
+    ax.text(330, zFA + 40, "FA", ha="center", fontsize=6.5, color="white")
+    ax.text(330, 130, "ACi", ha="center", fontsize=6.5)
+    ax.text(330, (fl[0][2] + fl[-1][5]) / 2, "3 cassetti", ha="center", fontsize=6.5, color="white")
+    dim(ax, 660, cs[5], 660, zFA, 15, f"{zFA - cs[5]:.0f}", vertical=True, fs=6.5)
+    ax.text(5, LEG / 2, "G1A", fontsize=6.5, rotation=90); ax.text(585, LEG / 2, "G2A", fontsize=6.5, rotation=90)
+    ax.set_xlim(-30, 720); ax.set_ylim(-10, LEG + 60)
+    ax.set_title("Vista frontale della campata cassetti", fontsize=8, loc="left")
     pdf.savefig(fig); plt.close(fig)
 
     # ---------- controlli
@@ -227,7 +227,7 @@ with PdfPages("cassettiera_manuale.pdf") as pdf:
     checks = ["La scatola è in squadra: diagonali uguali entro 1 mm",
               "Tutti i cassetti escono completamente e rientrano senza sfregare",
               "Fughe tra i frontali uniformi (3 mm) e allineate ai bordi della scatola",
-              "Il cassetto appeso non tocca la cassettiera né le canaline posteriori",
+              "I cassetti aperti non toccano la fascia anteriore FA",
               "La cassettiera non si muove spingendola: viti nel ripiano e nelle gambe serrate",
               "Carico per cassetto: fino a 25–30 kg con guide da 45 kg (non riempire di piombo un solo cassetto)"]
     y = 0.86

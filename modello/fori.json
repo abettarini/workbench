@@ -5,7 +5,7 @@
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    40.0,
-   0,
+   120,
    610
   ],
   "dir": [
@@ -27,7 +27,7 @@
   "kind": "spina",
   "p0": [
    25.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -46,7 +46,7 @@
   "kind": "spina",
   "p0": [
    55.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -65,7 +65,7 @@
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    40.0,
-   0,
+   120,
    100
   ],
   "dir": [
@@ -87,7 +87,7 @@
   "kind": "spina",
   "p0": [
    25.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -106,7 +106,7 @@
   "kind": "spina",
   "p0": [
    55.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -125,7 +125,7 @@
   "kind": "spina",
   "p0": [
    80,
-   25,
+   145.0,
    105
   ],
   "dir": [
@@ -144,7 +144,7 @@
   "kind": "spina",
   "p0": [
    80,
-   55,
+   175.0,
    105
   ],
   "dir": [
@@ -163,7 +163,7 @@
   "kind": "bullone long. M10\u00d7140",
   "p0": [
    0,
-   40,
+   160.0,
    160
   ],
   "dir": [
@@ -181,11 +181,49 @@
  },
  {
   "part": "Gamba 1 ant",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   24.0,
+   120,
+   675
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 5,
+  "depth": 80,
+  "cb": null,
+  "note": "Fascia ant. alta: preforo \u00d85"
+ },
+ {
+  "part": "Gamba 1 ant",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   56.0,
+   120,
+   645
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 5,
+  "depth": 80,
+  "cb": null,
+  "note": "Fascia ant. alta: preforo \u00d85"
+ },
+ {
+  "part": "Gamba 1 ant",
   "code": "I",
   "kind": "inserto M10 piedino",
   "p0": [
    40.0,
-   60.0,
+   180.0,
    0
   ],
   "dir": [
@@ -204,7 +242,7 @@
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    40.0,
-   800,
+   720,
    610
   ],
   "dir": [
@@ -226,7 +264,7 @@
   "kind": "spina",
   "p0": [
    25.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -245,7 +283,7 @@
   "kind": "spina",
   "p0": [
    55.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -260,71 +298,11 @@
  },
  {
   "part": "Gamba 1 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   80,
-   745,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. dx"
- },
- {
-  "part": "Gamba 1 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   80,
-   775,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. dx"
- },
- {
-  "part": "Gamba 1 post",
-  "code": "B2",
-  "kind": "bullone long. M10\u00d7140",
-  "p0": [
-   0,
-   760,
-   670
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": [
-   25,
-   12
-  ],
-  "note": "sup: passante, lamatura sulla faccia sinistra"
- },
- {
-  "part": "Gamba 1 post",
   "code": "B1",
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    40.0,
-   800,
+   720,
    100
   ],
   "dir": [
@@ -346,7 +324,7 @@
   "kind": "spina",
   "p0": [
    25.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -365,7 +343,7 @@
   "kind": "spina",
   "p0": [
    55.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -380,63 +358,79 @@
  },
  {
   "part": "Gamba 1 post",
-  "code": "S",
-  "kind": "spina",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
   "p0": [
-   80,
-   745,
-   105
+   24.0,
+   720,
+   682
   ],
   "dir": [
-   -1,
    0,
+   -1,
    0
   ],
-  "d": 12,
-  "depth": 25,
+  "d": 5,
+  "depth": 80,
   "cb": null,
-  "note": "inf: spina long. dx"
+  "note": "Fascia post. alta: preforo \u00d85"
  },
  {
   "part": "Gamba 1 post",
-  "code": "S",
-  "kind": "spina",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
   "p0": [
-   80,
-   775,
-   105
+   56.0,
+   720,
+   662
   ],
   "dir": [
-   -1,
    0,
+   -1,
    0
   ],
-  "d": 12,
-  "depth": 25,
+  "d": 5,
+  "depth": 80,
   "cb": null,
-  "note": "inf: spina long. dx"
+  "note": "Fascia post. alta: preforo \u00d85"
  },
  {
   "part": "Gamba 1 post",
-  "code": "B2",
-  "kind": "bullone long. M10\u00d7140",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
   "p0": [
-   0,
-   760,
+   24.0,
+   720,
    160
   ],
   "dir": [
-   1,
    0,
+   -1,
    0
   ],
-  "d": 11,
+  "d": 5,
   "depth": 80,
-  "cb": [
-   25,
-   12
+  "cb": null,
+  "note": "Fascia post. bassa: preforo \u00d85"
+ },
+ {
+  "part": "Gamba 1 post",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   56.0,
+   720,
+   130
   ],
-  "note": "inf: passante, lamatura sulla faccia sinistra"
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 5,
+  "depth": 80,
+  "cb": null,
+  "note": "Fascia post. bassa: preforo \u00d85"
  },
  {
   "part": "Gamba 1 post",
@@ -444,7 +438,7 @@
   "kind": "inserto M10 piedino",
   "p0": [
    40.0,
-   740.0,
+   660.0,
    0
   ],
   "dir": [
@@ -463,7 +457,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    40.0,
-   740,
+   660.0,
    700
   ],
   "dir": [
@@ -481,19 +475,19 @@
   "code": "T",
   "kind": "dado a tamburo mensola",
   "p0": [
-   40.0,
-   800,
+   80,
+   660.0,
    640
   ],
   "dir": [
-   0,
    -1,
+   0,
    0
   ],
   "d": 15,
-  "depth": 70,
+  "depth": 60,
   "cb": null,
-  "note": "dal retro, a 60 dalla testa"
+  "note": "dalla faccia destra (lato campata), a 60 dalla testa"
  },
  {
   "part": "Gamba 2 ant",
@@ -501,7 +495,7 @@
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    620.0,
-   0,
+   120,
    610
   ],
   "dir": [
@@ -523,7 +517,7 @@
   "kind": "spina",
   "p0": [
    605.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -542,7 +536,7 @@
   "kind": "spina",
   "p0": [
    635.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -561,7 +555,7 @@
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    620.0,
-   0,
+   120,
    100
   ],
   "dir": [
@@ -583,7 +577,7 @@
   "kind": "spina",
   "p0": [
    605.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -602,7 +596,7 @@
   "kind": "spina",
   "p0": [
    635.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -621,7 +615,7 @@
   "kind": "spina",
   "p0": [
    580,
-   25,
+   145.0,
    105
   ],
   "dir": [
@@ -640,7 +634,7 @@
   "kind": "spina",
   "p0": [
    580,
-   55,
+   175.0,
    105
   ],
   "dir": [
@@ -659,7 +653,7 @@
   "kind": "bullone long. M10\u00d7140",
   "p0": [
    660,
-   40,
+   160.0,
    160
   ],
   "dir": [
@@ -677,11 +671,49 @@
  },
  {
   "part": "Gamba 2 ant",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   604.0,
+   120,
+   675
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 5,
+  "depth": 80,
+  "cb": null,
+  "note": "Fascia ant. alta: preforo \u00d85"
+ },
+ {
+  "part": "Gamba 2 ant",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   636.0,
+   120,
+   645
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 5,
+  "depth": 80,
+  "cb": null,
+  "note": "Fascia ant. alta: preforo \u00d85"
+ },
+ {
+  "part": "Gamba 2 ant",
   "code": "I",
   "kind": "inserto M10 piedino",
   "p0": [
    620.0,
-   60.0,
+   180.0,
    0
   ],
   "dir": [
@@ -700,7 +732,7 @@
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    620.0,
-   800,
+   720,
    610
   ],
   "dir": [
@@ -722,7 +754,7 @@
   "kind": "spina",
   "p0": [
    605.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -741,7 +773,7 @@
   "kind": "spina",
   "p0": [
    635.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -756,106 +788,11 @@
  },
  {
   "part": "Gamba 2 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   580,
-   745,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. sx"
- },
- {
-  "part": "Gamba 2 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   580,
-   775,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. sx"
- },
- {
-  "part": "Gamba 2 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   660,
-   745,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. dx"
- },
- {
-  "part": "Gamba 2 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   660,
-   775,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. dx"
- },
- {
-  "part": "Gamba 2 post",
-  "code": "R",
-  "kind": "barra M10 L220 passante",
-  "p0": [
-   580,
-   760,
-   670
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "sup: passante per barra che unisce le due traverse"
- },
- {
-  "part": "Gamba 2 post",
   "code": "B1",
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    620.0,
-   800,
+   720,
    100
   ],
   "dir": [
@@ -877,7 +814,7 @@
   "kind": "spina",
   "p0": [
    605.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -896,7 +833,7 @@
   "kind": "spina",
   "p0": [
    635.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -911,98 +848,79 @@
  },
  {
   "part": "Gamba 2 post",
-  "code": "S",
-  "kind": "spina",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
   "p0": [
-   580,
-   745,
-   105
+   604.0,
+   720,
+   682
   ],
   "dir": [
-   1,
    0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "inf: spina long. sx"
- },
- {
-  "part": "Gamba 2 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   580,
-   775,
-   105
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "inf: spina long. sx"
- },
- {
-  "part": "Gamba 2 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   660,
-   745,
-   105
-  ],
-  "dir": [
    -1,
-   0,
    0
   ],
-  "d": 12,
-  "depth": 25,
+  "d": 5,
+  "depth": 80,
   "cb": null,
-  "note": "inf: spina long. dx"
+  "note": "Fascia post. alta: preforo \u00d85"
  },
  {
   "part": "Gamba 2 post",
-  "code": "S",
-  "kind": "spina",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
   "p0": [
-   660,
-   775,
-   105
+   636.0,
+   720,
+   662
   ],
   "dir": [
-   -1,
    0,
+   -1,
    0
   ],
-  "d": 12,
-  "depth": 25,
+  "d": 5,
+  "depth": 80,
   "cb": null,
-  "note": "inf: spina long. dx"
+  "note": "Fascia post. alta: preforo \u00d85"
  },
  {
   "part": "Gamba 2 post",
-  "code": "R",
-  "kind": "barra M10 L220 passante",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
   "p0": [
-   580,
-   760,
+   604.0,
+   720,
    160
   ],
   "dir": [
-   1,
    0,
+   -1,
    0
   ],
-  "d": 11,
+  "d": 5,
   "depth": 80,
   "cb": null,
-  "note": "inf: passante per barra che unisce le due traverse"
+  "note": "Fascia post. bassa: preforo \u00d85"
+ },
+ {
+  "part": "Gamba 2 post",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   636.0,
+   720,
+   130
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 5,
+  "depth": 80,
+  "cb": null,
+  "note": "Fascia post. bassa: preforo \u00d85"
  },
  {
   "part": "Gamba 2 post",
@@ -1010,7 +928,7 @@
   "kind": "inserto M10 piedino",
   "p0": [
    620.0,
-   740.0,
+   660.0,
    0
   ],
   "dir": [
@@ -1029,7 +947,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    620.0,
-   740,
+   660.0,
    700
   ],
   "dir": [
@@ -1047,19 +965,19 @@
   "code": "T",
   "kind": "dado a tamburo mensola",
   "p0": [
-   620.0,
-   800,
+   660,
+   660.0,
    640
   ],
   "dir": [
-   0,
    -1,
+   0,
    0
   ],
   "d": 15,
-  "depth": 70,
+  "depth": 60,
   "cb": null,
-  "note": "dal retro, a 60 dalla testa"
+  "note": "dalla faccia destra (lato campata), a 60 dalla testa"
  },
  {
   "part": "Gamba 3 ant",
@@ -1067,7 +985,7 @@
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    1400.0,
-   0,
+   120,
    610
   ],
   "dir": [
@@ -1089,7 +1007,7 @@
   "kind": "spina",
   "p0": [
    1385.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -1108,7 +1026,7 @@
   "kind": "spina",
   "p0": [
    1415.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -1123,71 +1041,11 @@
  },
  {
   "part": "Gamba 3 ant",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1440,
-   25,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. dx"
- },
- {
-  "part": "Gamba 3 ant",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1440,
-   55,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. dx"
- },
- {
-  "part": "Gamba 3 ant",
-  "code": "B2",
-  "kind": "bullone long. M10\u00d7140",
-  "p0": [
-   1360,
-   40,
-   670
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": [
-   25,
-   12
-  ],
-  "note": "sup: passante, lamatura sulla faccia sinistra"
- },
- {
-  "part": "Gamba 3 ant",
   "code": "B1",
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    1400.0,
-   0,
+   120,
    100
   ],
   "dir": [
@@ -1209,7 +1067,7 @@
   "kind": "spina",
   "p0": [
    1385.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -1228,7 +1086,7 @@
   "kind": "spina",
   "p0": [
    1415.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -1247,7 +1105,7 @@
   "kind": "spina",
   "p0": [
    1440,
-   25,
+   145.0,
    105
   ],
   "dir": [
@@ -1266,7 +1124,7 @@
   "kind": "spina",
   "p0": [
    1440,
-   55,
+   175.0,
    105
   ],
   "dir": [
@@ -1285,7 +1143,7 @@
   "kind": "bullone long. M10\u00d7140",
   "p0": [
    1360,
-   40,
+   160.0,
    160
   ],
   "dir": [
@@ -1303,11 +1161,49 @@
  },
  {
   "part": "Gamba 3 ant",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1384.0,
+   120,
+   675
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 5,
+  "depth": 80,
+  "cb": null,
+  "note": "Fascia ant. alta: preforo \u00d85"
+ },
+ {
+  "part": "Gamba 3 ant",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1416.0,
+   120,
+   645
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 5,
+  "depth": 80,
+  "cb": null,
+  "note": "Fascia ant. alta: preforo \u00d85"
+ },
+ {
+  "part": "Gamba 3 ant",
   "code": "I",
   "kind": "inserto M10 piedino",
   "p0": [
    1400.0,
-   60.0,
+   180.0,
    0
   ],
   "dir": [
@@ -1326,7 +1222,7 @@
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    1400.0,
-   800,
+   720,
    610
   ],
   "dir": [
@@ -1348,7 +1244,7 @@
   "kind": "spina",
   "p0": [
    1385.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -1367,7 +1263,7 @@
   "kind": "spina",
   "p0": [
    1415.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -1382,106 +1278,11 @@
  },
  {
   "part": "Gamba 3 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1360,
-   745,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. sx"
- },
- {
-  "part": "Gamba 3 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1360,
-   775,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. sx"
- },
- {
-  "part": "Gamba 3 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1440,
-   745,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. dx"
- },
- {
-  "part": "Gamba 3 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1440,
-   775,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. dx"
- },
- {
-  "part": "Gamba 3 post",
-  "code": "R",
-  "kind": "barra M10 L220 passante",
-  "p0": [
-   1360,
-   760,
-   670
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "sup: passante per barra che unisce le due traverse"
- },
- {
-  "part": "Gamba 3 post",
   "code": "B1",
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    1400.0,
-   800,
+   720,
    100
   ],
   "dir": [
@@ -1503,7 +1304,7 @@
   "kind": "spina",
   "p0": [
    1385.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -1522,7 +1323,7 @@
   "kind": "spina",
   "p0": [
    1415.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -1537,98 +1338,79 @@
  },
  {
   "part": "Gamba 3 post",
-  "code": "S",
-  "kind": "spina",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
   "p0": [
-   1360,
-   745,
-   105
+   1384.0,
+   720,
+   682
   ],
   "dir": [
-   1,
    0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "inf: spina long. sx"
- },
- {
-  "part": "Gamba 3 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1360,
-   775,
-   105
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "inf: spina long. sx"
- },
- {
-  "part": "Gamba 3 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1440,
-   745,
-   105
-  ],
-  "dir": [
    -1,
-   0,
    0
   ],
-  "d": 12,
-  "depth": 25,
+  "d": 5,
+  "depth": 80,
   "cb": null,
-  "note": "inf: spina long. dx"
+  "note": "Fascia post. alta: preforo \u00d85"
  },
  {
   "part": "Gamba 3 post",
-  "code": "S",
-  "kind": "spina",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
   "p0": [
-   1440,
-   775,
-   105
+   1416.0,
+   720,
+   662
   ],
   "dir": [
-   -1,
    0,
+   -1,
    0
   ],
-  "d": 12,
-  "depth": 25,
+  "d": 5,
+  "depth": 80,
   "cb": null,
-  "note": "inf: spina long. dx"
+  "note": "Fascia post. alta: preforo \u00d85"
  },
  {
   "part": "Gamba 3 post",
-  "code": "R",
-  "kind": "barra M10 L220 passante",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
   "p0": [
-   1360,
-   760,
+   1384.0,
+   720,
    160
   ],
   "dir": [
-   1,
    0,
+   -1,
    0
   ],
-  "d": 11,
+  "d": 5,
   "depth": 80,
   "cb": null,
-  "note": "inf: passante per barra che unisce le due traverse"
+  "note": "Fascia post. bassa: preforo \u00d85"
+ },
+ {
+  "part": "Gamba 3 post",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1416.0,
+   720,
+   130
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 5,
+  "depth": 80,
+  "cb": null,
+  "note": "Fascia post. bassa: preforo \u00d85"
  },
  {
   "part": "Gamba 3 post",
@@ -1636,7 +1418,7 @@
   "kind": "inserto M10 piedino",
   "p0": [
    1400.0,
-   740.0,
+   660.0,
    0
   ],
   "dir": [
@@ -1655,7 +1437,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    1400.0,
-   740,
+   660.0,
    700
   ],
   "dir": [
@@ -1673,19 +1455,19 @@
   "code": "T",
   "kind": "dado a tamburo mensola",
   "p0": [
-   1400.0,
-   800,
+   1440,
+   660.0,
    640
   ],
   "dir": [
-   0,
    -1,
+   0,
    0
   ],
   "d": 15,
-  "depth": 70,
+  "depth": 60,
   "cb": null,
-  "note": "dal retro, a 60 dalla testa"
+  "note": "dalla faccia destra (lato campata), a 60 dalla testa"
  },
  {
   "part": "Gamba 4 ant",
@@ -1693,7 +1475,7 @@
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    1960.0,
-   0,
+   120,
    610
   ],
   "dir": [
@@ -1715,7 +1497,7 @@
   "kind": "spina",
   "p0": [
    1945.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -1734,7 +1516,7 @@
   "kind": "spina",
   "p0": [
    1975.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -1749,71 +1531,11 @@
  },
  {
   "part": "Gamba 4 ant",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1920,
-   25,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. sx"
- },
- {
-  "part": "Gamba 4 ant",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1920,
-   55,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. sx"
- },
- {
-  "part": "Gamba 4 ant",
-  "code": "B2",
-  "kind": "bullone long. M10\u00d7140",
-  "p0": [
-   2000,
-   40,
-   670
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": [
-   25,
-   12
-  ],
-  "note": "sup: passante, lamatura sulla faccia destra"
- },
- {
-  "part": "Gamba 4 ant",
   "code": "B1",
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    1960.0,
-   0,
+   120,
    100
   ],
   "dir": [
@@ -1835,7 +1557,7 @@
   "kind": "spina",
   "p0": [
    1945.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -1854,7 +1576,7 @@
   "kind": "spina",
   "p0": [
    1975.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -1873,7 +1595,7 @@
   "kind": "spina",
   "p0": [
    1920,
-   25,
+   145.0,
    105
   ],
   "dir": [
@@ -1892,7 +1614,7 @@
   "kind": "spina",
   "p0": [
    1920,
-   55,
+   175.0,
    105
   ],
   "dir": [
@@ -1911,7 +1633,7 @@
   "kind": "bullone long. M10\u00d7140",
   "p0": [
    2000,
-   40,
+   160.0,
    160
   ],
   "dir": [
@@ -1929,11 +1651,49 @@
  },
  {
   "part": "Gamba 4 ant",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1944.0,
+   120,
+   675
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 5,
+  "depth": 80,
+  "cb": null,
+  "note": "Fascia ant. alta: preforo \u00d85"
+ },
+ {
+  "part": "Gamba 4 ant",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1976.0,
+   120,
+   645
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 5,
+  "depth": 80,
+  "cb": null,
+  "note": "Fascia ant. alta: preforo \u00d85"
+ },
+ {
+  "part": "Gamba 4 ant",
   "code": "I",
   "kind": "inserto M10 piedino",
   "p0": [
    1960.0,
-   60.0,
+   180.0,
    0
   ],
   "dir": [
@@ -1952,7 +1712,7 @@
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    1960.0,
-   800,
+   720,
    610
   ],
   "dir": [
@@ -1974,7 +1734,7 @@
   "kind": "spina",
   "p0": [
    1945.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -1993,7 +1753,7 @@
   "kind": "spina",
   "p0": [
    1975.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -2008,71 +1768,11 @@
  },
  {
   "part": "Gamba 4 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1920,
-   745,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. sx"
- },
- {
-  "part": "Gamba 4 post",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1920,
-   775,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 25,
-  "cb": null,
-  "note": "sup: spina long. sx"
- },
- {
-  "part": "Gamba 4 post",
-  "code": "B2",
-  "kind": "bullone long. M10\u00d7140",
-  "p0": [
-   2000,
-   760,
-   670
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": [
-   25,
-   12
-  ],
-  "note": "sup: passante, lamatura sulla faccia destra"
- },
- {
-  "part": "Gamba 4 post",
   "code": "B1",
   "kind": "bullone laterale M10\u00d7180",
   "p0": [
    1960.0,
-   800,
+   720,
    100
   ],
   "dir": [
@@ -2094,7 +1794,7 @@
   "kind": "spina",
   "p0": [
    1945.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -2113,7 +1813,7 @@
   "kind": "spina",
   "p0": [
    1975.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -2128,63 +1828,79 @@
  },
  {
   "part": "Gamba 4 post",
-  "code": "S",
-  "kind": "spina",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
   "p0": [
-   1920,
-   745,
-   105
+   1944.0,
+   720,
+   682
   ],
   "dir": [
-   1,
    0,
+   -1,
    0
   ],
-  "d": 12,
-  "depth": 25,
+  "d": 5,
+  "depth": 80,
   "cb": null,
-  "note": "inf: spina long. sx"
+  "note": "Fascia post. alta: preforo \u00d85"
  },
  {
   "part": "Gamba 4 post",
-  "code": "S",
-  "kind": "spina",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
   "p0": [
-   1920,
-   775,
-   105
+   1976.0,
+   720,
+   662
   ],
   "dir": [
-   1,
    0,
+   -1,
    0
   ],
-  "d": 12,
-  "depth": 25,
+  "d": 5,
+  "depth": 80,
   "cb": null,
-  "note": "inf: spina long. sx"
+  "note": "Fascia post. alta: preforo \u00d85"
  },
  {
   "part": "Gamba 4 post",
-  "code": "B2",
-  "kind": "bullone long. M10\u00d7140",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
   "p0": [
-   2000,
-   760,
+   1944.0,
+   720,
    160
   ],
   "dir": [
-   -1,
    0,
+   -1,
    0
   ],
-  "d": 11,
+  "d": 5,
   "depth": 80,
-  "cb": [
-   25,
-   12
+  "cb": null,
+  "note": "Fascia post. bassa: preforo \u00d85"
+ },
+ {
+  "part": "Gamba 4 post",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1976.0,
+   720,
+   130
   ],
-  "note": "inf: passante, lamatura sulla faccia destra"
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 5,
+  "depth": 80,
+  "cb": null,
+  "note": "Fascia post. bassa: preforo \u00d85"
  },
  {
   "part": "Gamba 4 post",
@@ -2192,7 +1908,7 @@
   "kind": "inserto M10 piedino",
   "p0": [
    1960.0,
-   740.0,
+   660.0,
    0
   ],
   "dir": [
@@ -2211,7 +1927,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    1960.0,
-   740,
+   660.0,
    700
   ],
   "dir": [
@@ -2229,19 +1945,547 @@
   "code": "T",
   "kind": "dado a tamburo mensola",
   "p0": [
-   1960.0,
-   800,
+   1920,
+   660.0,
    640
+  ],
+  "dir": [
+   1,
+   0,
+   0
+  ],
+  "d": 15,
+  "depth": 60,
+  "cb": null,
+  "note": "dalla faccia sinistra (lato campata), a 60 dalla testa"
+ },
+ {
+  "part": "Fascia ant. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   24.0,
+   0,
+   675
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 9,
+  "depth": 120,
+  "cb": [
+   20,
+   40
+  ],
+  "note": "gamba 1: passante \u00d89 + lamatura \u00d820 prof. 40 (tappo \u00d820)"
+ },
+ {
+  "part": "Fascia ant. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   56.0,
+   0,
+   645
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 9,
+  "depth": 120,
+  "cb": [
+   20,
+   40
+  ],
+  "note": "gamba 1: passante \u00d89 + lamatura \u00d820 prof. 40 (tappo \u00d820)"
+ },
+ {
+  "part": "Fascia ant. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   604.0,
+   0,
+   675
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 9,
+  "depth": 120,
+  "cb": [
+   20,
+   40
+  ],
+  "note": "gamba 2: passante \u00d89 + lamatura \u00d820 prof. 40 (tappo \u00d820)"
+ },
+ {
+  "part": "Fascia ant. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   636.0,
+   0,
+   645
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 9,
+  "depth": 120,
+  "cb": [
+   20,
+   40
+  ],
+  "note": "gamba 2: passante \u00d89 + lamatura \u00d820 prof. 40 (tappo \u00d820)"
+ },
+ {
+  "part": "Fascia ant. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1384.0,
+   0,
+   675
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 9,
+  "depth": 120,
+  "cb": [
+   20,
+   40
+  ],
+  "note": "gamba 3: passante \u00d89 + lamatura \u00d820 prof. 40 (tappo \u00d820)"
+ },
+ {
+  "part": "Fascia ant. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1416.0,
+   0,
+   645
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 9,
+  "depth": 120,
+  "cb": [
+   20,
+   40
+  ],
+  "note": "gamba 3: passante \u00d89 + lamatura \u00d820 prof. 40 (tappo \u00d820)"
+ },
+ {
+  "part": "Fascia ant. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1944.0,
+   0,
+   675
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 9,
+  "depth": 120,
+  "cb": [
+   20,
+   40
+  ],
+  "note": "gamba 4: passante \u00d89 + lamatura \u00d820 prof. 40 (tappo \u00d820)"
+ },
+ {
+  "part": "Fascia ant. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1976.0,
+   0,
+   645
+  ],
+  "dir": [
+   0,
+   1,
+   0
+  ],
+  "d": 9,
+  "depth": 120,
+  "cb": [
+   20,
+   40
+  ],
+  "note": "gamba 4: passante \u00d89 + lamatura \u00d820 prof. 40 (tappo \u00d820)"
+ },
+ {
+  "part": "Fascia post. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   24.0,
+   800,
+   682
   ],
   "dir": [
    0,
    -1,
    0
   ],
-  "d": 15,
-  "depth": 70,
-  "cb": null,
-  "note": "dal retro, a 60 dalla testa"
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 1: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   56.0,
+   800,
+   662
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 1: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   604.0,
+   800,
+   682
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 2: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   636.0,
+   800,
+   662
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 2: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1384.0,
+   800,
+   682
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 3: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1416.0,
+   800,
+   662
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 3: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1944.0,
+   800,
+   682
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 4: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. alta",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1976.0,
+   800,
+   662
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 4: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. bassa",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   24.0,
+   800,
+   160
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 1: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. bassa",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   56.0,
+   800,
+   130
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 1: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. bassa",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   604.0,
+   800,
+   160
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 2: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. bassa",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   636.0,
+   800,
+   130
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 2: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. bassa",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1384.0,
+   800,
+   160
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 3: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. bassa",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1416.0,
+   800,
+   130
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 3: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. bassa",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1944.0,
+   800,
+   160
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 4: passante \u00d89 + svasatura"
+ },
+ {
+  "part": "Fascia post. bassa",
+  "code": "V",
+  "kind": "vite strutturale \u00d88\u00d7160",
+  "p0": [
+   1976.0,
+   800,
+   130
+  ],
+  "dir": [
+   0,
+   -1,
+   0
+  ],
+  "d": 9,
+  "depth": 80,
+  "cb": [
+   16,
+   5
+  ],
+  "note": "gamba 4: passante \u00d89 + svasatura"
  },
  {
   "part": "Trav. sup. lat. 1",
@@ -2249,7 +2493,7 @@
   "kind": "assiale bullone",
   "p0": [
    40.0,
-   120,
+   240,
    610
   ],
   "dir": [
@@ -2268,7 +2512,7 @@
   "kind": "dado a tamburo",
   "p0": [
    40.0,
-   180,
+   300,
    580
   ],
   "dir": [
@@ -2287,7 +2531,7 @@
   "kind": "spina",
   "p0": [
    25.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -2306,7 +2550,7 @@
   "kind": "spina",
   "p0": [
    55.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -2325,7 +2569,7 @@
   "kind": "assiale bullone",
   "p0": [
    40.0,
-   680,
+   600,
    610
   ],
   "dir": [
@@ -2344,7 +2588,7 @@
   "kind": "dado a tamburo",
   "p0": [
    40.0,
-   620,
+   540,
    580
   ],
   "dir": [
@@ -2363,7 +2607,7 @@
   "kind": "spina",
   "p0": [
    25.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -2382,7 +2626,7 @@
   "kind": "spina",
   "p0": [
    55.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -2401,7 +2645,7 @@
   "kind": "assiale bullone",
   "p0": [
    40.0,
-   120,
+   240,
    100
   ],
   "dir": [
@@ -2420,7 +2664,7 @@
   "kind": "dado a tamburo",
   "p0": [
    40.0,
-   180,
+   300,
    70
   ],
   "dir": [
@@ -2439,7 +2683,7 @@
   "kind": "spina",
   "p0": [
    25.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -2458,7 +2702,7 @@
   "kind": "spina",
   "p0": [
    55.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -2477,7 +2721,7 @@
   "kind": "assiale bullone",
   "p0": [
    40.0,
-   680,
+   600,
    100
   ],
   "dir": [
@@ -2496,7 +2740,7 @@
   "kind": "dado a tamburo",
   "p0": [
    40.0,
-   620,
+   540,
    70
   ],
   "dir": [
@@ -2515,7 +2759,7 @@
   "kind": "spina",
   "p0": [
    25.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -2534,7 +2778,7 @@
   "kind": "spina",
   "p0": [
    55.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -2553,7 +2797,7 @@
   "kind": "assiale bullone",
   "p0": [
    620.0,
-   120,
+   240,
    610
   ],
   "dir": [
@@ -2572,7 +2816,7 @@
   "kind": "dado a tamburo",
   "p0": [
    620.0,
-   180,
+   300,
    580
   ],
   "dir": [
@@ -2591,7 +2835,7 @@
   "kind": "spina",
   "p0": [
    605.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -2610,7 +2854,7 @@
   "kind": "spina",
   "p0": [
    635.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -2629,7 +2873,7 @@
   "kind": "assiale bullone",
   "p0": [
    620.0,
-   680,
+   600,
    610
   ],
   "dir": [
@@ -2648,7 +2892,7 @@
   "kind": "dado a tamburo",
   "p0": [
    620.0,
-   620,
+   540,
    580
   ],
   "dir": [
@@ -2667,7 +2911,7 @@
   "kind": "spina",
   "p0": [
    605.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -2686,7 +2930,7 @@
   "kind": "spina",
   "p0": [
    635.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -2705,7 +2949,7 @@
   "kind": "passacavi",
   "p0": [
    580,
-   560,
+   420.0,
    650
   ],
   "dir": [
@@ -2724,7 +2968,7 @@
   "kind": "assiale bullone",
   "p0": [
    620.0,
-   120,
+   240,
    100
   ],
   "dir": [
@@ -2743,7 +2987,7 @@
   "kind": "dado a tamburo",
   "p0": [
    620.0,
-   180,
+   300,
    70
   ],
   "dir": [
@@ -2762,7 +3006,7 @@
   "kind": "spina",
   "p0": [
    605.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -2781,7 +3025,7 @@
   "kind": "spina",
   "p0": [
    635.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -2800,7 +3044,7 @@
   "kind": "assiale bullone",
   "p0": [
    620.0,
-   680,
+   600,
    100
   ],
   "dir": [
@@ -2819,7 +3063,7 @@
   "kind": "dado a tamburo",
   "p0": [
    620.0,
-   620,
+   540,
    70
   ],
   "dir": [
@@ -2838,7 +3082,7 @@
   "kind": "spina",
   "p0": [
    605.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -2857,7 +3101,7 @@
   "kind": "spina",
   "p0": [
    635.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -2876,7 +3120,7 @@
   "kind": "assiale bullone",
   "p0": [
    1400.0,
-   120,
+   240,
    610
   ],
   "dir": [
@@ -2895,7 +3139,7 @@
   "kind": "dado a tamburo",
   "p0": [
    1400.0,
-   180,
+   300,
    580
   ],
   "dir": [
@@ -2914,7 +3158,7 @@
   "kind": "spina",
   "p0": [
    1385.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -2933,7 +3177,7 @@
   "kind": "spina",
   "p0": [
    1415.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -2952,7 +3196,7 @@
   "kind": "assiale bullone",
   "p0": [
    1400.0,
-   680,
+   600,
    610
   ],
   "dir": [
@@ -2971,7 +3215,7 @@
   "kind": "dado a tamburo",
   "p0": [
    1400.0,
-   620,
+   540,
    580
   ],
   "dir": [
@@ -2990,7 +3234,7 @@
   "kind": "spina",
   "p0": [
    1385.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -3009,7 +3253,7 @@
   "kind": "spina",
   "p0": [
    1415.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -3028,7 +3272,7 @@
   "kind": "passacavi",
   "p0": [
    1360,
-   560,
+   420.0,
    650
   ],
   "dir": [
@@ -3047,7 +3291,7 @@
   "kind": "assiale bullone",
   "p0": [
    1400.0,
-   120,
+   240,
    100
   ],
   "dir": [
@@ -3066,7 +3310,7 @@
   "kind": "dado a tamburo",
   "p0": [
    1400.0,
-   180,
+   300,
    70
   ],
   "dir": [
@@ -3085,7 +3329,7 @@
   "kind": "spina",
   "p0": [
    1385.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -3104,7 +3348,7 @@
   "kind": "spina",
   "p0": [
    1415.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -3123,7 +3367,7 @@
   "kind": "assiale bullone",
   "p0": [
    1400.0,
-   680,
+   600,
    100
   ],
   "dir": [
@@ -3142,7 +3386,7 @@
   "kind": "dado a tamburo",
   "p0": [
    1400.0,
-   620,
+   540,
    70
   ],
   "dir": [
@@ -3161,7 +3405,7 @@
   "kind": "spina",
   "p0": [
    1385.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -3180,7 +3424,7 @@
   "kind": "spina",
   "p0": [
    1415.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -3199,7 +3443,7 @@
   "kind": "assiale bullone",
   "p0": [
    1960.0,
-   120,
+   240,
    610
   ],
   "dir": [
@@ -3218,7 +3462,7 @@
   "kind": "dado a tamburo",
   "p0": [
    1960.0,
-   180,
+   300,
    580
   ],
   "dir": [
@@ -3237,7 +3481,7 @@
   "kind": "spina",
   "p0": [
    1945.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -3256,7 +3500,7 @@
   "kind": "spina",
   "p0": [
    1975.0,
-   120,
+   240,
    665
   ],
   "dir": [
@@ -3275,7 +3519,7 @@
   "kind": "assiale bullone",
   "p0": [
    1960.0,
-   680,
+   600,
    610
   ],
   "dir": [
@@ -3294,7 +3538,7 @@
   "kind": "dado a tamburo",
   "p0": [
    1960.0,
-   620,
+   540,
    580
   ],
   "dir": [
@@ -3313,7 +3557,7 @@
   "kind": "spina",
   "p0": [
    1945.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -3332,7 +3576,7 @@
   "kind": "spina",
   "p0": [
    1975.0,
-   680,
+   600,
    665
   ],
   "dir": [
@@ -3351,7 +3595,7 @@
   "kind": "assiale bullone",
   "p0": [
    1960.0,
-   120,
+   240,
    100
   ],
   "dir": [
@@ -3370,7 +3614,7 @@
   "kind": "dado a tamburo",
   "p0": [
    1960.0,
-   180,
+   300,
    70
   ],
   "dir": [
@@ -3389,7 +3633,7 @@
   "kind": "spina",
   "p0": [
    1945.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -3408,7 +3652,7 @@
   "kind": "spina",
   "p0": [
    1975.0,
-   120,
+   240,
    155
   ],
   "dir": [
@@ -3427,7 +3671,7 @@
   "kind": "assiale bullone",
   "p0": [
    1960.0,
-   680,
+   600,
    100
   ],
   "dir": [
@@ -3446,7 +3690,7 @@
   "kind": "dado a tamburo",
   "p0": [
    1960.0,
-   620,
+   540,
    70
   ],
   "dir": [
@@ -3465,7 +3709,7 @@
   "kind": "spina",
   "p0": [
    1945.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -3484,7 +3728,7 @@
   "kind": "spina",
   "p0": [
    1975.0,
-   680,
+   600,
    155
   ],
   "dir": [
@@ -3498,316 +3742,12 @@
   "note": "testata"
  },
  {
-  "part": "Trav. sup. post. cassetti",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   80,
-   760.0,
-   670
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. cassetti",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   140,
-   760.0,
-   700
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. sup. post. cassetti",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   80,
-   745.0,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. cassetti",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   80,
-   775.0,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. cassetti",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   580,
-   760.0,
-   670
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. cassetti",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   520,
-   760.0,
-   700
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. sup. post. cassetti",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   580,
-   745.0,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. cassetti",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   580,
-   775.0,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. cassetti",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   80,
-   760.0,
-   160
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. cassetti",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   140,
-   760.0,
-   190
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. inf. post. cassetti",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   80,
-   745.0,
-   105
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. cassetti",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   80,
-   775.0,
-   105
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. cassetti",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   580,
-   760.0,
-   160
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. cassetti",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   520,
-   760.0,
-   190
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. inf. post. cassetti",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   580,
-   745.0,
-   105
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. cassetti",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   580,
-   775.0,
-   105
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
   "part": "Trav. inf. ant. cassetti",
   "code": "A",
   "kind": "assiale bullone",
   "p0": [
    80,
-   40.0,
+   160.0,
    160
   ],
   "dir": [
@@ -3826,7 +3766,7 @@
   "kind": "dado a tamburo",
   "p0": [
    140,
-   40.0,
+   160.0,
    190
   ],
   "dir": [
@@ -3845,7 +3785,7 @@
   "kind": "spina",
   "p0": [
    80,
-   25.0,
+   145.0,
    105
   ],
   "dir": [
@@ -3864,7 +3804,7 @@
   "kind": "spina",
   "p0": [
    80,
-   55.0,
+   175.0,
    105
   ],
   "dir": [
@@ -3883,7 +3823,7 @@
   "kind": "assiale bullone",
   "p0": [
    580,
-   40.0,
+   160.0,
    160
   ],
   "dir": [
@@ -3902,7 +3842,7 @@
   "kind": "dado a tamburo",
   "p0": [
    520,
-   40.0,
+   160.0,
    190
   ],
   "dir": [
@@ -3921,7 +3861,7 @@
   "kind": "spina",
   "p0": [
    580,
-   25.0,
+   145.0,
    105
   ],
   "dir": [
@@ -3940,768 +3880,8 @@
   "kind": "spina",
   "p0": [
    580,
-   55.0,
+   175.0,
    105
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. seduta",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   660,
-   760.0,
-   670
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. seduta",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   720,
-   760.0,
-   700
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. sup. post. seduta",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   660,
-   745.0,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. seduta",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   660,
-   775.0,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. seduta",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   1360,
-   760.0,
-   670
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. seduta",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   1300,
-   760.0,
-   700
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. sup. post. seduta",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1360,
-   745.0,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. seduta",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1360,
-   775.0,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. seduta",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   660,
-   760.0,
-   160
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. seduta",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   720,
-   760.0,
-   190
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. inf. post. seduta",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   660,
-   745.0,
-   105
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. seduta",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   660,
-   775.0,
-   105
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. seduta",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   1360,
-   760.0,
-   160
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. seduta",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   1300,
-   760.0,
-   190
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. inf. post. seduta",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1360,
-   745.0,
-   105
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. seduta",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1360,
-   775.0,
-   105
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. ricarica",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   1440,
-   760.0,
-   670
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. ricarica",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   1500,
-   760.0,
-   700
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. sup. post. ricarica",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1440,
-   745.0,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. ricarica",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1440,
-   775.0,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. ricarica",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   1920,
-   760.0,
-   670
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. ricarica",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   1860,
-   760.0,
-   700
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. sup. post. ricarica",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1920,
-   745.0,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. post. ricarica",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1920,
-   775.0,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. ricarica",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   1440,
-   760.0,
-   160
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. ricarica",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   1500,
-   760.0,
-   190
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. inf. post. ricarica",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1440,
-   745.0,
-   105
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. ricarica",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1440,
-   775.0,
-   105
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. ricarica",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   1920,
-   760.0,
-   160
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. ricarica",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   1860,
-   760.0,
-   190
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. inf. post. ricarica",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1920,
-   745.0,
-   105
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. inf. post. ricarica",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1920,
-   775.0,
-   105
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. ant. ricarica",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   1440,
-   40.0,
-   670
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. ant. ricarica",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   1500,
-   40.0,
-   700
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. sup. ant. ricarica",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1440,
-   25.0,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. ant. ricarica",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1440,
-   55.0,
-   615
-  ],
-  "dir": [
-   1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. ant. ricarica",
-  "code": "A",
-  "kind": "assiale bullone",
-  "p0": [
-   1920,
-   40.0,
-   670
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 11,
-  "depth": 80,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. ant. ricarica",
-  "code": "T",
-  "kind": "dado a tamburo",
-  "p0": [
-   1860,
-   40.0,
-   700
-  ],
-  "dir": [
-   0,
-   0,
-   -1
-  ],
-  "d": 15,
-  "depth": 45,
-  "cb": null,
-  "note": "dall'alto"
- },
- {
-  "part": "Trav. sup. ant. ricarica",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1920,
-   25.0,
-   615
-  ],
-  "dir": [
-   -1,
-   0,
-   0
-  ],
-  "d": 12,
-  "depth": 30,
-  "cb": null,
-  "note": "testata"
- },
- {
-  "part": "Trav. sup. ant. ricarica",
-  "code": "S",
-  "kind": "spina",
-  "p0": [
-   1920,
-   55.0,
-   615
   ],
   "dir": [
    -1,
@@ -4719,7 +3899,7 @@
   "kind": "assiale bullone",
   "p0": [
    1440,
-   40.0,
+   160.0,
    160
   ],
   "dir": [
@@ -4738,7 +3918,7 @@
   "kind": "dado a tamburo",
   "p0": [
    1500,
-   40.0,
+   160.0,
    190
   ],
   "dir": [
@@ -4757,7 +3937,7 @@
   "kind": "spina",
   "p0": [
    1440,
-   25.0,
+   145.0,
    105
   ],
   "dir": [
@@ -4776,7 +3956,7 @@
   "kind": "spina",
   "p0": [
    1440,
-   55.0,
+   175.0,
    105
   ],
   "dir": [
@@ -4795,7 +3975,7 @@
   "kind": "assiale bullone",
   "p0": [
    1920,
-   40.0,
+   160.0,
    160
   ],
   "dir": [
@@ -4814,7 +3994,7 @@
   "kind": "dado a tamburo",
   "p0": [
    1860,
-   40.0,
+   160.0,
    190
   ],
   "dir": [
@@ -4833,7 +4013,7 @@
   "kind": "spina",
   "p0": [
    1920,
-   25.0,
+   145.0,
    105
   ],
   "dir": [
@@ -4852,7 +4032,7 @@
   "kind": "spina",
   "p0": [
    1920,
-   55.0,
+   175.0,
    105
   ],
   "dir": [
@@ -4871,7 +4051,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    40.0,
-   740,
+   660.0,
    740
   ],
   "dir": [
@@ -4890,7 +4070,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    40.0,
-   740,
+   660.0,
    740
   ],
   "dir": [
@@ -4909,7 +4089,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    40.0,
-   740,
+   660.0,
    1008
   ],
   "dir": [
@@ -4928,7 +4108,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    620.0,
-   740,
+   660.0,
    740
   ],
   "dir": [
@@ -4947,7 +4127,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    620.0,
-   740,
+   660.0,
    740
   ],
   "dir": [
@@ -4966,7 +4146,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    620.0,
-   740,
+   660.0,
    1008
   ],
   "dir": [
@@ -4985,7 +4165,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    1400.0,
-   740,
+   660.0,
    740
   ],
   "dir": [
@@ -5004,7 +4184,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    1400.0,
-   740,
+   660.0,
    740
   ],
   "dir": [
@@ -5023,7 +4203,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    1400.0,
-   740,
+   660.0,
    1008
   ],
   "dir": [
@@ -5042,7 +4222,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    1960.0,
-   740,
+   660.0,
    740
   ],
   "dir": [
@@ -5061,7 +4241,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    1960.0,
-   740,
+   660.0,
    740
   ],
   "dir": [
@@ -5080,7 +4260,7 @@
   "kind": "barra mensola \u00d812",
   "p0": [
    1960.0,
-   740,
+   660.0,
    1008
   ],
   "dir": [
@@ -5151,9 +4331,9 @@
   "note": "passante"
  },
  {
-  "part": "Trav. sup. ant. ricarica",
+  "part": "Fascia ant. alta",
   "code": "P",
-  "kind": "vite base piastre M10\u00d7200",
+  "kind": "vite base piastre M10\u00d7160",
   "p0": [
    1615.0,
    25.0,
@@ -5165,9 +4345,9 @@
    -1
   ],
   "d": 11,
-  "depth": 120,
+  "depth": 80,
   "cb": null,
-  "note": "passante verticale, dado sotto la traversa"
+  "note": "passante verticale, dado sotto la fascia"
  },
  {
   "part": "Piano di lavoro",
@@ -5227,9 +4407,9 @@
   "note": "passante"
  },
  {
-  "part": "Trav. sup. ant. ricarica",
+  "part": "Fascia ant. alta",
   "code": "P",
-  "kind": "vite base piastre M10\u00d7200",
+  "kind": "vite base piastre M10\u00d7160",
   "p0": [
    1745.0,
    25.0,
@@ -5241,9 +4421,9 @@
    -1
   ],
   "d": 11,
-  "depth": 120,
+  "depth": 80,
   "cb": null,
-  "note": "passante verticale, dado sotto la traversa"
+  "note": "passante verticale, dado sotto la fascia"
  },
  {
   "part": "Piano di lavoro",

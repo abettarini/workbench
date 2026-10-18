@@ -14,6 +14,8 @@ def code(n):
     if m: return f"L{m.group(2)}{'s' if m.group(1)=='sup' else 'i'}"
     m = re.match(r"Trav\. (sup|inf)\. (post|ant)\. (\w+)", n)
     if m: return f"{'P' if m.group(2)=='post' else 'A'}{m.group(3)[0].upper()}{'s' if m.group(1)=='sup' else 'i'}"
+    m = re.match(r"Fascia (post|ant)\. (alta|bassa)", n)
+    if m: return "FA" if m.group(1) == "ant" else ("FPa" if m.group(2) == "alta" else "FPb")
     m = re.match(r"Montante mensola (\d)", n)
     if m: return f"M{m.group(1)}"
     return n
@@ -26,7 +28,7 @@ A4 = (11.69, 8.27)
 INK, RED, MUTE = "#222222", "#c0392b", "#666666"
 WOOD, WOOD2, STEEL, PLY = "#e3c79c", "#cfa874", "#9aa3ab", "#efdcb8"
 HCOL = {"B1": "#c0392b", "B2": "#e67e22", "R": "#8e44ad", "S": "#d4a017", "I": "#7f8c8d", "M": "#2c6fbb",
-        "T": "#16a085", "A": "#c0392b", "C": "#555555", "P": "#34495e"}
+        "T": "#16a085", "A": "#c0392b", "C": "#555555", "P": "#34495e", "V": "#7d3c98"}
 FACE_NAME = {"A": "anteriore", "D": "destra", "P": "posteriore", "S": "sinistra", "T": "testa", "F": "piede"}
 plt.rcParams["font.family"] = "DejaVu Sans"
 PAGE = [0]

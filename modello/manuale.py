@@ -1,12 +1,31 @@
-"""Manuale tavolo BASE – KVH 80×120 -> tavolo_base_manuale.pdf"""
+"""Manuale tavolo BASE – KVH 80×120, 4 telai laterali + 3 fasce -> tavolo_base_manuale.pdf"""
 from manlib import *
 from manlib import PAGE, TOC, FOOTER
-# ------------------------------------------------------------------ codici e quantità
+from openpyxl import load_workbook
+from osb import OSB_CUTS, STRIP
+import disegni
+# ------------------------------------------------------------------ codici, misure dal modello
 legs = [n for n in parts if n.startswith("Gamba")]
 rails = [n for n in parts if n.startswith("Trav.")]
+fasce = [n for n in parts if n.startswith("Fascia")]
 risers = [n for n in parts if n.startswith("Montante")]
 def length(n):
     x0, y0, z0, x1, y1, z1 = parts[n]["box"]; return round(max(x1 - x0, y1 - y0, z1 - z0))
+Fb, Ffd, Ffh = P["Fb"], P["Ff_d"], P["Ff_h"]
+yF0, yB1 = Ffd, D - Fb                       # facce esterne delle gambe
+yF1, yB0 = yF0 + Ly, yB1 - Ly                # testate delle traverse laterali
+LAT = yB0 - yF1                               # lunghezza traverse laterali
+FAS = length("Fascia ant. alta")
+YM = (yB0 + yB1) / 2                          # asse barre alzatina
+XM = [x + Lx / 2 for x in d["legs_x"]]
+cable = next(h for h in holes if h["code"] == "C" and h["part"].startswith("Trav."))
+CAB_Y, CAB_Z = cable["p0"][1] - yF1, LEG_H - cable["p0"][2]
+tray = parts["Canalina seduta"]["box"]
+rinf = parts["Rinforzo piano ricarica"]["box"]
+NB = len(cf["kvh_bars"])
+
+def screws_of(fas):
+    return sorted({(round(h["p0"][0] - (parts[fas]["box"][0])), round(h["p0"][2])) for h in holes if h["part"] == fas and h["code"] == "V"})
 
 # ------------------------------------------------------------------ disegni ferramenta
 def draw_hw(ax, kind):
@@ -32,8 +51,16 @@ def draw_hw(ax, kind):
         R(ax, 6, 17, 80, 6, STEEL); ax.add_patch(Polygon([[86, 14], [94, 17], [94, 23], [86, 26]], fc="#c8cdd2", ec=INK))
         R(ax, 82, 12, 3, 16, "#c8cdd2")
     elif kind == "V":
+        ax.add_patch(Polygon([[6, 12], [12, 16], [12, 24], [6, 28]], fc="#d8b84a", ec=INK))
+        R(ax, 12, 16.5, 78, 7, "#d8b84a")
+        for x in range(40, 88, 3): ax.plot([x, x + 1.5], [16.5, 23.5], lw=0.4, color=INK)
+        ax.add_patch(Polygon([[90, 16.5], [96, 20], [90, 23.5]], fc="#d8b84a", ec=INK))
+    elif kind == "W":
         R(ax, 12, 17, 3, 6, STEEL); ax.add_patch(Polygon([[15, 18], [70, 19], [80, 20], [70, 21], [15, 22]], fc=STEEL, ec=INK))
         ax.add_patch(Polygon([[8, 14], [12, 17], [12, 23], [8, 26]], fc="#c8cdd2", ec=INK))
+    elif kind == "K":
+        R(ax, 10, 14, 70, 12, "#bfbfbf"); R(ax, 6, 12, 4, 16, "#999")
+        for x in range(20, 78, 6): ax.plot([x, x], [14, 26], lw=0.5, color="#666")
     elif kind == "Q":
         ax.add_patch(Polygon([[30, 8], [70, 8], [70, 12], [34, 12], [34, 34], [30, 34]], fc=STEEL, ec=INK))
         R(ax, 46, 9, 12, 2, "white", ec=INK, lw=0.5); R(ax, 31, 18, 2, 8, "white", ec=INK, lw=0.5)
@@ -42,15 +69,16 @@ def draw_hw(ax, kind):
         R(ax, 10, 12, 30, 16, "#222"); R(ax, 40, 18, 20, 4, STEEL); R(ax, 60, 14, 5, 12, STEEL)
 
 HW = [  # codice, nome, quantità, dove, disegno
-    ("B1", "Vite M10×180 testa cilindrica (TCEI) + rondella Ø20", "16", "traverse laterali (L): dalla faccia esterna della gamba", "B1"),
-    ("B2", "Vite M10×140 testa cilindrica (M10×160 accorciata) + rondella", "10", "traverse longitudinali su gambe con una sola traversa", "B2"),
-    ("R", "Barra filettata M10, spezzone 220 mm", "4", "gambe 2P e 3P: unisce le due traverse longitudinali", "R"),
-    ("D", "Dado a tamburo M10 (Ø15 circa)", "38", "34 nelle traverse + 4 nelle gambe posteriori (predisposizione alzatina)", "D"),
-    ("S", "Spina in faggio Ø12×50", "68", "2 per testata di traversa", "S"),
+    ("B1", "Vite M10×180 testa cilindrica (TCEI) + rondella Ø20", "16", "traverse laterali (L) dei 4 telai: dalla faccia esterna della gamba", "B1"),
+    ("B2", "Vite M10×140 testa cilindrica (M10×180 accorciata) + rondella", "4", "traverse basse anteriori ACi e ARi", "B2"),
+    ("D", "Dado a tamburo M10 (Ø15 circa)", "24", "20 nelle testate delle traverse + 4 nelle gambe posteriori (predisposizione alzatina)", "D"),
+    ("S", "Spina in faggio Ø12×50", "40", "2 per testata di traversa", "S"),
+    ("V", "Vite strutturale per legno 8×160 (Rothoblaas TPS)", "24", "fasce FA, FPa, FPb: 2 per gamba, perpendicolari", "V"),
     ("I", "Dado ragno M10 (o inserto filettato) + piedino M10", "8", "sotto ogni gamba", "I"),
-    ("Q", "Squadretta con asola + viti 4,5×25", "16", "fissaggio del piano alle traverse superiori", "Q"),
-    ("V", "Viti legno: 5×60, 5×70, 4×45, 4×50, 3,5×25", "sfuse", "rinforzo, listelli, cassettiera, cassetti", "V"),
-    ("X", "Viti TSPEI M10 + dadi autobloccanti", "2+2", "base piastre ricarica: 2 × M10×110 e 2 × M10×200", "X"),
+    ("Q", "Squadretta con asola + viti 4,5×25", "16", "fissaggio del piano a fasce e traverse laterali alte", "Q"),
+    ("W", "Viti legno: 5×60, 5×70, 4×35, 4,5×25", "sfuse", "rinforzo ricarica, listelli, ripiani, squadrette", "W"),
+    ("X", "Viti TSPEI M10 + dadi autobloccanti + rondelle larghe", "2+2", "base piastre ricarica: 2 × M10×160 (anteriori) e 2 × M10×110", "X"),
+    ("K", "Tassello per telai Ø10 L 160 con vite", "4", "fissaggio a muro attraverso la fascia posteriore alta", "K"),
 ]
 
 # ------------------------------------------------------------------ foratura gambe
@@ -130,51 +158,77 @@ def draw_leg(fig, n, rect_draw, rect_tab):
         else:
             pos = "—"; hor = f"{u:.0f} da sx, {('%.0f' % (Ly - v))} dal retro" if f == "T" else f"centro"
         depth = "passante" if through(h, n) else f"{h['depth']:.0f}"
-        note = {"B1": "bullone laterale B1", "B2": "bullone longit. B2", "R": "barra R", "S": "spina S", "I": "inserto I",
-                "M": "predisp. alzatina: foro barra M", "T": "predisp. alzatina: dado D"}.get(h["code"], h["kind"])
+        note = {"B1": "bullone laterale B1", "B2": "bullone traversa bassa B2", "S": "spina S", "I": "dado ragno I",
+                "M": "predisp. alzatina: foro barra", "T": "predisp. alzatina: dado D",
+                "V": "preforo vite fascia V"}.get(h["code"], h["kind"])
         if h["cb"]: note += f", lamatura Ø{h['cb'][0]}×{h['cb'][1]}"
         if f == "T": note += " – punta lunga"
+        if h["code"] == "V": note += " (" + h["note"].split(":")[0] + ")"
         lev = "sup." if (v > 400 and f in "ADPS") else ("inf." if f in "ADPS" else "")
         rows.append([str(k), FACE_NAME[f], pos, hor, f"Ø{h['d']:.0f}", depth, (lev + " " + note).strip()])
         rcol.append(None)
     ax.set_xlim(-95, top_off + Lx + 10); ax.set_ylim(-35, LEG_H + 70)
     at = fig.add_axes(rect_tab)
     table(at, rows, ["n°", "faccia", "dalla testa", "da sinistra", "Ø", "prof.", "cosa"],
-          [0.05, 0.11, 0.10, 0.20, 0.06, 0.10, 0.42], fs=7, sc=1.45)
+          [0.045, 0.10, 0.09, 0.16, 0.05, 0.085, 0.43], fs=6.6, sc=1.45)
     return hs
 
 # ------------------------------------------------------------------ sezioni
-def sec_nodo_estremita(ax):
-    """vista dall'alto: gamba 1P + traversa PC (bullone B2)"""
+def sec_nodo_bassa(ax):
+    """vista dall'alto: gamba G1A + traversa bassa ACi (bullone B2 dalla faccia opposta)"""
     ax.set_aspect("equal"); ax.axis("off")
-    R(ax, 0, 0, 80, 120, WOOD); R(ax, 80, 40, 220, 80, WOOD2)
-    # bullone: lamatura da sinistra
-    R(ax, 0, 80 - 12.5, 12, 25, "white", ls="--"); R(ax, 12, 80 - 5.5, 68 + 70, 11, "white", ec=INK, ls="--", lw=0.6)
-    R(ax, 2, 80 - 8, 10, 16, STEEL); R(ax, 12, 80 - 5, 128, 10, STEEL)
-    ax.add_patch(Circle((140, 80), 7.5, fc=STEEL, ec=INK)); ax.plot([133, 147], [80, 80], lw=1, color=INK)
-    for dy in (-15, 15): R(ax, 55, 80 + dy - 6, 55, 12, "#e8c77a", ec=INK, lw=0.5, ls=":")
-    dim(ax, 80, 120, 140, 120, 18, "60"); dim(ax, 0, 0, 80, 0, -14, "80")
-    ax.text(150, 112, "dado a tamburo D\n(foro Ø15 dall'alto,\nprof. 45)", fontsize=6.3, va="top")
-    ax.text(2, 135, "lamatura Ø25×12", fontsize=6.3)
-    ax.text(170, 60, "traversa\nlongitudinale", fontsize=6.3)
-    ax.text(5, 20, "gamba", fontsize=6.3)
-    ax.text(57, 50, "spine S (quota diversa)", fontsize=5.5, color="#8a6a20")
-    ax.set_xlim(-10, 310); ax.set_ylim(-35, 150)
-    ax.set_title("A · gamba d'estremità: bullone B2 M10×140 (vista dall'alto)", fontsize=8, loc="left")
+    R(ax, 0, 0, 80, 120, WOOD); R(ax, 80, 0, 220, 80, WOOD2)
+    R(ax, 0, 40 - 12.5, 12, 25, "white", ls="--"); R(ax, 12, 40 - 5.5, 68 + 70, 11, "white", ec=INK, ls="--", lw=0.6)
+    R(ax, 2, 40 - 8, 10, 16, STEEL); R(ax, 12, 40 - 5, 128, 10, STEEL)
+    ax.add_patch(Circle((140, 40), 7.5, fc=STEEL, ec=INK)); ax.plot([133, 147], [40, 40], lw=1, color=INK)
+    for dy in (-15, 15): R(ax, 55, 40 + dy - 6, 55, 12, "#e8c77a", ec=INK, lw=0.5, ls=":")
+    dim(ax, 80, 80, 140, 80, 18, "60"); dim(ax, 0, 120, 80, 120, 14, "80")
+    dim(ax, 300, 0, 300, 40, 12, "40", vertical=True)
+    ax.text(150, 125, "dado a tamburo D\n(Ø15 dall'alto, prof. 45)", fontsize=6.3, va="bottom")
+    ax.text(2, -14, "lamatura Ø25×12", fontsize=6.3, va="top")
+    ax.text(175, 25, "ACi / ARi", fontsize=6.3)
+    ax.text(5, 95, "gamba\nanteriore", fontsize=6.3)
+    ax.text(-8, -40, "← fronte (sotto la fascia FA)", fontsize=6, color=MUTE)
+    ax.set_xlim(-15, 330); ax.set_ylim(-55, 175)
+    ax.set_title("A · traversa bassa: bullone B2 (dall'alto)", fontsize=8, loc="left")
 
-def sec_nodo_centrale(ax):
+def sec_laterale(ax):
+    """sezione verticale lungo la profondità, sull'asse di una gamba: telaio laterale + fasce + viti"""
     ax.set_aspect("equal"); ax.axis("off")
-    R(ax, -220, 40, 220, 80, WOOD2); R(ax, 0, 0, 80, 120, WOOD); R(ax, 80, 40, 220, 80, WOOD2)
-    R(ax, -75, 75, 230, 10, STEEL)
-    for x in (-60, 140): ax.add_patch(Circle((x, 80), 7.5, fc=STEEL, ec=INK)); ax.plot([x - 7, x + 7], [80, 80], lw=1, color=INK)
-    dim(ax, -60, 120, 140, 120, 18, "barra R 220: 60 + 80 + 60 + 2×10")
-    ax.text(-210, 60, "traversa sinistra", fontsize=6.3); ax.text(170, 60, "traversa destra", fontsize=6.3)
-    ax.text(5, 20, "gamba\n2P / 3P", fontsize=6.3)
-    ax.text(-215, -10, "Avvita la barra a metà nel dado della prima traversa, accosta l'altra e stringi\n"
-            "ruotando i dadi a tamburo con un cacciavite largo: le traverse si tirano contro la gamba.",
-            fontsize=6.3, va="top")
-    ax.set_xlim(-230, 310); ax.set_ylim(-45, 150)
-    ax.set_title("B · gambe centrali posteriori: barra passante R (vista dall'alto)", fontsize=8, loc="left")
+    zc = 470
+    R(ax, yF0, zc, Ly, LEG_H - zc, WOOD); R(ax, yB0, zc, Ly, LEG_H - zc, WOOD)
+    R(ax, yF1, LEG_H - Rh, LAT, Rh, WOOD2)
+    R(ax, 0, LEG_H - Ffh, Ffd, Ffh, "#b98d55"); R(ax, yB1, LEG_H - Rh, Fb, Rh, "#b98d55")
+    R(ax, 0, LEG_H, D, P["T_top"], "#efe0c2", hatch="///")
+    ax.plot([D + 3, D + 3], [zc - 20, H + 30], color="#555", lw=2.5); ax.text(D + 10, zc, "muro", fontsize=6.3, rotation=90)
+    for x in (zc,): ax.plot([yF0 - 5, yF1 + 5], [x, x], color=INK, lw=0.6, ls=(0, (4, 3)))
+    ax.plot([yB0 - 5, yB1 + 5], [zc, zc], color=INK, lw=0.6, ls=(0, (4, 3)))
+    # viti fascia anteriore (lamatura Ø20 prof. 40)
+    for (u, z) in screws_of("Fascia ant. alta")[:2]:
+        R(ax, 0, z - 10, 40, 20, "white", ec=HCOL["V"], ls="--", lw=0.6)
+        R(ax, 40, z - 3.5, 160, 7, "#d8b84a", lw=0.5); R(ax, 37, z - 7.5, 3, 15, "#a8861c", lw=0.4)
+    for (u, z) in screws_of("Fascia post. alta")[:2]:
+        R(ax, D - 160, z - 3.5, 160, 7, "#d8b84a", lw=0.5); R(ax, D - 3, z - 7.5, 3, 15, "#a8861c", lw=0.4)
+    # bulloni laterali
+    zb = LEG_H - 90
+    R(ax, yF0, zb - 12.5, 12, 25, "white", ls="--", lw=0.5); R(ax, yF0 + 2, zb - 5, 178, 10, STEEL, lw=0.5)
+    R(ax, yB1 - 12, zb - 12.5, 12, 25, "white", ls="--", lw=0.5); R(ax, yB1 - 180, zb - 5, 178, 10, STEEL, lw=0.5)
+    for yy in (yF1 + 60, yB0 - 60):
+        R(ax, yy - 7.5, LEG_H - Rh, 15, 45, "#9aa3ab", lw=0.5)
+    dim(ax, 0, H, Ffd, H, 22, f"{Ffd}", fs=6.3); dim(ax, Ffd, H, yF1, H, 22, f"{Ly}", fs=6.3)
+    dim(ax, yF1, H, yB0, H, 22, f"{LAT}", fs=6.3); dim(ax, yB0, H, yB1, H, 22, f"{Ly}", fs=6.3)
+    dim(ax, yB1, H, D, H, 22, f"{Fb}", fs=6.3)
+    dim(ax, 0, LEG_H - Ffh, 0, LEG_H, -14, f"{Ffh}", vertical=True, fs=6.3)
+    dim(ax, D, LEG_H - Rh, D, LEG_H, 30, f"{Rh}", vertical=True, fs=6.3)
+    ax.text(-30, LEG_H - Ffh - 22, "FA (di piatto)", fontsize=6.2)
+    ax.text(yB1 + 4, LEG_H - Rh - 22, "FPa", fontsize=6.2)
+    ax.text(yF1 + 120, LEG_H - Rh / 2, "traversa laterale alta", fontsize=6.2, va="center")
+    ax.text(yF0 + 4, zc + 40, "gamba\nant.", fontsize=6.2); ax.text(yB0 + 4, zc + 40, "gamba\npost.", fontsize=6.2)
+    ax.text(-30, LEG_H - Ffh - 70, "vite 8×160 in lamatura\nØ20 prof. 40 (tappo)", fontsize=5.6, color=HCOL["V"])
+    ax.text(yB0 - 10, LEG_H - Rh - 40, "viti 8×160", fontsize=5.6, color=HCOL["V"], ha="right")
+    ax.text(yF0 + 14, zb - 22, "B1", fontsize=6, color=RED); ax.text(yB1 - 30, zb - 22, "B1", fontsize=6, color=RED)
+    ax.set_xlim(-50, D + 60); ax.set_ylim(zc - 30, H + 70)
+    ax.set_title("B · sezione sull'asse di una gamba (fronte a sinistra, muro a destra)", fontsize=8, loc="left")
 
 def sec_nodo_laterale(ax):
     ax.set_aspect("equal"); ax.axis("off")
@@ -198,7 +252,7 @@ def testata(ax, kind):
     if kind == "lat":
         bz, sz, nut_from, title = 30, 85, "basso", "Traversa LATERALE (L): testata e fianco"
     else:
-        bz, sz, nut_from, title = 90, 35, "alto", "Traversa LONGITUDINALE (P, A): testata e fianco"
+        bz, sz, nut_from, title = 90, 35, "alto", "Traversa BASSA ANTERIORE (ACi, ARi): testata e fianco"
     ax.add_patch(Circle((40, bz), 5.5, fc=HCOL["A"], ec=INK)); ax.text(48, bz - 2, "Ø11 prof. 80", fontsize=6.2)
     for dx in (-15, 15): ax.add_patch(Circle((40 + dx, sz), 6, fc=HCOL["S"], ec=INK))
     ax.text(62, sz + 8, "Ø12 prof. 30", fontsize=6.2)
@@ -221,134 +275,161 @@ def testata(ax, kind):
 
 # ------------------------------------------------------------------ PDF
 FOOTER[0] = "Modulo 1 – Tavolo base KVH 80×120 – manuale di lavorazione e montaggio"
+pal = {FAS: "#b98d55", 700: "#d9b382", LAT: "#c99a62", 500: "#bd8d55", 480: "#b07f4a", 250: "#e6caa0"}
 with PdfPages("tavolo_base_manuale.pdf") as pdf:
-    # ================= 1. copertina
+    # ================= copertina
     fig = plt.figure(figsize=A4); PAGE[0] += 1
     fig.text(0.05, 0.9, "Tavolo da lavoro", fontsize=30, weight="bold")
     fig.text(0.05, 0.85, "Modulo 1 · Tavolo base – manuale di lavorazione e montaggio", fontsize=14, color=MUTE)
     img(fig, "man_f9_base.png", [0.36, 0.10, 0.62, 0.72], crop=(150, 900, 40, 1480))
-    fases = ["Prima di iniziare", "Ferramenta e codici dei pezzi", "Fase 1 · Taglio",
-             "Fase 2 · Foratura (gambe, traverse, pannelli)", "Fase 3 · Levigatura e finitura",
-             "Fase 4 · Telai laterali", "Fase 5 · Collegamento dei telai", "Fase 6 · Listelli e ripiani bassi",
+    fases = ["Prima di iniziare · Ferramenta · Distinta materiali (BOM)", "Codici dei pezzi · Viste quotate",
+             "Fase 1 · Taglio", "Fase 2 · Foratura (gambe, traverse, fasce, piano)", "Fase 3 · Levigatura e finitura",
+             "Fase 4 · Telai laterali", "Fase 5 · Traverse basse e fasce", "Fase 6 · Listelli e ripiani bassi",
              "Fase 7 · Piano", "Fase 8 · Zona ricarica", "Fase 9 · Piedini, fissaggio a muro, predisposizioni",
              "Fase 10 · Canaline, elettrico e controlli finali", "",
              "Moduli aggiuntivi (manuali separati):", "  Modulo 2 · Cassettiera", "  Modulo 3 · Alzatina con mensola"]
     fig.text(0.05, 0.76, "Contenuto", fontsize=11, weight="bold")
     fig.text(0.05, 0.735, "\n".join(fases), fontsize=9, va="top", linespacing=1.9)
-    fig.text(0.05, 0.08, "Quote in mm. Ogni foro è stato verificato sul modello 3D: nessun foro\n"
-             "ne interseca un altro (minimo 7,7 mm di legno tra due fori).", fontsize=8, color=MUTE)
+    fig.text(0.05, 0.08, "Struttura: 4 telai laterali imbullonati uniti da 3 fasce a tutta lunghezza avvitate.\n"
+             "Quote in mm. Ogni foro è stato verificato sul modello 3D: nessun foro ne interseca un altro\n"
+             "(minimo 7,5 mm di legno tra due fori).", fontsize=8, color=MUTE)
     pdf.savefig(fig); plt.close(fig)
 
-    # ================= 2. prima di iniziare
+    # ================= prima di iniziare
     fig = page("Prima di iniziare")
     para(fig, 0.04, 0.89, "Attrezzi", fs=11, weight="bold")
     para(fig, 0.04, 0.86, (
-        "• Troncatrice o sega circolare con guida (tagli a 90° precisi)\n"
+        "• Troncatrice o sega circolare con guida (tagli a 90° precisi; le fasce sono lunghe 1990)\n"
         "• Trapano a colonna oppure guida per trapano (fori perpendicolari)\n"
-        "• Punte legno a lancia/elicoidali: Ø3, Ø4, Ø8, Ø11, Ø12; punta lunga Ø12 da 300 mm\n"
-        "• Punte Forstner: Ø15, Ø25, Ø35; sega a tazza Ø60\n"
-        "• Svasatore, avvitatore, chiave a brugola 8 (TCEI M10), chiave 17\n"
-        "• Cacciavite piatto largo (per ruotare i dadi a tamburo)\n"
-        "• 4 morsetti da almeno 600 mm, squadra, metro, matita, livella\n"
+        "• Punte legno: Ø3, Ø5, Ø9, Ø11, Ø12; punta lunga Ø12 da 300 mm; punta Ø5 da almeno 120 mm\n"
+        "• Punte Forstner: Ø15, Ø20, Ø25, Ø35; sega a tazza Ø60; svasatore\n"
+        "• Avvitatore con inserto TX40 (viti 8×160), chiave a brugola 8 (TCEI M10), chiave 17\n"
+        "• Cacciavite piatto largo (per orientare i dadi a tamburo)\n"
+        "• 4 morsetti da almeno 600 mm + 2 morsetti lunghi o cinghie per le fasce\n"
+        "• Squadra, metro, matita, livella\n"
         "• Levigatrice orbitale con carte 80 – 120 – 180\n"
         "• Colla vinilica D3, pennello, stracci"), width=62, fs=8.6)
     para(fig, 0.52, 0.89, "Verifica prima di tagliare e forare", fs=11, weight="bold")
     para(fig, 0.52, 0.86, (
-        "1. Sezione reale delle travi: devono essere 80×120. Se misurano 78×118 (capita) le quote dei fori "
-        "restano valide perché sono riferite alla testa e all'asse dei pezzi, ma rifai i conti delle campate.\n"
-        "2. Dado a tamburo: non lo vendono Tecnomat, OBI e Leroy Merlin (ferramenta o online). Il manuale usa Ø15: "
+        "1. Sezione reale delle travi: devono essere 80×120. Se misurano 78×118 le quote dei fori restano valide "
+        "(sono riferite alla testa e all'asse dei pezzi), ma ricontrolla campate e profondità.\n"
+        "2. Lunghezza delle barre: le fasce sono 1990 perché da una barra da 4000 ne escono due (taglio 4 mm + "
+        "rifilatura 10). Se le barre sono più corte di 4000, accorcia tutte e tre le fasce della stessa misura.\n"
+        "3. Dado a tamburo: non lo vendono Tecnomat, OBI e Leroy Merlin (ferramenta o online). Il manuale usa Ø15: "
         "se il tuo è Ø14 o Ø16 usa la Forstner dello stesso diametro.\n"
-        "3. Sede per i piedini: con il dado ragno M10 il foro è Ø12 (Ø14 per un inserto a vite); segui la confezione.\n"
-        "4. Altezza del piedino: le gambe sono da 700 mm e il piano finito è a 740 mm senza piedini. "
-        "Se vuoi restare a 740 con i piedini, accorcia tutte le gambe dell'altezza del piedino dal lato "
-        "del PIEDE: le quote dei fori, date 'dalla testa', non cambiano.\n"
-        "5. Il muro: tipo (mattone pieno, forato, cartongesso) e presenza del battiscopa, che può "
-        "allontanare il tavolo dal muro."), width=60, fs=8.6)
+        "4. Piedini: le gambe sono da 700 mm e il piano finito è a 740 senza piedini. Per restare a 740 con i piedini, "
+        "accorcia tutte le gambe dal lato del PIEDE: le quote dei fori 'dalla testa' non cambiano.\n"
+        "5. Il muro: tipo (pieno, forato, cartongesso) e battiscopa, che può allontanare il tavolo dal muro."),
+        width=60, fs=8.4)
     para(fig, 0.04, 0.5, "Convenzioni del manuale", fs=11, weight="bold")
     para(fig, 0.04, 0.47, (
         "• Fronte = lato dove ti siedi. Sinistra/destra viste stando seduto davanti al tavolo.\n"
-        "• Le gambe si numerano da 1 (sinistra) a 4 (destra); A = anteriore, P = posteriore: G1A … G4P.\n"
-        "• Le quote dei fori nelle gambe sono 'dalla testa' (dall'estremità alta) e 'da sinistra' guardando "
-        "quella faccia da fuori.\n"
+        "• Gambe numerate da 1 (sinistra) a 4 (destra); A = anteriore, P = posteriore: G1A … G4P.\n"
+        "• Traverse laterali L1s…L4i (s = alta, i = bassa); traverse basse anteriori ACi e ARi; fasce FA, FPa, FPb.\n"
+        "• Quote dei fori nelle gambe 'dalla testa' (estremità alta) e 'da sinistra' guardando quella faccia da fuori.\n"
         "• Nelle traverse le quote sono dal filo superiore del pezzo e dalla testata.\n"
-        "• Passante = il foro attraversa tutto il pezzo; il punto di uscita è indicato con l'apice (es. 3').\n"
-        "• Lamatura = allargamento poco profondo (Ø25×12) dove entra la testa del bullone con la rondella."),
+        "• Passante = il foro attraversa tutto il pezzo; il punto di uscita è indicato con l'apice (es. 3')."),
         width=62, fs=8.6)
-    box_note(fig, 0.52, 0.12, 0.44, 0.36, "Regola d'oro dei nodi",
-             "Tutti i nodi telaio sono uguali: bullone (o barra) M10 + dado a tamburo + 2 spine Ø12.\n\n"
-             "• Traverse longitudinali: bullone a 30 mm dalla testa, spine a 85.\n"
-             "• Traverse laterali: bullone a 90 mm dalla testa, spine a 35.\n"
-             "• Spine a ±15 mm dall'asse del pezzo.\n"
-             "• Dado a tamburo a 60 mm dalla testata della traversa.\n\n"
-             "Le due regole sono una lo specchio dell'altra: con UNA sola dima (pag. 12) fori tutti i nodi, "
-             "basta girarla.\n\n"
-             "Spine incollate solo nella traversa: nella gamba entrano a secco, così il tavolo resta smontabile.",
-             fs=8.3, width=64)
+    box_note(fig, 0.52, 0.10, 0.44, 0.38, "Come sta in piedi il tavolo",
+             "• 4 TELAI LATERALI: gamba anteriore + gamba posteriore + traversa laterale alta e bassa. Nodi con "
+             "bullone M10 + dado a tamburo + 2 spine Ø12 (bullone a 90 dalla testa della traversa, spine a 35).\n"
+             "• 3 FASCE a tutta lunghezza li uniscono: FPa e FPb dietro, di coltello, contro il muro; FA davanti, "
+             "posata di piatto sotto il bordo del piano. Ogni fascia si avvita a ogni gamba con 2 viti 8×160 "
+             "perpendicolari: lavorano nel legno di fianco, tengono molto e si possono togliere e rimettere.\n"
+             "• 2 traverse basse anteriori ACi e ARi chiudono le campate dei ripiani.\n"
+             "• Il piano avvitato e il fissaggio a muro completano la rigidezza: indispensabili per le presse.",
+             fs=8.1, width=66)
     pdf.savefig(fig); plt.close(fig)
 
-    # ================= 3. ferramenta
+    # ================= ferramenta
     fig = page("Ferramenta – codici usati nel manuale")
     for i, (c, name, q, where, k) in enumerate(HW):
         col, row = i % 2, i // 2
-        x = 0.04 + col * 0.48; y = 0.80 - row * 0.155
-        a = fig.add_axes([x, y, 0.13, 0.11]); draw_hw(a, k)
-        fig.text(x + 0.14, y + 0.085, f"{c}", fontsize=13, weight="bold", color=HCOL.get(c, INK))
-        fig.text(x + 0.18, y + 0.088, name, fontsize=8.5, weight="bold", va="center")
-        fig.text(x + 0.18, y + 0.058, f"Quantità: {q}", fontsize=8)
-        para(fig, x + 0.18, y + 0.045, where, width=44, fs=7.8, color=MUTE)
-    fig.text(0.04, 0.05, "Colla vinilica D3 per spine, rinforzo e cassetti. Prezzi e quantità nel foglio tavolo_costi.xlsx.",
-             fontsize=8, color=MUTE)
+        x = 0.04 + col * 0.48; y = 0.80 - row * 0.15
+        a = fig.add_axes([x, y, 0.13, 0.10]); draw_hw(a, k)
+        fig.text(x + 0.14, y + 0.08, f"{c}", fontsize=13, weight="bold", color=HCOL.get(c, INK))
+        fig.text(x + 0.18, y + 0.083, name, fontsize=8.3, weight="bold", va="center")
+        fig.text(x + 0.18, y + 0.055, f"Quantità: {q}", fontsize=8)
+        para(fig, x + 0.18, y + 0.042, where, width=44, fs=7.6, color=MUTE)
+    fig.text(0.04, 0.04, "Colla vinilica D3 per spine, rinforzo e listelli. Prezzi e negozi nella distinta materiali (pagina seguente) "
+             "e nel foglio tavolo_base_costi.xlsx.", fontsize=8, color=MUTE)
     pdf.savefig(fig); plt.close(fig)
 
-    # ================= 4. codici pezzi
+    # ================= distinta materiali (BOM)
+    ws = load_workbook("tavolo_base_costi.xlsx", data_only=True)["Distinta costi"]
+    bom, tot, ver = [], 0, 0
+    for r in ws.iter_rows(min_row=5, values_only=True):
+        if not r[0] or not r[1]: break
+        cat, art, use, q, u, pr, t, src, shop = r[:9]
+        tot += t or 0; ver += (t or 0) if str(src).startswith("verificato") else 0
+        bom.append([cat, "\n".join(textwrap.wrap(art, 46)), "\n".join(textwrap.wrap(str(use), 44)), f"{q:g} {u}",
+                    shop, f"{pr:.2f}", f"{t:.2f}", "sì" if str(src).startswith("verificato") else "stima"])
+    for part_, rows_ in (("1/2", bom[:15]), ("2/2", bom[15:])):
+        fig = page(f"Distinta materiali e costi (BOM) {part_}")
+        at = fig.add_axes([0.03, 0.10, 0.94, 0.80])
+        tb = table(at, rows_, ["categoria", "articolo", "uso", "q.tà", "negozio", "€ cad.", "€ tot.", "verificato"],
+                   [0.10, 0.27, 0.26, 0.06, 0.10, 0.06, 0.07, 0.08], fs=6.6, sc=2.25,
+                   colors=[None if r[7] == "sì" else "#fff6c8" for r in rows_])
+        if part_ == "2/2":
+            fig.text(0.97, 0.07, f"TOTALE modulo 1: {tot:.2f} €   (prezzi verificati {ver:.2f} € · stime {tot - ver:.2f} €)",
+                     fontsize=9.5, weight="bold", ha="right")
+        fig.text(0.03, 0.04, "Prezzi letti sui siti di Tecnomat, OBI e Leroy Merlin il 18/10/2026 (negozio di riferimento Tecnomat Roma "
+                 "Prenestina). Righe gialle = stime. Link ai prodotti nel file tavolo_base_costi.xlsx.", fontsize=7.2, color=MUTE)
+        pdf.savefig(fig); plt.close(fig)
+
+    # ================= codici pezzi
     fig = page("Codici dei pezzi")
     ax = fig.add_axes([0.03, 0.42, 0.50, 0.47]); ax.set_aspect("equal"); ax.axis("off")
-    for n in legs + rails:
+    for n in legs + rails + fasce:
+        if n == "Fascia post. bassa": continue
         x0, y0, z0, x1, y1, z1 = parts[n]["box"]
-        if z0 > 300 or n.startswith("Gamba"):
-            R(ax, x0, y0, x1 - x0, y1 - y0, WOOD if n.startswith("Gamba") else WOOD2, lw=0.6)
-            ax.text((x0 + x1) / 2, (y0 + y1) / 2, code(n).replace("s", "s/i") if not n.startswith("Gamba") else code(n),
-                    ha="center", va="center", fontsize=6.5, weight="bold", rotation=90 if (y1 - y0) > (x1 - x0) * 2 and not n.startswith("Gamba") else 0)
-    ax.text(1000, -60, "FRONTE (seduta)", ha="center", fontsize=8, color=MUTE)
-    ax.text(1000, 860, "RETRO (muro)", ha="center", fontsize=8, color=MUTE)
+        fc = WOOD if n.startswith("Gamba") else ("#b98d55" if n.startswith("Fascia") else WOOD2)
+        R(ax, x0, y0, x1 - x0, y1 - y0, fc, lw=0.6, ls="--" if n.startswith("Trav. inf. ant") else "-",
+          alpha=0.55 if n.startswith("Trav. inf. ant") else 1)
+        c = code(n)
+        if n.startswith("Trav. sup. lat"): c = c[:-1] + "s/i"
+        if n == "Fascia post. alta": c = "FPa / FPb"
+        if n.startswith("Trav. inf. lat"): continue
+        ax.text((x0 + x1) / 2, (y0 + y1) / 2, c, ha="center", va="center", fontsize=6.5, weight="bold",
+                rotation=90 if (y1 - y0) > (x1 - x0) * 2 and not n.startswith("Gamba") else 0)
+    ax.text(1000, -70, "FRONTE (seduta)", ha="center", fontsize=8, color=MUTE)
+    ax.text(1000, 850, "RETRO (muro)", ha="center", fontsize=8, color=MUTE)
     for (a, c), lab in zip(d["bays"], ["cassetti", "seduta", "ricarica"]):
-        ax.text((a + c) / 2, 400, lab, ha="center", fontsize=8, color=MUTE, style="italic")
+        ax.text((a + c) / 2, 420, lab, ha="center", fontsize=8, color=MUTE, style="italic")
     ax.set_xlim(-40, 2040); ax.set_ylim(-110, 900)
-    ax.set_title("Pianta del telaio (vista dall'alto) – s = superiore, i = inferiore", fontsize=8.5, loc="left")
-    rows = []
-    groups = OrderedDict()
-    for n in legs + rails + risers:
+    ax.set_title("Pianta del telaio (vista dall'alto) – ACi e ARi tratteggiate (sono in basso)", fontsize=8.5, loc="left")
+    rows = []; groups = OrderedDict()
+    for n in legs + fasce + rails + risers:
         c = code(n); L = length(n)
-        typ = "gamba" if n.startswith("Gamba") else ("traversa laterale" if ". lat." in n else
-               ("montante alzatina (conservare)" if n.startswith("Mont") else "traversa longitudinale"))
+        typ = ("gamba" if n.startswith("Gamba") else "fascia (tutta lunghezza)" if n.startswith("Fascia") else
+               "traversa laterale" if ". lat." in n else "montante alzatina (conservare)" if n.startswith("Mont") else
+               "traversa bassa anteriore")
         groups.setdefault((typ, L), []).append(c)
     for (typ, L), cs in groups.items():
         rows.append([typ, f"{L}", str(len(cs)), "\n".join(", ".join(cs[k:k + 4]) for k in range(0, len(cs), 4))])
     at = fig.add_axes([0.55, 0.40, 0.42, 0.49])
-    table(at, rows, ["pezzo", "lungh.", "n°", "codici"], [0.38, 0.12, 0.07, 0.43], fs=7.2, sc=2.6)
+    table(at, rows, ["pezzo", "lungh.", "n°", "codici"], [0.40, 0.11, 0.07, 0.42], fs=7.2, sc=2.6)
     para(fig, 0.04, 0.36, (
-        "Appena tagliato ogni pezzo, scrivi il codice a matita su una faccia che resterà nascosta "
-        "(per le gambe: la testa; per le traverse: la faccia inferiore). Segna anche una freccia verso il FRONTE: "
-        "evita di montare un pezzo girato.\n\n"
-        "Gli altri pezzi hanno il loro nome: Piano (lamellare), Rinforzo, Ripiano cassetti, Ripiano ricarica, "
-        "Ripiano seduta (tutti in OSB), Listelli reggiripiano. I 4 montanti M1–M4 non servono al tavolo base: "
-        "tagliali, marcali e conservali per l'alzatina (modulo 3)."), width=110, fs=8.8)
+        "Appena tagliato ogni pezzo, scrivi il codice a matita su una faccia che resterà nascosta (gambe: la testa; "
+        "traverse: la faccia inferiore; fasce: la faccia verso l'interno) e una freccia verso il FRONTE.\n\n"
+        "Sezioni: gambe e traverse laterali 80 (largh.) × 120 (prof./altezza); fasce posteriori 80 × 120 di coltello; fascia "
+        "anteriore 120 × 80 posata di piatto (stessa trave, ruotata); ACi e ARi 80 × 120 di coltello.\n\n"
+        "Gli altri pezzi hanno il loro nome: Piano (lamellare), Rinforzo, Ripiano cassetti, Ripiano ricarica, Ripiano seduta "
+        "(tutti in OSB), Listelli reggiripiano. I 4 montanti M1–M4 non servono al tavolo base: tagliali, marcali e "
+        "conservali per l'alzatina (modulo 3)."), width=112, fs=8.6)
     pdf.savefig(fig); plt.close(fig)
 
     # ================= viste quotate
-    import disegni
     disegni.pagine_viste(page, pdf, plt)
 
-    # ================= 5. taglio
+    # ================= fase 1 taglio
     fig = page("Taglio delle travi e dei pannelli", "Fase 1")
     ax = fig.add_axes([0.04, 0.50, 0.92, 0.38]); ax.axis("off")
-    # assegna codici ai tagli
     pool = {}
-    for n in legs + rails + risers: pool.setdefault(length(n), []).append(code(n))
+    for n in legs + fasce + rails + risers: pool.setdefault(length(n), []).append(code(n))
     for k in pool: pool[k] = sorted(pool[k], key=lambda c: (c[0] != "G", c))
     bars = cf["kvh_bars"]
     ax.set_xlim(-300, 4250); ax.set_ylim(len(bars) * 1.5 + 0.2, -0.8)
-    pal = {700: "#d9b382", 560: "#c99a62", 500: "#bd8d55", 480: "#b07f4a", 250: "#e6caa0"}
     for i, bar in enumerate(bars):
         y = i * 1.5; x = 10
         R(ax, 0, y, 4000, 1.0, "#f4f1ec", ec="#999", lw=0.6)
@@ -357,41 +438,38 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
         for L in bar:
             c = pool[L].pop(0)
             R(ax, x, y, L, 1.0, pal.get(L, WOOD), lw=0.6)
-            ax.text(x + L / 2, y + 0.33, c, ha="center", va="center", fontsize=8, weight="bold")
-            ax.text(x + L / 2, y + 0.72, str(L), ha="center", va="center", fontsize=7)
+            ax.text(x + L / 2, y + 0.33, c, ha="center", va="center", fontsize=7.5 if L > 300 else 6.5, weight="bold")
+            ax.text(x + L / 2, y + 0.72, str(L), ha="center", va="center", fontsize=6.8)
             x += L + 4
         ax.text(4020, y + 0.5, f"avanzo {4000 - x:.0f}", va="center", fontsize=7.5, color=MUTE)
-    ax.text(0, -0.45, "Travi KVH 80×120 da 4 m – grigio: 10 mm di rifilatura della testa; taglio 4 mm", fontsize=8.5)
+    ax.text(0, -0.45, f"Travi KVH 80×120 da 4 m ({NB} barre) – grigio: 10 mm di rifilatura della testa; taglio 4 mm", fontsize=8.5)
     para(fig, 0.04, 0.46, (
         "1. Rifila 10 mm a una testa di ogni barra per avere un'estremità a 90° pulita.\n"
-        "2. Taglia nell'ordine indicato, misurando sempre dalla testa appena tagliata. Le 8 gambe devono essere "
-        "identiche: tagliale con un fermo (battuta) sulla troncatrice, non misurandole una a una.\n"
-        "3. Stessa cosa per le 8 traverse laterali da 560: una sola battuta per tutte.\n"
+        f"2. Le fasce da {FAS} per prime: due sulla barra 1 (la seconda è quello che resta: misurala, deve essere ≥ {FAS}). "
+        "Le tre fasce devono essere identiche: segna la prima e usala come campione.\n"
+        "3. Gambe (700) e traverse laterali (" + f"{LAT}" + "): tagliale con un fermo (battuta) sulla troncatrice, non misurandole una a una.\n"
         "4. Controlla ogni taglio con la squadra su due facce. Una testata storta apre il nodo.\n"
-        "5. Tieni gli avanzi da ~100 mm: uno serve per la dima di foratura.\n"
-        "6. Marca subito il codice su ogni pezzo."), width=66, fs=8.5)
+        "5. Tieni un avanzo di ~100 mm: serve per la dima di foratura.\n"
+        "6. Marca subito il codice su ogni pezzo. Tecnomat taglia in negozio (1° taglio gratis, poi 1 €)."), width=66, fs=8.4)
     ax2 = fig.add_axes([0.56, 0.08, 0.40, 0.32]); ax2.set_aspect("equal"); ax2.axis("off")
     R(ax2, 0, 0, 2500, 1250, "#efe3c4")
-    for (x, y), w_, h_, t in [((0, 0), 500, 560, "Ripiano\ncassetti\n500×560"), ((504, 0), 480, 560, "Ripiano\nricarica\n480×560"),
-                              ((988, 0), 480, 520, "Rinforzo A\n480×520"), ((1472, 0), 480, 520, "Rinforzo B\n480×520"),
-                              ((0, 564), 700, 260, "Ripiano seduta 700×260")]:
-        R(ax2, x, y, w_, h_, "#d9c08a", lw=0.6); ax2.text(x + w_ / 2, y + h_ / 2, t, ha="center", va="center", fontsize=6.3)
-    ax2.text(1600, 900, "avanzo ≈ 1,8 m²\n(utile per la cassettiera)", ha="center", va="center", fontsize=6.5, color=MUTE)
+    for (x, y), w_, h_, t in OSB_CUTS:
+        R(ax2, x, y, w_, h_, "#d9c08a", lw=0.6); ax2.text(x + w_ / 2, y + h_ / 2, t, ha="center", va="center", fontsize=6)
+    ax2.text(1800, 900, "avanzo ≈ 1,7 m²\n(utile per la cassettiera)", ha="center", va="center", fontsize=6.5, color=MUTE)
     ax2.set_xlim(-20, 2520); ax2.set_ylim(-20, 1270)
     ax2.set_title("Pannello OSB/3 2500×1250×18 (il piano lamellare resta intero)", fontsize=8, loc="left")
     para(fig, 0.04, 0.17, (
-        "OSB: taglia prima la striscia da 560 su tutta la lunghezza, poi i pezzi. Lato liscio dei ripiani verso "
-        "l'alto. I due rinforzi si incollano uno sull'altro e formano 36 mm."),
-        width=66, fs=8.5)
+        f"OSB: taglia prima la striscia da {STRIP} su tutta la lunghezza, poi i pezzi. Lato liscio dei ripiani verso "
+        "l'alto. I due rinforzi si incollano uno sull'altro e formano 36 mm."), width=66, fs=8.4)
     pdf.savefig(fig); plt.close(fig)
 
-    # ================= 6. dima e regole foratura
-    fig = page("Foratura: regole, dima e sezioni dei nodi", "Fase 2")
-    a = fig.add_axes([0.03, 0.55, 0.46, 0.33]); testata(a, "lat")
-    a = fig.add_axes([0.51, 0.55, 0.46, 0.33]); testata(a, "long")
-    a = fig.add_axes([0.03, 0.08, 0.32, 0.40]); sec_nodo_estremita(a)
-    a = fig.add_axes([0.36, 0.08, 0.36, 0.40]); sec_nodo_centrale(a)
-    a = fig.add_axes([0.74, 0.08, 0.24, 0.40]); sec_nodo_laterale(a)
+    # ================= fase 2 regole e sezioni
+    fig = page("Foratura: regole e sezioni dei nodi", "Fase 2")
+    a = fig.add_axes([0.03, 0.56, 0.46, 0.32]); testata(a, "lat")
+    a = fig.add_axes([0.51, 0.56, 0.46, 0.32]); testata(a, "long")
+    a = fig.add_axes([0.02, 0.06, 0.30, 0.42]); sec_nodo_bassa(a)
+    a = fig.add_axes([0.32, 0.06, 0.46, 0.44]); sec_laterale(a)
+    a = fig.add_axes([0.78, 0.06, 0.21, 0.42]); sec_nodo_laterale(a)
     pdf.savefig(fig); plt.close(fig)
 
     fig = page("Foratura: la dima e come forare", "Fase 2")
@@ -403,50 +481,50 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
     dim(ax, 0, 0, 0, 30, -10, "30", vertical=True); dim(ax, 0, 0, 0, 85, -30, "85", vertical=True)
     dim(ax, 0, 120, 25, 120, 10, "25"); dim(ax, 25, 120, 55, 120, 10, "30")
     ax.text(40, -20, "faccia di riferimento (BASSO)", ha="center", fontsize=7, color=RED)
-    ax.annotate("", (95, 30), (95, 85), arrowprops=dict(arrowstyle="<->", color=MUTE))
     ax.set_xlim(-50, 130); ax.set_ylim(-40, 150)
     ax.set_title("Dima: avanzo di KVH 80×120×100 forato al trapano a colonna", fontsize=8.5, loc="left")
     para(fig, 0.42, 0.88, (
         "Come si costruisce\n"
-        "Prendi un avanzo di trave lungo ~100 mm e fora i 3 fori passanti al trapano a colonna, "
-        "perfettamente perpendicolari. Scrivi 'BASSO' sulla faccia corta di riferimento.\n\n"
+        "Prendi un avanzo di trave lungo ~100 mm e fora i 3 fori passanti al trapano a colonna, perfettamente "
+        "perpendicolari. Scrivi 'BASSO' sulla faccia corta di riferimento.\n\n"
         "Come si usa\n"
-        "Accosta la dima alla faccia da forare, a filo con il bordo di riferimento, e stringila con un morsetto. "
-        "La punta segue il foro della dima e resta dritta anche col trapano a mano. Metti un nastro sulla "
-        "punta alla profondità giusta (profondità + 100 mm di dima).\n\n"
+        "Accosta la dima alla faccia da forare, a filo del bordo di riferimento, e stringila con un morsetto. La punta "
+        "segue il foro della dima e resta dritta anche col trapano a mano. Nastro sulla punta alla profondità giusta "
+        "(profondità + 100 mm di dima).\n\n"
         "Orientamento\n"
-        "• Traverse LATERALI (L) e gambe per le L: dima con 'BASSO' verso il basso del pezzo → bullone a 90 "
+        "• Traverse LATERALI (L) e relative facce delle gambe: dima con 'BASSO' verso il basso del pezzo → bullone a 90 "
         "dalla testa, spine a 35.\n"
-        "• Traverse LONGITUDINALI (P, A) e gambe per le P/A: dima capovolta, 'BASSO' verso l'alto → bullone "
-        "a 30 dalla testa, spine a 85.\n"
-        "• Sulle facce laterali delle gambe posteriori (larghe 120) la dima va a filo del bordo POSTERIORE; "
-        "sulle gambe anteriori a filo del bordo ANTERIORE: l'asse delle traverse longitudinali è a 40 mm dal filo esterno.\n\n"
+        "• Traverse BASSE ANTERIORI (ACi, ARi) e facce laterali delle gambe anteriori 1, 2, 3, 4: dima capovolta → bullone "
+        "a 30 dalla testa della traversa, spine a 85; sulla gamba la dima va a filo del bordo ANTERIORE (asse a 40).\n\n"
+        "Fasce (senza dima)\n"
+        "• Fori Ø9 passanti nella fascia al trapano a colonna (o con guida), poi svasatura (FPa, FPb) o lamatura Ø20 "
+        "prof. 40 (FA).\n"
+        "• Il preforo Ø5 nella gamba si fa a fascia montata, passando dal foro Ø9 (fase 5): così i fori coincidono.\n\n"
         "Ordine dei fori in ogni pezzo\n"
-        "1. Fori Ø11 (bulloni) e Ø12 (spine) con la dima.\n"
-        "2. Lamature Ø25×12 con la Forstner, centrate sul foro Ø11 già fatto.\n"
-        "3. Nelle traverse: foro Ø15 per il dado a tamburo, a 60 dalla testata, profondo 45. Deve incontrare "
-        "il foro Ø11: verifica infilando un chiodo nel Ø11.\n"
-        "4. Smussa leggermente gli spigoli di tutti i fori."), width=78, fs=8.4)
-    box_note(fig, 0.04, 0.08, 0.35, 0.3, "Profondità",
+        "1. Fori Ø11 (bulloni) e Ø12 (spine) con la dima.  2. Lamature Ø25×12 con la Forstner, centrate sul Ø11.\n"
+        "3. Nelle traverse: Ø15 per il dado a tamburo a 60 dalla testata, prof. 45; deve incontrare il Ø11.\n"
+        "4. Smussa leggermente gli spigoli di tutti i fori."), width=78, fs=8.1)
+    box_note(fig, 0.04, 0.08, 0.35, 0.30, "Profondità",
              "• Ø11 nella testata della traversa: 80 mm\n• Ø12 spine: 30 nella traversa, 25 nella gamba\n"
-             "• Ø15 dado a tamburo: 45 mm\n• Ø11 nelle gambe: passante (80 o 120)\n"
-             "• Lamatura: Ø25, 12 mm\n\nForo Ø11 nella testata: punta lunga almeno 200 mm (100 di dima + 80 + margine).",
-             fs=8.3, width=58)
+             "• Ø15 dado a tamburo: 45 mm (60 nelle gambe post.)\n• Ø11 nelle gambe: passante (80 o 120)\n"
+             "• Lamatura bulloni: Ø25, 12 mm\n• Fasce: Ø9 passante; preforo Ø5 prof. 80 nella gamba\n\n"
+             "Foro Ø11 nella testata: punta lunga almeno 200 mm (100 di dima + 80 + margine).", fs=8.2, width=58)
     pdf.savefig(fig); plt.close(fig)
 
-    # ================= foratura gambe (2 per pagina)
+    # ================= foratura gambe
     order = ["Gamba 1 ant", "Gamba 1 post", "Gamba 2 ant", "Gamba 2 post", "Gamba 3 ant", "Gamba 3 post",
              "Gamba 4 ant", "Gamba 4 post"]
     for n in order:
         fig = page(f"Foratura gamba {code(n)} – {n.lower()}", "Fase 2")
         draw_leg(fig, n, [0.02, 0.09, 0.42, 0.80], [0.46, 0.12, 0.52, 0.76])
         fig.text(0.03, 0.06, "Facce viste da fuori, testa in alto · cerchio pieno = ingresso · cerchio vuoto con apice = uscita "
-                 "del foro passante · tratteggio = lamatura Ø25 · i numeri rimandano alla tabella", fontsize=7, color=MUTE)
+                 "del foro passante · tratteggio = lamatura Ø25 · viola = preforo Ø5 delle viti delle fasce (da fare a fascia "
+                 "montata) · i numeri rimandano alla tabella", fontsize=6.8, color=MUTE)
         pdf.savefig(fig); plt.close(fig)
 
     # ================= traverse e montanti
     fig = page("Foratura traverse e montanti", "Fase 2")
-    rows, cols = [], []
+    rows = []
     for n in sorted(rails, key=lambda n: (". lat." not in n, code(n))):
         c = code(n); L = length(n); lat = ". lat." in n
         extra = []
@@ -454,143 +532,131 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
             if h["part"] == n and h["code"] == "C":
                 extra.append(f"passacavi Ø35 a {h['p0'][1] - parts[n]['box'][1]:.0f} dalla testata anteriore, "
                              f"{parts[n]['box'][5] - h['p0'][2]:.0f} dalla testa (vedi sotto)")
-            if h["part"] == n and h["code"] == "P":
-                extra.append(f"Ø11 verticale a {h['p0'][0] - parts[n]['box'][0]:.0f}")
-        extra = [e for e in dict.fromkeys(extra)]
-        if any(e.startswith("Ø11 verticale") for e in extra):
-            xs_ = [e.split(" a ")[1] for e in extra if e.startswith("Ø11")]
-            extra = [f"2 fori Ø11 verticali passanti a {' e '.join(xs_)} da sx, 25 dal fronte (fase 8)"]
-        rows.append([c, "laterale" if lat else "longitudinale", f"{L}",
+        rows.append([c, "laterale" if lat else "bassa anteriore", f"{L}",
                      "bullone −90 · spine −35 · dado dal BASSO" if lat else "bullone −30 · spine −85 · dado dall'ALTO",
                      "; ".join(dict.fromkeys(extra)) or "—"])
-    at = fig.add_axes([0.03, 0.43, 0.94, 0.45])
+    at = fig.add_axes([0.03, 0.48, 0.94, 0.40])
     table(at, rows, ["codice", "tipo", "lungh.", "entrambe le testate (quote dal filo superiore)", "fori aggiuntivi"],
-          [0.07, 0.11, 0.07, 0.32, 0.43], fs=7, sc=1.25)
-    # dettaglio passacavi e montante
+          [0.07, 0.12, 0.07, 0.32, 0.42], fs=7, sc=1.3)
     ax = fig.add_axes([0.04, 0.07, 0.42, 0.30]); ax.set_aspect("equal"); ax.axis("off")
-    R(ax, 0, 0, 560, 120, WOOD)
-    hc = next(h for h in holes if h["code"] == "C" and h["part"].startswith("Trav."))
-    yy = hc["p0"][1] - 120; zz = hc["p0"][2] - 580
-    ax.add_patch(Circle((yy, zz), 17.5, fc="white", ec=INK))
-    for end in (60, 500): R(ax, end - 7.5, 0, 15, 45, "white", ec=HCOL["T"], ls="--", lw=0.7)
-    dim(ax, 0, 120, yy, 120, 12, f"{yy:.0f}"); dim(ax, 560, 0, 560, zz, 14, f"{zz:.0f}", vertical=True)
-    ax.text(0, -25, "fronte", fontsize=6.5, color=MUTE); ax.text(560, -25, "retro", fontsize=6.5, color=MUTE, ha="right")
-    ax.set_xlim(-20, 620); ax.set_ylim(-40, 150)
+    R(ax, 0, 0, LAT, 120, WOOD)
+    zz = 120 - CAB_Z + (LEG_H - 120) - (LEG_H - 120)   # dal basso della traversa
+    zz = 120 - CAB_Z
+    ax.add_patch(Circle((CAB_Y, zz), 17.5, fc="white", ec=INK))
+    for end in (60, LAT - 60): R(ax, end - 7.5, 0, 15, 45, "white", ec=HCOL["T"], ls="--", lw=0.7)
+    dim(ax, 0, 120, CAB_Y, 120, 12, f"{CAB_Y:.0f}"); dim(ax, LAT, 120 - CAB_Z, LAT, 120, 14, f"{CAB_Z:.0f}", vertical=True)
+    ax.text(0, -25, "fronte", fontsize=6.5, color=MUTE); ax.text(LAT, -25, "retro", fontsize=6.5, color=MUTE, ha="right")
+    ax.set_xlim(-20, LAT + 70); ax.set_ylim(-40, 150)
     ax.set_title("L2s e L3s: foro passacavi Ø35 (Forstner), vista dal fianco", fontsize=8, loc="left")
     ax = fig.add_axes([0.52, 0.07, 0.44, 0.30]); ax.set_aspect("equal"); ax.axis("off")
     R(ax, 0, 0, 250, 120, WOOD); R(ax, 0, 60 - 6, 250, 12, "white", ec=HCOL["M"], ls="--", lw=0.8)
     dim(ax, 0, 0, 0, 60, -12, "60", vertical=True); dim(ax, 0, 120, 250, 120, 12, "250")
-    ax.text(270, 60, "Ø12 passante, in asse\nlungo tutto il montante,\na 60 mm dal filo\nposteriore.\n"
+    ax.text(270, 60, "Ø12 passante, in asse\nlungo tutto il montante\n(60 dal filo posteriore).\n"
             "Fora 125 mm da ogni\ntesta con la punta lunga.", fontsize=7, va="center")
     ax.text(0, -25, "retro (muro)", fontsize=6.5, color=MUTE)
     ax.set_xlim(-30, 420); ax.set_ylim(-40, 150)
     ax.set_title("Montanti M1–M4 (80×120×250) per l'alzatina, vista dal fianco", fontsize=8, loc="left")
     pdf.savefig(fig); plt.close(fig)
 
-    # ================= schede traverse
     disegni.pagine_traverse(page, pdf, plt, "Fase 2")
+    disegni.pagine_fasce(page, pdf, plt, "Fase 2")
 
     # ================= pannelli
     fig = page("Foratura di piano, rinforzo e contropiastra", "Fase 2")
     ax = fig.add_axes([0.03, 0.42, 0.62, 0.46]); ax.set_aspect("equal"); ax.axis("off")
     R(ax, 0, 0, 2000, 800, "#efe0c2")
-    lab = {"M": "barra mensola Ø12", "C": "passacavi Ø60", "P": "base piastre Ø11"}
     prow = []
     for h in [h for h in holes if h["part"] == "Piano di lavoro"]:
         x, y = h["p0"][0], h["p0"][1]
         ax.add_patch(Circle((x, y), max(h["d"], 14) / 2, fc=HCOL.get(h["code"], INK), ec=INK, lw=0.4))
         prow.append((h["code"], x, y, h["d"]))
     for xx in sorted({round(p[1]) for p in prow if p[0] == "M"}):
-        ax.text(xx, 770 - 60, f"{xx}", fontsize=6, ha="center", color=RED)
-    ax.text(-30, 740, "740", fontsize=6, ha="right", color=RED); ax.plot([-20, 0], [740, 740], color=RED, lw=0.4)
+        ax.text(xx, YM - 55, f"{xx}", fontsize=6, ha="center", color=RED)
+    ax.text(-30, YM, f"{YM:.0f}", fontsize=6, ha="right", va="center", color=RED); ax.plot([-20, 0], [YM, YM], color=RED, lw=0.4)
     for p in prow:
         if p[0] == "C": ax.text(p[1], p[2] - 110, f"x {p[1]:.0f}\ny {p[2]:.0f}", fontsize=6, ha="center", color=RED)
-    ax.text(1680, 230, "4 fori Ø11:\nx 1615 e 1745\ny 25 e 155", fontsize=6, ha="center", color=RED)
+    ps_ = sorted({(round(p[1]), round(p[2])) for p in prow if p[0] == "P"})
+    ax.text(1680, 250, f"4 fori Ø11:\nx {ps_[0][0]} e {ps_[-1][0]}\ny {ps_[0][1]} e {ps_[-1][1]}", fontsize=6, ha="center", color=RED)
     ax.text(1000, -60, "FRONTE – quote da sinistra (x) e dal bordo anteriore (y)", ha="center", fontsize=7.5, color=MUTE)
     ax.set_xlim(-60, 2040); ax.set_ylim(-110, 820)
     ax.set_title("PIANO 2000×800×40 visto dall'alto", fontsize=8.5, loc="left")
     para(fig, 0.67, 0.88, (
-        "Piano\n• 2 fori Ø60 passacavi con la sega a tazza: fora metà da sopra e metà da sotto per non scheggiare.\n"
+        "Piano\n• 2 fori Ø60 passacavi con la sega a tazza: metà da sopra e metà da sotto per non scheggiare.\n"
         "• 4 fori Ø11 della base piastre: falli in fase 8, usando la base d'acciaio come dima.\n"
-        "• 4 fori Ø12 (in blu) a 740 dal fronte, x = 40, 620, 1400, 1960: servono SOLO per l'alzatina "
-        "(modulo 3). Non farli ora: si forano dall'alto passando la punta nel foro già fatto nella gamba.\n\n"
-        "Rinforzo (OSB 2×18) e contropiastra 220×220×6\n• 2 fori Ø11 per le viti posteriori della base: "
-        "falli in fase 8 insieme al piano, dopo l'incollaggio del rinforzo."), width=48, fs=8.2)
+        f"• 4 fori Ø12 (in blu) a {YM:.0f} dal fronte, x = {', '.join(str(round(x)) for x in XM)}: servono SOLO per l'alzatina "
+        "(modulo 3). Non farli ora: si forano dal basso passando la punta nel foro della gamba, quando monti l'alzatina.\n\n"
+        f"Rinforzo (OSB 2×18) e contropiastra 220×220×6\n• Rinforzo {round(rinf[3]-rinf[0])}×{round(rinf[4]-rinf[1])}: "
+        "2 fori Ø11 per le viti posteriori della base, in fase 8 insieme al piano, dopo l'incollaggio."), width=48, fs=8.1)
     pdf.savefig(fig); plt.close(fig)
 
-    # ================= fase 3 finitura + fase 4 telai
+    # ================= fase 3 + 4
     fig = page("Levigatura e finitura · Telai laterali", "Fasi 3 e 4")
     para(fig, 0.04, 0.89, "Fase 3 · Levigatura e finitura (prima del montaggio)", fs=10.5, weight="bold")
     para(fig, 0.04, 0.86, (
         "1. Leviga tutti i pezzi con grana 120 e poi 180. Il KVH è già piallato: basta togliere segni e matita.\n"
-        "2. Smussa tutti gli spigoli vivi di 2 mm.\n"
-        "3. Stendi olio o impregnante su gambe, traverse e montanti; vernice trasparente sui ripiani OSB "
-        "(l'OSB grezzo trattiene polvere e sporco).\n"
-        "4. NON trattare le testate delle traverse e le zone dove andrà la colla (sotto il piano dove si incolla "
-        "il rinforzo): la colla non attacca sull'olio. Coprile con nastro di carta.\n"
-        "5. Il piano si tratta per ultimo, a tavolo montato, con 2–3 mani."), width=58, fs=8.6)
-    para(fig, 0.04, 0.58, "Fase 4 · Telai laterali (4 telai)", fs=10.5, weight="bold")
-    para(fig, 0.04, 0.55, (
-        "Ogni telaio = gamba anteriore + gamba posteriore + traversa laterale superiore e inferiore "
-        "(es. G1A + G1P + L1s + L1i).\n\n"
-        "1. Inserisci i dadi a tamburo D nelle traverse L, con la fessura verso la testata e il foro filettato "
-        "allineato al foro Ø11.\n"
-        "2. Incolla le spine S nelle testate delle traverse (solo lì). Lascia sporgere 20 mm.\n"
-        "3. Appoggia le due gambe sul pavimento, faccia interna in alto. Infila le traverse sulle spine della gamba "
-        "anteriore.\n"
-        "4. Dalla faccia anteriore della gamba infila i bulloni B1 con rondella e avvitali nel dado a tamburo. "
-        "Stringi con moderazione.\n"
-        "5. Ripeti con la gamba posteriore (bulloni dalla faccia posteriore).\n"
-        "6. Controlla la squadra misurando le diagonali del telaio: devono essere uguali entro 2 mm. "
-        "Poi stringi a fondo.\n"
-        "7. Pulisci subito la colla uscita."), width=58, fs=8.6)
+        "2. Smussa tutti gli spigoli vivi di 2 mm (la fascia FA è sotto le mani: smussala bene).\n"
+        "3. Olio o impregnante su gambe, traverse, fasce e montanti; vernice trasparente sui ripiani OSB.\n"
+        "4. NON trattare testate delle traverse e zone da incollare (sotto il piano dove va il rinforzo).\n"
+        "5. Il piano si tratta per ultimo, a tavolo montato, con 2–3 mani."), width=58, fs=8.5)
+    para(fig, 0.04, 0.62, "Fase 4 · Telai laterali (4 telai)", fs=10.5, weight="bold")
+    para(fig, 0.04, 0.59, (
+        "Ogni telaio = gamba anteriore + gamba posteriore + traversa laterale alta e bassa (es. G1A + G1P + L1s + L1i).\n\n"
+        "1. Predisposizione alzatina: in ogni gamba posteriore infila un dado a tamburo D nel foro Ø15 della faccia "
+        "laterale (lato campata), con il foro filettato in verticale. Prova avvitando di qualche giro una barra M10 dal "
+        "foro Ø12 in testa, poi sfilala.\n"
+        "2. Dadi a tamburo D nelle traverse L (dal basso), fessura verso la testata, foro filettato allineato al Ø11.\n"
+        "3. Incolla le spine S nelle testate delle traverse (solo lì), sporgenti 20 mm.\n"
+        "4. Gambe a terra, faccia interna in alto. Infila le traverse sulle spine della gamba anteriore.\n"
+        "5. Bulloni B1 con rondella dalla faccia anteriore della gamba anteriore, avvitali nel dado. Stringi poco.\n"
+        "6. Ripeti con la gamba posteriore (bulloni dalla faccia posteriore).\n"
+        "7. Diagonali del telaio uguali entro 2 mm, poi stringi a fondo. I bulloni B1 restano coperti dalle fasce: "
+        "stringili bene adesso.\n8. Pulisci subito la colla uscita."), width=58, fs=8.3)
     img(fig, "man_f4_telai.png", [0.47, 0.12, 0.52, 0.78], crop=(100, 900, 40, 1480))
     pdf.savefig(fig); plt.close(fig)
 
     # ================= fase 5
-    fig = page("Collegamento dei telai", "Fase 5")
-    img(fig, "man_f5_collegamento.png", [0.44, 0.32, 0.55, 0.60], crop=(80, 940, 40, 1480))
+    fig = page("Traverse basse anteriori e fasce", "Fase 5")
+    img(fig, "man_f5_collegamento.png", [0.43, 0.36, 0.56, 0.56], crop=(80, 940, 40, 1480))
+    sv = {f: screws_of(f) for f in fasce}
     para(fig, 0.04, 0.89, (
-        "Serve un aiutante. Lavora con il tavolo in piedi, sul pavimento piano.\n\n"
-        "1. Prepara le traverse longitudinali: dadi a tamburo D e spine S incollate in entrambe le testate.\n"
-        "2. Telaio 1 + telaio 2 con le traverse posteriori dei cassetti PCs e PCi:\n"
-        "   – lato gamba 1: bullone B2 dalla faccia sinistra di G1P (lamatura);\n"
-        "   – lato gamba 2: avvita a metà una barra R nel dado della PCs passando dal foro di G2P. Fai lo stesso "
-        "con la PCi.\n"
-        "3. Aggiungi il telaio 3 con le traverse posteriori della seduta PSs e PSi: la barra R che sporge da G2P "
-        "entra nel loro dado. Ruota i dadi a tamburo con il cacciavite per tirare le traverse contro la gamba.\n"
-        "4. Telaio 4 con le traverse posteriori della ricarica PRs e PRi: barre R in G3P, bulloni B2 dalla "
-        "faccia destra di G4P.\n"
-        "5. Traversa bassa anteriore dei cassetti ACi tra G1A e G2A: bulloni B2 dalla faccia sinistra di G1A e dalla faccia destra di G2A (lato seduta).\n"
-        "6. Traverse anteriori della ricarica ARs e ARi tra G3A e G4A: bulloni B2 dalla faccia sinistra di G3A "
-        "(lato seduta) e dalla faccia destra di G4A.\n"
-        "7. Prima di stringere tutto: controlla che il tavolo appoggi su tutte le 8 gambe e misura le "
-        "diagonali di ogni campata, viste dall'alto (uguali entro 3 mm).\n"
-        "8. Stringi tutti i nodi partendo dal centro verso le estremità."), width=52, fs=8.4)
-    a = fig.add_axes([0.47, 0.05, 0.48, 0.25]); sec_nodo_centrale(a)
+        "Serve un aiutante. Tavolo in piedi, sul pavimento piano, vicino al muro dove andrà.\n\n"
+        "1. Metti in piedi i 4 telai alle distanze giuste (campate nette 500 · 700 · 480).\n"
+        "2. ACi tra G1A e G2A e ARi tra G3A e G4A: dadi D e spine come nei telai; bulloni B2 dalla faccia della gamba "
+        "opposta alla traversa (G1A sinistra, G2A destra, G3A sinistra, G4A destra).\n"
+        f"3. Fascia posteriore bassa FPb: appoggiala sul retro delle gambe posteriori, a filo sotto (quota 70–190) e con "
+        "5 mm di margine ai due fianchi. Morsetti su G1P e G4P.\n"
+        "4. Controlla la squadra in pianta (diagonali del rettangolo delle gambe uguali entro 3 mm) e che le gambe siano a piombo.\n"
+        "5. Passando dai fori Ø9 della fascia, fai il preforo Ø5 profondo 80 nella gamba, poi avvita le viti V 8×160 "
+        "fino a portare la testa a filo. Una gamba alla volta, partendo dal centro (G2P, G3P).\n"
+        "6. Fascia posteriore alta FPa allo stesso modo, a filo della testa delle gambe (quota 580–700).\n"
+        "7. Fascia anteriore FA, di piatto, davanti alle gambe anteriori e a filo della loro testa: viti dentro le "
+        "lamature Ø20. Poi incolla i tappi Ø20 e rasali.\n"
+        "8. Ricontrolla diagonali e piombo: con le fasce il telaio è rigido."), width=52, fs=8.2)
+    a = fig.add_axes([0.45, 0.04, 0.52, 0.30]); sec_laterale(a)
     pdf.savefig(fig); plt.close(fig)
 
     # ================= fase 6
     fig = page("Listelli e ripiani bassi", "Fase 6")
     img(fig, "man_f6_ripiani.png", [0.40, 0.10, 0.59, 0.80], crop=(90, 920, 40, 1480))
+    lc = parts["Listello reggiripiano – Ripiano basso cassetti sx"]["box"]; ls_ = parts["Listello reggiripiano – Ripiano basso post. seduta sx"]["box"]
+    Lc, Ls = round(lc[4] - lc[1]), round(ls_[4] - ls_[1])
     para(fig, 0.04, 0.89, (
-        "Listelli reggiripiano 30×40 (6 pezzi): avvitati sulle facce interne delle traverse laterali inferiori, "
-        "con il filo superiore a 18 mm sotto il filo della traversa (i ripiani OSB restano a filo).\n\n"
-        "• Campate cassetti e ricarica: listelli da 560, per tutta la profondità.\n"
-        "• Campata seduta: listelli da 260 contro la traversa posteriore.\n\n"
-        "Viti: 5×70, preforo Ø3 nella traversa, Ø5 svasato nel listello, più colla.\n"
-        "• Listelli da 560: 3 viti a 130, 280 e 430 dalla testata anteriore.\n"
-        "• Listelli da 260: 2 viti a 50 e 130 dall'inizio del listello.\n"
-        "NON avvitare entro 100 mm dalle testate delle traverse: lì ci sono bullone e dado a tamburo.\n\n"
-        "Ripiani OSB 18: appoggiali sui listelli, lato liscio in alto, e fissa ciascuno con 2 viti 4×35 per lato, "
-        "preforo Ø3. Carico consigliato: fino a 30 kg sui ripiani da 500, fino a 15 kg su quello della seduta "
-        "(luce 700)."), width=55, fs=8.4)
+        f"Listelli reggiripiano 30×40 (6 pezzi): avvitati sulle facce interne di gambe e traverse laterali basse, con il "
+        f"filo superiore 18 mm sotto il filo della traversa (i ripiani OSB restano a filo).\n\n"
+        f"• Campate cassetti e ricarica: listelli da {Lc}, da dietro la traversa bassa anteriore (y {round(lc[1])}) fino alla "
+        f"fascia posteriore bassa (y {round(lc[4])}).\n"
+        f"• Campata seduta: listelli da {Ls} contro la fascia posteriore bassa.\n\n"
+        "Viti 5×70, preforo Ø3, svasate, più colla. Listelli lunghi: 3 viti, una nella gamba anteriore, una al centro "
+        "della traversa laterale e una nella gamba posteriore. Listelli corti: 2 viti (traversa e gamba posteriore).\n"
+        "NON avvitare entro 40 mm dalle testate delle traverse (spine).\n\n"
+        "Ripiani OSB 18: appoggiali sui listelli, lato liscio in alto, e fissa ciascuno con 2 viti 4×35 per lato, preforo Ø3. "
+        "Carico consigliato: fino a 30 kg sui ripiani da 500, fino a 15 kg su quello della seduta (luce 700)."), width=55, fs=8.3)
     ax = fig.add_axes([0.04, 0.08, 0.32, 0.25]); ax.set_aspect("equal"); ax.axis("off")
     R(ax, 0, 0, 80, 120, WOOD2); R(ax, 80, 62, 30, 40, WOOD); R(ax, 80, 102, 160, 18, "#d9c08a")
-    for y in (82,): R(ax, 20, y - 2.5, 90, 5, STEEL)
+    R(ax, 20, 79.5, 90, 5, STEEL)
     ax.text(5, 82, "vite 5×70", fontsize=6.3, va="center", color="white")
     ax.text(120, 111, "ripiano OSB 18", fontsize=6.5, va="center"); ax.text(115, 75, "listello 30×40", fontsize=6.5)
-    ax.text(5, 20, "traversa\nlaterale inf.", fontsize=6.3)
+    ax.text(5, 20, "traversa\nlaterale bassa", fontsize=6.3)
     dim(ax, 240, 102, 240, 120, 10, "18", vertical=True)
     ax.set_xlim(-10, 290); ax.set_ylim(-15, 140)
     ax.set_title("Sezione: ripiano sul listello", fontsize=8, loc="left")
@@ -601,26 +667,25 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
     img(fig, "man_f7_piano.png", [0.42, 0.40, 0.57, 0.52], crop=(110, 950, 40, 1480))
     para(fig, 0.04, 0.89, (
         "1. Fai i 2 fori passacavi Ø60. Incolla tra loro i due rinforzi OSB (36 mm) e poi incollali sotto il piano: "
-        "posizione x 1440–1920, y 80–600 (a filo della traversa ARs e tra le traverse L3s e L4s). Colla su tutta "
-        "la superficie + 12 viti 5×60 dal basso, preforo Ø3, svasate. Le viti non devono stare entro 40 mm "
-        "dai 4 fori della base piastre (x 1615 e 1745, y 155).\n"
-        "2. Appoggia il piano sul telaio, a filo dietro e sui lati (sporgenza zero).\n"
-        "3. Fissalo con le squadrette Q avvitate all'interno delle traverse superiori: l'asola va sotto il piano "
-        "e la vite 4,5×25 al centro dell'asola, così il legno può muoversi con l'umidità.\n"
-        "4. Se monterai l'alzatina, le sue barre bloccheranno il piano anche sul retro."), width=56, fs=8.4)
-    rows = [["traverse posteriori PCs, PSs, PRs", "2 per traversa, a 100 dalle gambe", "6"],
-            ["L1s (faccia destra)", "a 200 e 450 dal fronte", "2"],
-            ["L2s (faccia sinistra e destra)", "1 a sinistra, 2 a destra", "3"],
-            ["L3s (faccia sinistra)", "a 200 e 450 dal fronte", "2"],
-            ["campata ricarica", "nessuna (vedi fase 8)", "–"],
-            ["totale", "", "13 (+3)"]]
-    at = fig.add_axes([0.04, 0.32, 0.37, 0.18]); table(at, rows, ["dove", "posizione", "n°"], [0.42, 0.45, 0.13], fs=6.8, sc=1.3)
+        f"x {round(rinf[0])}–{round(rinf[3])}, y {round(rinf[1])}–{round(rinf[4])} (dietro la fascia FA, tra le traverse L3s e L4s). "
+        "Colla su tutta la superficie + 12 viti 5×60 dal basso, preforo Ø3, svasate, lontane almeno 40 mm dai fori della "
+        f"base piastre (x {ps_[0][0]} e {ps_[-1][0]}, y {ps_[-1][1]}).\n"
+        "2. Appoggia il piano sul telaio: a filo della fascia FA davanti e della fascia FPa dietro, sporgenza 5 mm "
+        "oltre le fasce sui fianchi (a filo delle gambe).\n"
+        "3. Fissalo con le squadrette Q avvitate sulle facce interne di FA, FPa e delle traverse laterali alte: asola sotto il "
+        "piano e vite 4,5×25 al centro dell'asola, così il legno può muoversi con l'umidità.\n"
+        "4. Se monterai l'alzatina, le sue barre bloccheranno il piano anche sul retro."), width=56, fs=8.2)
+    rows = [["FA (faccia interna)", "2 per campata, a 100 dalle gambe", "6"],
+            ["FPa (faccia interna)", "2 per campata, a 100 dalle gambe", "6"],
+            ["L1s e L4s", "1 al centro, faccia interna", "2"],
+            ["L2s e L3s", "1 al centro, lato seduta", "2"],
+            ["totale", "", "16"]]
+    at = fig.add_axes([0.04, 0.32, 0.37, 0.16]); table(at, rows, ["dove", "posizione", "n°"], [0.36, 0.52, 0.12], fs=6.8, sc=1.3)
     ax = fig.add_axes([0.44, 0.06, 0.52, 0.30]); ax.set_aspect("equal"); ax.axis("off")
     R(ax, 0, 0, 80, 120, WOOD2); R(ax, -200, 120, 380, 40, "#efe0c2")
     ax.add_patch(Polygon([[-4, 75], [0, 75], [0, 116], [-40, 116], [-40, 120], [-4, 120]], fc=STEEL, ec=INK, lw=0.6))
-    ax.add_patch(Polygon([[-4, 75], [-4, 120], [-40, 120], [-40, 116], [0, 116]], fc=STEEL, ec=INK, lw=0.6))
     R(ax, -26, 120, 4, 25, STEEL, lw=0.4); R(ax, -2, 92, 25, 4, STEEL, lw=0.4)
-    ax.text(-190, 100, "squadretta Q", fontsize=6.5); ax.text(30, 60, "traversa\nsuperiore", fontsize=6.5)
+    ax.text(-190, 100, "squadretta Q", fontsize=6.5); ax.text(30, 60, "fascia o\ntraversa alta", fontsize=6.5)
     ax.text(-190, 140, "piano 40", fontsize=6.5)
     ax.text(100, 100, "vite 4,5×25 nell'asola\n(il piano può muoversi)", fontsize=6.5)
     ax.set_xlim(-210, 300); ax.set_ylim(40, 170)
@@ -631,94 +696,96 @@ with PdfPages("tavolo_base_manuale.pdf") as pdf:
     fig = page("Zona ricarica: base delle piastre", "Fase 8")
     img(fig, "man_f8_ricarica.png", [0.52, 0.42, 0.47, 0.50], crop=(110, 900, 40, 1480))
     ax = fig.add_axes([0.03, 0.06, 0.62, 0.40]); ax.set_aspect("equal"); ax.axis("off")
-    R(ax, 0, 580, 80, 120, WOOD2)                         # ARs
-    R(ax, 0, 700, 640, 40, "#efe0c2", hatch="///")        # piano
-    R(ax, 80, 664, 520, 36, "#d9c08a", hatch="\\\\")       # rinforzo
-    R(ax, 80, 658, 220, 6, STEEL)                          # contropiastra
-    R(ax, 0, 740, 180, 12, "#3a3f45"); R(ax, 0, 752, 180, 10, "#9aa7b4")
-    for y, zb, lab_ in ((25, 580, "M10×200"), (155, 658, "M10×110")):
-        R(ax, y - 5, zb - 14, 10, 752 - zb + 14, STEEL, lw=0.5)
-        ax.add_patch(Polygon([[y - 9, 752], [y + 9, 752], [y + 5, 746], [y - 5, 746]], fc=STEEL, ec=INK, lw=0.5))
+    R(ax, 0, LEG_H - Ffh, Ffd, Ffh, "#b98d55")                      # FA
+    R(ax, 0, LEG_H, 640, 40, "#efe0c2", hatch="///")                 # piano
+    R(ax, Ffd, LEG_H - 36, 480, 36, "#d9c08a", hatch="\\\\")          # rinforzo
+    R(ax, Ffd, LEG_H - 42, 220, 6, STEEL)                            # contropiastra
+    R(ax, 0, H, 180, 12, "#3a3f45"); R(ax, 0, H + 12, 180, 10, "#9aa7b4")
+    for y, zb, lab_ in ((25, LEG_H - Ffh, "M10×160"), (155, LEG_H - 42, "M10×110")):
+        R(ax, y - 5, zb - 14, 10, H + 12 - zb + 14, STEEL, lw=0.5)
+        ax.add_patch(Polygon([[y - 9, H + 12], [y + 9, H + 12], [y + 5, H + 6], [y - 5, H + 6]], fc=STEEL, ec=INK, lw=0.5))
         R(ax, y - 9, zb - 9, 18, 9, "#7f8890", lw=0.5)
         ax.text(y, zb - 30, lab_, ha="center", fontsize=6.5)
-    for y in (380, 520): R(ax, y - 2.5, 660, 5, 60, "#666", lw=0.3)
-    ax.text(440, 640, "viti 5×60 + colla", fontsize=6.5)
-    ax.text(200, 590, "traversa ARs", fontsize=6.5) if False else ax.text(5, 610, "ARs", fontsize=6.5)
-    ax.text(330, 720, "piano 40", fontsize=6.5); ax.text(330, 677, "rinforzo OSB 36", fontsize=6.5)
-    ax.text(310, 650, "contropiastra 6", fontsize=6.5)
-    ax.text(190, 760, "base 12 + piastra attrezzo 10", fontsize=6.5)
-    dim(ax, 0, 762, 25, 762, 14, "25", fs=6.5); dim(ax, 0, 790, 155, 790, 10, "155", fs=6.5)
-    ax.text(0, 540, "← fronte", fontsize=6.5, color=MUTE)
-    ax.set_xlim(-20, 660); ax.set_ylim(520, 820)
-    ax.set_title("Sezione verticale in corrispondenza delle viti (x 1615 e 1745)", fontsize=8, loc="left")
+    for y in (380, 520): R(ax, y - 2.5, LEG_H - 40, 5, 60, "#666", lw=0.3)
+    ax.text(440, LEG_H - 60, "viti 5×60 + colla", fontsize=6.5)
+    ax.text(5, LEG_H - Ffh + 30, "FA", fontsize=6.5)
+    ax.text(330, H - 20 + 40 - 18, "piano 40", fontsize=6.5); ax.text(330, LEG_H - 23, "rinforzo OSB 36", fontsize=6.5)
+    ax.text(250, LEG_H - 52, "contropiastra 6", fontsize=6.5)
+    ax.text(190, H + 20, "base 12 + piastra attrezzo 10", fontsize=6.5)
+    dim(ax, 0, H + 22, 25, H + 22, 14, "25", fs=6.5); dim(ax, 0, H + 50, 155, H + 50, 10, "155", fs=6.5)
+    ax.text(0, LEG_H - Ffh - 50, "← fronte", fontsize=6.5, color=MUTE)
+    ax.set_xlim(-20, 660); ax.set_ylim(LEG_H - Ffh - 70, H + 80)
+    ax.set_title(f"Sezione verticale in corrispondenza delle viti (x {ps_[0][0]} e {ps_[-1][0]})", fontsize=8, loc="left")
     para(fig, 0.04, 0.89, (
         "1. Appoggia la base d'acciaio sul piano: bordo anteriore a filo del piano, centrata nella campata "
         "(centro a x = 1680, cioè 240 mm dalla gamba destra). Bloccala con due morsetti.\n"
         "2. Usa i suoi fori come dima: fora Ø11 verticale.\n"
-        "   – 2 fori ANTERIORI (25 dal fronte): attraversano piano e traversa ARs (160 mm). Punta lunga, "
+        f"   – 2 fori ANTERIORI (25 dal fronte): attraversano piano e fascia FA ({P['T_top'] + Ffh} mm). Punta lunga, "
         "fora metà da sopra; finisci da sotto se serve.\n"
         "   – 2 fori POSTERIORI (155 dal fronte): attraversano piano e rinforzo.\n"
-        "3. Da sotto, presenta la contropiastra sui 2 fori posteriori e segna/foralo se non è già forata.\n"
+        "3. Da sotto, presenta la contropiastra sui 2 fori posteriori e segnala/forala se non è già forata.\n"
         "4. Viti TSPEI dall'alto (testa svasata a filo della base):\n"
-        "   – anteriori M10×200: rondella larga + dado autobloccante sotto la traversa ARs;\n"
+        "   – anteriori M10×160: rondella larga + dado autobloccante sotto la fascia FA;\n"
         "   – posteriori M10×110: dado autobloccante sotto la contropiastra.\n"
-        "5. Stringi in croce. Le piastre degli attrezzi si bloccano poi con le 2 manopole M12."), width=62, fs=8.3)
+        "5. Stringi in croce. Le piastre degli attrezzi si bloccano poi con le 2 manopole M12."), width=62, fs=8.2)
     pdf.savefig(fig); plt.close(fig)
 
-    # ================= fase 9 piedini, muro, predisposizioni
+    # ================= fase 9
     fig = page("Piedini, fissaggio a muro e predisposizioni", "Fase 9")
     img(fig, "man_f9_base.png", [0.50, 0.40, 0.49, 0.52], crop=(150, 900, 40, 1480))
-    ax = fig.add_axes([0.55, 0.04, 0.30, 0.34]); ax.set_aspect("equal"); ax.axis("off")
-    R(ax, 680, 450, 120, 250, WOOD); R(ax, 560, 700, 260, 40, "#efe0c2", hatch="///")
-    R(ax, 734, 625, 12, 75, "white", ec=HCOL["M"], ls="--")
-    R(ax, 730, 632.5, 70, 15, "white", ec=HCOL["T"], ls="--"); ax.add_patch(Circle((740, 640), 7.5, fc=STEEL, ec=INK))
-    ax.plot([800, 800], [430, 760], color="#555", lw=2); ax.text(806, 450, "muro", fontsize=6.5, rotation=90)
-    ax.text(570, 715, "piano (non forato)", fontsize=6.3); ax.text(600, 560, "gamba\nposteriore", fontsize=6.3)
-    ax.text(600, 660, "dado D\ngià inserito", fontsize=6.3, color=HCOL["T"]); ax.text(690, 680, "Ø12", fontsize=6, color=HCOL["M"])
-    dim(ax, 680, 450, 800, 450, -20, "120", fs=6.3); dim(ax, 740, 760, 800, 760, 10, "60", fs=6.3)
-    ax.set_xlim(540, 840); ax.set_ylim(400, 790)
-    ax.set_title("Predisposizione alzatina nelle gambe posteriori", fontsize=8, loc="left")
+    ax = fig.add_axes([0.53, 0.04, 0.34, 0.34]); ax.set_aspect("equal"); ax.axis("off")
+    R(ax, yB0, 450, Ly, LEG_H - 450, WOOD); R(ax, yB1, LEG_H - Rh, Fb, Rh, "#b98d55")
+    R(ax, yB0 - 60, LEG_H, 260, 40, "#efe0c2", hatch="///")
+    R(ax, YM - 6, LEG_H - 75, 12, 75, "white", ec=HCOL["M"], ls="--")
+    ax.add_patch(Circle((YM, LEG_H - 60), 7.5, fc=STEEL, ec=INK)); ax.plot([YM - 6, YM + 6], [LEG_H - 60, LEG_H - 60], color=INK, lw=0.8)
+    R(ax, D - 70, LEG_H - Rh / 2 - 5, 70, 10, "#bfbfbf", lw=0.4)
+    ax.plot([D + 2, D + 2], [430, 760], color="#555", lw=2); ax.text(D + 8, 450, "muro", fontsize=6.5, rotation=90)
+    ax.text(yB0 - 55, LEG_H + 15, "piano (non forato)", fontsize=6.3); ax.text(yB0 + 10, 540, "gamba\nposteriore", fontsize=6.3)
+    ax.text(yB0 + 5, LEG_H - 45, "D", fontsize=6.3, color=HCOL["T"]); ax.text(YM + 8, LEG_H - 20, "Ø12", fontsize=6, color=HCOL["M"])
+    ax.text(yB1 + 4, LEG_H - Rh - 18, "FPa + tassello", fontsize=6)
+    dim(ax, yB0, 450, yB1, 450, -20, f"{Ly}", fs=6.3); dim(ax, YM, LEG_H + 40, yB1, LEG_H + 40, 12, f"{yB1 - YM:.0f}", fs=6.3)
+    ax.set_xlim(yB0 - 70, D + 30); ax.set_ylim(400, H + 80)
+    ax.set_title("Gamba posteriore: dado D (visto di testa) e tassello nella fascia", fontsize=7.5, loc="left")
     para(fig, 0.04, 0.89, (
-        "Piedini\n1. Inclina il tavolo, avvita gli inserti I nei fori Ø14 sotto le gambe (con una vite M10 e "
-        "controdado) e poi i piedini.\n2. Porta il tavolo al muro e livellalo agendo sui piedini.\n\n"
+        "Piedini\n1. Inclina il tavolo, avvita i dadi ragno I nei fori sotto le gambe e poi i piedini.\n"
+        "2. Porta il tavolo al muro e livellalo agendo sui piedini.\n\n"
         "Fissaggio a muro (indispensabile per le presse)\n"
-        "3. 4 angolari a L: 2 sulla faccia esterna di G1P e 2 su quella di G4P, a 300 e 450 da terra. Viti 5×40 "
-        "nella gamba, tasselli Ø8 nel muro (nylon per mattone pieno, specifici per forato; su cartongesso "
-        "cerca il montante metallico). Se c'è il battiscopa, metti uno spessore dietro le gambe.\n\n"
+        "3. 4 tasselli per telai Ø10 L 160 attraverso la fascia posteriore alta FPa, alla sua mezzeria (quota 640): uno in "
+        "ogni campata e uno in più nella campata ricarica, a ~150 mm dalle gambe (lontano dalle viti V). Fora Ø10 la fascia, "
+        "segna il muro, fora il muro con la punta adatta, inserisci e avvita. Se c'è il battiscopa, metti uno spessore "
+        "dietro la fascia all'altezza dei tasselli. Su cartongesso: cerca i montanti metallici o usa tasselli a espansione "
+        "specifici.\n\n"
         "Predisposizioni per i moduli\n"
-        "• Alzatina (modulo 3): in ogni gamba posteriore il foro Ø12 in testa e il dado a tamburo D inserito "
-        "dal retro (fase 4), con il foro filettato in verticale: PROVA avvitando di qualche giro una barra M10 "
-        "dal foro in testa, poi sfilala. Fallo ADESSO, prima del piano: dopo non si raggiungono più. I fori nel piano si "
-        "fanno solo quando monti l'alzatina. Conserva i 4 montanti M1–M4.\n"
-        "• Cassettiera (modulo 2): nessuna lavorazione. La campata sinistra con il suo ripiano è già pronta; "
-        "le guide del cassetto appeso si avvitano direttamente su L1s e L2s."), width=62, fs=8.2)
+        "• Alzatina (modulo 3): in ogni gamba posteriore c'è il dado D inserito in fase 4 (dalla faccia laterale, lato "
+        "campata) e il foro Ø12 in testa. I fori nel piano si fanno solo quando monti l'alzatina. Conserva i montanti M1–M4.\n"
+        "• Cassettiera (modulo 2): nessuna lavorazione. La campata sinistra con il suo ripiano è già pronta."), width=62, fs=8.1)
     pdf.savefig(fig); plt.close(fig)
 
-    # ================= fase 11
+    # ================= fase 10
     fig = page("Canaline, elettrico e controlli finali", "Fase 10")
     img(fig, "man_f7_piano.png", [0.50, 0.40, 0.49, 0.52], crop=(110, 950, 40, 1480))
     para(fig, 0.04, 0.89, (
         "Canaline e ciabatta\n"
-        "1. Una canalina per campata, sotto il piano, tra la traversa posteriore e i passacavi: "
-        "fascia y 615–715 dal fronte. Fissala sotto il piano con viti 4×25 (il piano è spesso 40: non usare viti più lunghe).\n"
+        f"1. Una canalina per campata, sotto il piano, davanti alla fascia FPa: fascia y {round(tray[1])}–{round(tray[4])} dal fronte. "
+        "Fissala sotto il piano con viti 4×25 (il piano è spesso 40: non usare viti più lunghe).\n"
         "2. La ciabatta va dentro la canalina della campata seduta, con l'interruttore raggiungibile dal fronte.\n"
-        "3. I cavi passano da una campata all'altra nei fori Ø35 delle traverse L2s e L3s (560 dal fronte "
+        f"3. I cavi passano da una campata all'altra nei fori Ø35 delle traverse L2s e L3s ({CAB_Y + yF1:.0f} dal fronte "
         "del tavolo). Salgono sul piano dai passacavi Ø60.\n"
-        "4. Usa fascette e tieni i cavi alti, lontani dalla zona del futuro cassetto appeso (campata sinistra).\n"
-        "5. Un solo cavo di alimentazione scende a muro, fissato alla gamba G2P o G3P."), width=60, fs=8.4)
+        "4. Fascette e cavi alti, lontani dai cassetti della campata sinistra.\n"
+        "5. Un solo cavo di alimentazione scende a muro, lungo la gamba G2P o G3P."), width=60, fs=8.3)
     checks = ["Il tavolo appoggia su 8 piedini senza dondolare (livella sul piano in due direzioni)",
-              "Tutti i 34 nodi stretti; dopo 2–3 settimane ristringi (il legno si assesta)",
-              "Diagonali delle campate uguali: nessun gioco spingendo il piano avanti-indietro",
-              "Fissaggi a muro serrati: prova con la pressa in calibratura, il tavolo non deve muoversi",
+              "Telai: 20 nodi imbullonati stretti; dopo 2–3 settimane ristringi ACi e ARi (gli altri sono sotto le fasce)",
+              "Fasce: 24 viti 8×160 a fondo, nessuna fessura tra fascia e gamba",
+              "Nessun gioco spingendo il piano avanti-indietro e di lato",
+              "Tasselli a muro serrati: prova con la pressa in calibratura, il tavolo non deve muoversi",
               "Base piastre: le 4 viti stringono, le manopole bloccano la piastra senza gioco",
               "Campata cassetti libera e ripiano fissato: pronta per la cassettiera (modulo 2)",
-              "Nessun cavo schiacciato tra cassetti, guide o traverse",
               "Finitura del piano: 2–3 mani di olio, leggera carteggiatura 240 tra una mano e l'altra"]
     para(fig, 0.04, 0.46, "Controlli finali", fs=10.5, weight="bold")
     y = 0.43
     for c in checks:
         fig.patches.append(Rectangle((0.045, y - 0.016), 0.012, 0.016, transform=fig.transFigure, fc="white", ec=INK, lw=0.7))
-        para(fig, 0.065, y, c, width=110, fs=8.6); y -= 0.042
+        para(fig, 0.065, y, c, width=110, fs=8.5); y -= 0.042
     pdf.savefig(fig); plt.close(fig)
 
 print("pagine:", PAGE[0])

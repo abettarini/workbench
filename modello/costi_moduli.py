@@ -101,6 +101,7 @@ U = {  # link prodotti (dalle ricerche del 18/10/2026)
  "pio15": "https://www.tecnomat.it/it/pioppo-spess-15-mm-120x60-cm-25022690/",
  "fibra3": "https://www.tecnomat.it/it/fibra-grezza-spess-3-mm-dim-250x125-cm-10048894/",
  "guide": "https://www.tecnomat.it/it/guide-p-cas-acc-estraz-tot-h45-500mm-bnc-25060371/",
+ "tps160": "https://www.tecnomat.it/it/p-viti-legno-tps-snk-8x160-mm-100pz-25026900/",
  "tav18": "https://www.tecnomat.it/it/tavola-abete-lam-100x20-cm-spess-18-10074965/",
 }
 
@@ -108,22 +109,22 @@ U = {  # link prodotti (dalle ricerche del 18/10/2026)
 wb = Workbook(); ws = wb.active; ws.title = "Distinta costi"
 V, S, B = "ver", "stima", "base"
 base_items = [
-    ("Legno", "Trave legno massiccio strutturale KVH giuntato 80×120×4000", "gambe, traverse e i 4 montanti dell'alzatina (~2,6 m di scorta)",
+    ("Legno", "Trave legno massiccio strutturale KVH giuntato 80×120×4000", "gambe, traverse laterali, 3 fasce da 1990, traverse basse anteriori e i 4 montanti dell'alzatina",
      "='Confronto travi'!I8", "pz", "='Confronto travi'!D8", V, True, TM, U["kvh"], "Solo Tecnomat; OBI e Leroy Merlin non hanno KVH"),
     ("Legno", "Tavola abete lamellare 2000×800×40", "piano di lavoro (intero)", 1, "pz", 79.00, V, False, TM, U["lam40"],
      "Leroy Merlin: 147,45 € (marketplace); OBI: non c'è lo spessore 40"),
     ("Legno", "OSB 3 pioppo 18 mm 2500×1250", "3 ripiani bassi + rinforzo ricarica (2 strati)", 1, "pz", 27.50, V, False, TM, U["osb"],
      "OBI 31,49 €, Leroy Merlin 30,50 €"),
-    ("Legno", "Listello abete grezzo 30×40×2000", "reggiripiano: 4 × 560 + 2 × 260", 2, "pz", 3.10, V, False, TM, U["list2"],
+    ("Legno", "Listello abete grezzo 30×40×2000", "reggiripiano: 4 × 520 + 2 × 260", 2, "pz", 3.10, V, False, TM, U["list2"],
      "Grezzo va bene: resta nascosto sotto i ripiani"),
-    ("Ferramenta telaio", "Vite a testa cilindrica zincata M10×180 (B1)", "traverse laterali", 16, "pz", 1.39, V, False, OB, U["m10x180"],
-     "In negozio verifica che sia a esagono incassato (TCEI); TCEI M10×180 non trovate a scaffale altrove"),
-    ("Ferramenta telaio", "Viti a testa cilindrica M10×160, conf. 10 pz (B2)", "traverse longitudinali", 1, "conf", 13.09, V, False, OB, U["m10x160"],
-     "Accorciale a 140 mm con il seghetto (avvita prima un dado per ripulire il filetto)"),
-    ("Ferramenta telaio", "Dado a tamburo M10 (D)", "34 nodi + 4 predisposizione alzatina", 38, "pz", 0.80, S, False, FO, "",
+    ("Ferramenta telaio", "Vite a testa cilindrica zincata M10×180 (B1 + B2)", "16 traverse laterali (B1) + 4 traverse basse anteriori (B2, accorciate a 140)", 20, "pz", 1.39, V, False, OB, U["m10x180"],
+     "In negozio verifica che sia a esagono incassato (TCEI). Le 4 B2: accorciale a 140 mm col seghetto (avvita prima un dado per ripulire il filetto)"),
+    ("Ferramenta telaio", "Dado a tamburo M10 (D)", "20 testate di traversa + 4 predisposizione alzatina", 24, "pz", 0.80, S, False, FO, "",
      "Non venduto dai tre negozi: ferramenta, Würth o online. Misura il diametro prima di forare"),
-    ("Ferramenta telaio", "Barra filettata M10×1000 zincata (R)", "4 spezzoni da 220 per le gambe centrali", 1, "pz", 1.65, V, False, TM, U["barra"], "OBI 3,19 €, LM 1,75 €"),
-    ("Ferramenta telaio", "Spine in faggio zigrinato Ø12, conf. 25 pz", "2 per testata (68)", 3, "conf", 3.69, V, False, OB, U["spine"],
+    ("Ferramenta telaio", "Viti legno SNK TPS Rothoblaas 8×160, conf. 100 pz (V)", "fasce sulle gambe: 2 per gamba per fascia (24)", 1, "conf", 27.45, V, False, TM, U["tps160"],
+     "Ne avanzano molte: utili per altri lavori. OBI vende 8×180 a 3,99 € ogni 2 pz (12 conf. = 47,88 €)"),
+    ("Ferramenta telaio", "Tondo faggio zigrinato Ø20 (tappi)", "chiude le 8 lamature della fascia anteriore (facoltativo)", 1, "pz", 1.50, S, False, TM, "", ""),
+    ("Ferramenta telaio", "Spine in faggio zigrinato Ø12, conf. 25 pz", "2 per testata (40)", 2, "conf", 3.69, V, False, OB, U["spine"],
      "Lunghezza non indicata: servono ~50 mm. In alternativa tondo faggio Ø12×1000 Tecnomat 0,80 € da tagliare"),
     ("Ferramenta telaio", "Collante vinilico D3 Tover 500 ml", "spine, rinforzo, listelli", 1, "pz", 4.95, V, False, TM, U["colla"], ""),
     ("Ferramenta telaio", "Piede regolabile Ø40 vite M10, conf. 2 pz", "sotto le gambe", 4, "conf", 1.65, V, False, TM, U["piedi"], ""),
@@ -132,14 +133,14 @@ base_items = [
     ("Ferramenta telaio", "Squadretta a L 30×38×30 zincata", "fissaggio del piano", 16, "pz", 0.50, V, False, TM, U["squad"],
      "Senza asola: allunga a mano il foro verso il piano con una punta Ø6"),
     ("Ferramenta telaio", "Viti legno assortite (5×60, 5×70, 4×35, 4×50, 4,5×25)", "rinforzo, listelli, ripiani, squadrette", 1, "set", 15.00, S, False, TM, "", ""),
-    ("Ferramenta telaio", "Staffa angolare con nervatura 90×90×65 zincata", "fissaggio a muro (G1P e G4P)", 4, "pz", 2.89, V, False, OB, U["staffa"], ""),
-    ("Ferramenta telaio", "Tasselli Ø8 per il tipo di muro", "fissaggio a muro", 1, "conf", 3.00, S, False, TM, "", ""),
+    ("Ferramenta telaio", "Tassello per telai Ø10 con vite, L 160", "fissaggio a muro attraverso la fascia posteriore alta (4)", 4, "pz", 1.20, S, False, TM, "",
+     "Scegli il tipo in base al muro (pieno, forato, cartongesso)"),
     ("Zona ricarica", "Piastre acciaio tagliate e forate (base 180×180×12, contropiastra 220×220×6, 3 piastre attrezzo)",
      "attacco presse e morsa", 1, "lotto", 90.00, S, False, "officina/carpenteria", "", "Chiedi un preventivo a un'officina o a un servizio di taglio laser"),
     ("Zona ricarica", "Vite TSPEI M10×110 + dado autobloccante", "base, 2 posteriori", 2, "pz", 1.50, S, False, FO, "", "Non trovate a scaffale"),
-    ("Zona ricarica", "Vite TSPEI M10×200 + dado autobloccante", "base, 2 anteriori", 2, "pz", 2.00, S, False, FO, "", "Non trovate a scaffale"),
+    ("Zona ricarica", "Vite TSPEI M10×160 + dado autobloccante", "base, 2 anteriori (attraversano piano e fascia anteriore)", 2, "pz", 1.80, S, False, FO, "", "Non trovate a scaffale"),
     ("Zona ricarica", "Dadi autobloccanti M10 inox, conf. 10 pz", "sotto la base", 1, "conf", 2.40, V, False, TM, U["dadiaut"], ""),
-    ("Zona ricarica", "Rondelle piane larghe M10 (Ø29,5), conf. 8 pz", "sotto la traversa e la contropiastra", 1, "conf", 2.50, V, False, LM, U["rondlarghe"], ""),
+    ("Zona ricarica", "Rondelle piane larghe M10 (Ø29,5), conf. 8 pz", "sotto la fascia anteriore e la contropiastra", 1, "conf", 2.50, V, False, LM, U["rondlarghe"], ""),
     ("Zona ricarica", "Manopole a stella M12 + 2 spine Ø10 h8", "bloccaggio piastre", 1, "kit", 10.00, S, False, FO, "", ""),
     ("Elettrico", "Canalina di distribuzione Arnocanali 60×40, 2 scomparti", "una per campata (da tagliare)", 3, "pz", 8.55, V, False, TM, U["canalina"],
      "Lunghezza non indicata: verifica. Alternativa specifica sottoscrivania: LM 76 cm 36,95 € (online)"),
@@ -154,7 +155,8 @@ distinta(ws, "Modulo 1 – Tavolo base: distinta e costi",
          base_items, ["Legno", "Ferramenta telaio", "Zona ricarica", "Elettrico", "Finitura"],
          ["Tecnomat: taglio legno in negozio, 1° taglio gratis poi 1 € a taglio (solo per pannelli e listelli comprati lì).",
           "I prezzi Tecnomat sono del negozio predefinito del sito (Roma Prenestina): controlla quello dove andrai.",
-          "I 4 dadi a tamburo della predisposizione alzatina vanno inseriti durante il montaggio del tavolo."])
+          "I 4 dadi a tamburo della predisposizione alzatina vanno inseriti durante il montaggio del tavolo.",
+          "Telaio: 4 telai laterali imbullonati + 3 fasce a tutta lunghezza avvitate (2 posteriori, 1 anteriore di piatto)."])
 
 wt = wb.create_sheet("Confronto travi")
 wt["A1"] = "Confronto travi per il telaio"; wt["A1"].font = H1
@@ -195,20 +197,20 @@ for i, bar in enumerate(cf["kvh_bars"], 1):
     row = 3 + i
     setc(wc, f"A{row}", f"Barra {i}"); setc(wc, f"B{row}", " + ".join(map(str, bar)))
     setc(wc, f"C{row}", sum(bar) + 4 * len(bar) + 10, BLUE, "#,##0"); setc(wc, f"D{row}", f"=4000-C{row}", NORM, "#,##0")
-wc[f"A{5 + len(cf['kvh_bars'])}"] = "I 4 pezzi da 250 sono i montanti dell'alzatina: tagliali e conservali. Tecnomat taglia in negozio (1 € a taglio dopo il primo)."
+wc[f"A{5 + len(cf['kvh_bars'])}"] = "1990 = fasce (2 posteriori + 1 anteriore). I 4 pezzi da 250 sono i montanti dell'alzatina: tagliali e conservali. Tecnomat taglia in negozio (1 € a taglio dopo il primo)."
 wc[f"A{5 + len(cf['kvh_bars'])}"].font = NOTE
 wb.save("tavolo_base_costi.xlsx")
 
 # ============================================================== 2. CASSETTIERA
 cas = [p for p in parts if p["module"] == "cassettiera"]
-pieces = {"multistrato 18": [], "multistrato 15": [], "HDF 4": []}
+pieces = {"multistrato 18": [], "multistrato 15": [], "pannello di fibra 3": []}
 for p in cas:
     a, b, c = dims(p)
     if "(scatola)" in p["name"]:
         x0, y0, z0, x1, y1, z1 = p["box"]; wd, l, h = round(x1 - x0, 1), round(y1 - y0), round(z1 - z0)
         tag = "appeso" if "appeso" in p["name"] else p["name"].split(" (")[0].lower()
         pieces["multistrato 15"] += [(f"{tag}: fianco", l, h)] * 2 + [(f"{tag}: testata", round(wd - 30), h)] * 2
-        pieces["HDF 4"] += [(f"{tag}: fondo", l, round(wd))]
+        pieces["pannello di fibra 3"] += [(f"{tag}: fondo", l, round(wd))]
     else:
         pieces[p["mat"]].append((p["name"], a, b))
 json.dump(pieces, open("cassettiera_pezzi.json", "w"), indent=1)
@@ -216,18 +218,18 @@ wb = Workbook(); ws = wb.active; ws.title = "Distinta costi"
 cas_items = [
     ("Legno", "Multistrato pioppo 18 mm 1200×600", "scatola e frontali (2 pannelli, schema nel manuale)", 2, "pz", 17.80, V, False, TM, U["pio18"],
      "Il pannello intero da 18 non c'è a Tecnomat; LM al m² 59 €/m²"),
-    ("Legno", "Multistrato pioppo 15 mm 1200×600", "scatole dei 4 cassetti", 2, "pz", 15.90, V, False, TM, U["pio15"], ""),
+    ("Legno", "Multistrato pioppo 15 mm 1200×600", "scatole dei 3 cassetti", 1, "pz", 15.90, V, False, TM, U["pio15"], ""),
     ("Legno", "Fibra grezza (faesite) 3 mm 2500×1250", "fondi dei cassetti e schienale", 1, "pz", 16.00, V, False, TM, U["fibra3"],
      "3 mm invece di 4: va bene per carichi fino a ~15 kg per cassetto"),
-    ("Ferramenta", "Coppia guide cassetto estrazione totale H45 L 500", "3 cassettiera + 1 appeso", 4, "cp", 10.90, V, False, TM, U["guide"],
+    ("Ferramenta", "Coppia guide cassetto estrazione totale H45 L 500", "3 cassetti", 3, "cp", 10.90, V, False, TM, U["guide"],
      "Portata non indicata; LM Cisne-45 a sfere 50 kg a 10,90 €"),
-    ("Ferramenta", "Maniglie", "", 4, "pz", 4.00, S, False, TM, "", ""),
+    ("Ferramenta", "Maniglie", "", 3, "pz", 4.00, S, False, TM, "", ""),
     ("Ferramenta", "Viti 4×45, 3,5×30, 3,5×25, 3×16, 4×16, 4×30, 4×50", "scatola, cassetti, frontali, guide, fissaggio", 1, "set", 10.00, S, False, TM, "", ""),
     ("Ferramenta", "Collante vinilico D3 Tover 500 ml", "giunti", 1, "pz", 4.95, V, False, TM, U["colla"], ""),
     ("Finitura", "Impregnante legno all'acqua Cipir 0,75 l", "scatola e frontali", 1, "pz", 6.70, V, False, TM, U["impr"], ""),
 ]
 distinta(ws, "Modulo 2 – Cassettiera: distinta e costi",
-         f"Cassettiera fissa per la campata sinistra (3 cassetti) + cassetto appeso. Prezzi verificati il {DATA}; celle gialle = stime.",
+         f"Cassettiera fissa per la campata sinistra (3 cassetti). Prezzi verificati il {DATA}; celle gialle = stime.",
          cas_items, ["Legno", "Ferramenta", "Finitura"],
          ["Alternativa economica: scatola in OSB 18 dall'avanzo del pannello del tavolo base (0 €).",
           "Tecnomat taglia i pannelli in negozio: porta il foglio 'Taglio pannelli'."])
@@ -247,14 +249,14 @@ alz_items = [
     ("Legno", "Montanti KVH 80×120×250", "tagliati con le travi del tavolo base", 4, "pz", 0, B, False, TM, "", ""),
     ("Legno", "Tavola in abete lamellare 1000×200×18", "mensola: tagliate a 620, 780 e 600", 3, "pz", 4.50, V, False, TM, U["tav18"],
      "OBI 800×200×18 8,79 €; OBI 800×200×14 8,19 €"),
-    ("Legno", "Listello abete grezzo 30×40×2000", "rinforzo sotto il bordo anteriore", 1, "pz", 3.10, V, False, TM, U["list2"],
+    ("Legno", "Listello abete grezzo 30×40×2000", "rinforzo sotto il bordo anteriore: 3 pezzi tra i montanti (500, 700, 480)", 1, "pz", 3.10, V, False, TM, U["list2"],
      "Visibile dal basso: levigalo. Piallato 30×40×2000 da OBI a 3,99 €"),
     ("Ferramenta", "Barra filettata M10×1000 zincata", "4 spezzoni da 390", 2, "pz", 1.65, V, False, TM, U["barra"], ""),
     ("Ferramenta", "Dado cieco M10 + rondella Ø30", "sopra la mensola", 4, "set", 0.80, S, False, TM, "", ""),
     ("Ferramenta", "Dadi a tamburo M10 nelle gambe posteriori", "già montati con il tavolo base", 4, "pz", 0, B, False, FO, "", ""),
     ("Ferramenta", "Viti 4×50", "listello sotto le tavole", 1, "conf", 3.00, S, False, TM, "", ""),
     ("Ferramenta", "Collante vinilico D3 Tover 500 ml", "listello", 1, "pz", 4.95, V, False, TM, U["colla"], "Se avanza dal tavolo base: 0 €"),
-    ("Ferramenta", "Staffa angolare con nervatura 90×90×65 zincata", "fissaggio a muro su M1 e M4", 2, "pz", 2.89, V, False, OB, U["staffa"], ""),
+    ("Ferramenta", "Staffa angolare con nervatura 90×90×65 zincata", "fissaggio a muro sotto la mensola, vicino a M1 e M4", 2, "pz", 2.89, V, False, OB, U["staffa"], ""),
     ("Ferramenta", "Tasselli Ø8", "fissaggio a muro", 1, "conf", 2.00, S, False, TM, "", ""),
     ("Finitura", "Impregnante (quota)", "mensola e montanti", 1, "pz", 3.00, S, False, TM, "", ""),
 ]
@@ -295,11 +297,17 @@ R = [
  ("Tavola 200 mm larga", OB, "Tavola lamellare abete 800×200×14", "800×200×14", 8.19, "1", "https://www.obi-italia.it/p/2423135", ""),
  ("Listello 30×40", TM, "Listello abete grezzo 2 m 30×40", "30×40×2000", 3.10, "1", U["list2"], "scelta"),
  ("Listello 30×40", OB, "Listello abete piallato 4 lati 30×40×2000", "30×40×2000", 3.99, "1", "https://www.obi-italia.it/p/6191670", ""),
- ("Vite M10 lunga", OB, "Vite testa cilindrica zincata M10×180", "M10×180", 1.39, "1", U["m10x180"], "scelta (B1)"),
- ("Vite M10 lunga", OB, "Viti testa cilindrica M10×160", "M10×160", 13.09, "10", U["m10x160"], "scelta (B2, da accorciare)"),
+ ("Vite M10 lunga", OB, "Vite testa cilindrica zincata M10×180", "M10×180", 1.39, "1", U["m10x180"], "scelta (B1 e B2)"),
+ ("Vite M10 lunga", OB, "Viti testa cilindrica M10×160", "M10×160", 13.09, "10", U["m10x160"], ""),
  ("Vite M10 lunga", OB, "Vite testa esagonale M10×140", "M10×140", 3.99, "5", "https://www.obi-italia.it/p/6271043", "testa esagonale: lamatura Ø30"),
  ("Vite M10 lunga", TM, "Bulloni testa tonda collo quadro M10×160 Würth", "M10×160", 19.45, "25", "https://www.tecnomat.it/it/bulloni-t-tonda-quadra-zinc-m10x160-25pz-10049377/", ""),
  ("Vite M10 lunga", LM, "Vite testa esagonale DIN 931 M10×140 (MP)", "M10×140", 35.31, "50", "https://www.leroymerlin.it/prodotti/vite-con-filetto-metrico-a-testa-esagonale-8-8-filetto-medio-din-931-zincato-m10-x-140-scatola-da-50-unita-86447822.html", "spedizione 12,50 €"),
+ ("Vite strutturale Ø8", TM, "Viti legno SNK TPS Rothoblaas 8×160", "8×160", 27.45, "100", U["tps160"], "scelta (fasce)"),
+ ("Vite strutturale Ø8", TM, "Viti legno SNK TPS Rothoblaas 8×200", "8×200", 41.90, "100", "https://www.tecnomat.it/it/p-viti-legno-tps-snk-8x200-mm-100pz-25026876/", ""),
+ ("Vite strutturale Ø8", OB, "Vite legno testa svasata T40 8×180", "8×180", 3.99, "2", "https://www.obi-italia.it/p/5045984", "24 viti = 47,88 €"),
+ ("Fascia 2000 (alternativa)", TM, "Tavola abete lamellare 200×60 sp. 28 (da refilare)", "2000×600×28", 42.00, "1", "https://www.tecnomat.it/it/tavola-abete-lam-200x60-cm-spess-28-10074970/", "scartata: KVH dalle stesse barre a costo zero"),
+ ("Fascia 2000 (alternativa)", TM, "Tavola abete lamellare 200×40 sp. 18 (da refilare)", "2000×400×18", 18.00, "1", "https://www.tecnomat.it/it/tavola-abete-lam-200x40-cm-spess-18-10074956/", "troppo sottile su 2 m"),
+ ("Fascia 2000 (alternativa)", LM, "Tavola abete grezzo 2000×380×50", "2000×380×50", 48.99, "1", "https://www.leroymerlin.it/prodotti/tavola-rettangolare-in-abete-grezzo-2000-x-380-x-50-mm-36596630.html", "massello grezzo, da piallare"),
  ("Barra filettata M10 1 m", TM, "Barra filettata M10×1 m zincata", "M10×1000", 1.65, "1", U["barra"], "scelta"),
  ("Barra filettata M10 1 m", LM, "Barra filettata SUKI M10×1000", "M10×1000", 1.75, "1", "https://www.leroymerlin.it/prodotti/barra-filettata-suki-in-acciaio-m10-l-1000-mm-35737030.html", ""),
  ("Barra filettata M10 1 m", OB, "Barra filettata zincata M10×1000", "M10×1000", 3.19, "1", "https://www.obi-italia.it/p/4328456", ""),
@@ -326,18 +334,22 @@ ws[f"A{6 + len(R)}"] = "Non trovati in nessuno dei tre negozi: dadi a tamburo M1
 ws[f"A{6 + len(R)}"].font = NOTE
 
 wj = wb.create_sheet("Giunzioni alternative")
-wj["A1"] = "Sistemi di giunzione traverse–gambe: costo per 34 nodi"; wj["A1"].font = H1
+wj["A1"] = "Sistemi di giunzione del telaio: confronto (D = soluzione adottata)"; wj["A1"].font = H1
 header(wj, 3, ["Sistema", "Componente", "Negozio", "Q.tà", "Prezzo", "Totale", "Note"], [30, 46, 14, 7, 11, 12, 60])
 J = [
- ("A · Bulloni + dadi a tamburo (attuale)", "Vite M10×180 testa cilindrica", OB, 16, 1.39, "smontabile, rigido; fori precisi con dima"),
- ("A · Bulloni + dadi a tamburo (attuale)", "Viti M10×160 conf. 10 (accorciate)", OB, 1, 13.09, ""),
- ("A · Bulloni + dadi a tamburo (attuale)", "Dadi a tamburo M10 (stima, online)", FO, 38, 0.80, "unico pezzo non trovato a scaffale"),
- ("A · Bulloni + dadi a tamburo (attuale)", "Barra filettata M10 1 m", TM, 1, 1.65, ""),
- ("A · Bulloni + dadi a tamburo (attuale)", "Spine Ø12 conf. 25", OB, 3, 3.69, ""),
+ ("A · Bulloni + dadi a tamburo (precedente)", "Vite M10×180 testa cilindrica", OB, 16, 1.39, "smontabile, rigido; fori precisi con dima"),
+ ("A · Bulloni + dadi a tamburo (precedente)", "Viti M10×160 conf. 10 (accorciate)", OB, 1, 13.09, ""),
+ ("A · Bulloni + dadi a tamburo (precedente)", "Dadi a tamburo M10 (stima, online)", FO, 38, 0.80, "unico pezzo non trovato a scaffale"),
+ ("A · Bulloni + dadi a tamburo (precedente)", "Barra filettata M10 1 m", TM, 1, 1.65, ""),
+ ("A · Bulloni + dadi a tamburo (precedente)", "Spine Ø12 conf. 25", OB, 3, 3.69, ""),
  ("B · Viti strutturali", "Viti Rothoblaas TPS 8×200 conf. 100", TM, 1, 41.90, "2 viti per nodo (68), inclinate; si smonta poche volte"),
  ("B · Viti strutturali", "Spine Ø12 conf. 25", OB, 3, 3.69, "antirotazione"),
  ("C · Staffe metalliche", "Staffa angolare con nervatura 90×90×65 (conf. 20 a 29,99 €)", OB, 4, 29.99, "2 per nodo (68 → 4 conf.); si vedono, meno rigido"),
  ("C · Staffe metalliche", "Viti per staffe (stima)", TM, 1, 12.00, ""),
+ ("D · Telai + fasce (adottata)", "Vite M10×180 testa cilindrica (16 B1 + 4 B2 accorciate)", OB, 20, 1.39, "20 nodi imbullonati: telai laterali e traverse basse anteriori"),
+ ("D · Telai + fasce (adottata)", "Dadi a tamburo M10 (stima, online)", FO, 20, 0.80, "+4 per l'alzatina, contati nella distinta"),
+ ("D · Telai + fasce (adottata)", "Viti Rothoblaas TPS 8×160 conf. 100", TM, 1, 27.45, "fasce: 24 viti perpendicolari nelle facce delle gambe"),
+ ("D · Telai + fasce (adottata)", "Spine Ø12 conf. 25", OB, 2, 3.69, ""),
 ]
 for i, (sysn, comp, shop, q, pr, note) in enumerate(J):
     row = 4 + i
@@ -345,7 +357,7 @@ for i, (sysn, comp, shop, q, pr, note) in enumerate(J):
     setc(wj, f"D{row}", q, BLUE, "0"); setc(wj, f"E{row}", pr, BLUE, EUR); setc(wj, f"F{row}", f"=D{row}*E{row}", NORM, EUR)
     setc(wj, f"G{row}", note, wrap=True)
 r0 = 5 + len(J)
-for k, sysn in enumerate(["A · Bulloni + dadi a tamburo (attuale)", "B · Viti strutturali", "C · Staffe metalliche"]):
+for k, sysn in enumerate(["A · Bulloni + dadi a tamburo (precedente)", "B · Viti strutturali", "C · Staffe metalliche", "D · Telai + fasce (adottata)"]):
     setc(wj, f"E{r0 + k}", f"Totale {sysn[0]}", BOLD, border=False)
     setc(wj, f"F{r0 + k}", f'=SUMIFS(F4:F{3 + len(J)},A4:A{3 + len(J)},"{sysn}")', BOLD, EUR)
 wb.save("confronto_prezzi_negozi.xlsx")
